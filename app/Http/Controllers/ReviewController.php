@@ -11,15 +11,11 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        $query = Review::with(['booking.user', 'booking.schedule.doctor.clinic']);
+        // Semua user (admin & patient) bisa melihat semua review
+        $reviews = Review::with(['booking.user', 'booking.schedule.doctor.clinic', 'booking.schedule.doctor.specialization'])
+            ->latest()
+            ->paginate(12);
 
-        if (!Auth::user()->isAdmin()) {
-            $query->whereHas('booking', function ($q) {
-                $q->where('user_id', Auth::id());
-            });
-        }
-
-        $reviews = $query->latest()->paginate(10);
         return view('reviews.index', compact('reviews'));
     }
 
@@ -64,11 +60,12 @@ class ReviewController extends Controller
     // Admin can delete review
     public function destroy(Review $review)
     {
-        if (!Auth::user()->isAdmin()) {
+        if (! Auth::user()->isAdmin()) {
             abort(403);
         }
 
         $review->delete();
+
         return redirect()->route('reviews.index')->with('success', 'Review berhasil dihapus.');
     }
 }
