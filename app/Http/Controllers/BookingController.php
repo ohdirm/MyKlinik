@@ -11,7 +11,7 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $query = Booking::with(['user', 'schedule.doctor.clinic', 'schedule.doctor.specialization'])->latest();
+        $query = Booking::with(['user', 'schedule.doctor.clinic', 'schedule.doctor.specialization', 'review'])->latest();
 
         // Jika bukan admin, hanya tampilkan booking milik pasien itu sendiri
         if (!Auth::user()->isAdmin()) {

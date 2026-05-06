@@ -68,6 +68,9 @@
                     <td class="px-6 py-4 text-right">
                         <div class="flex justify-end gap-2">
                             <a href="{{ route('bookings.edit', $booking) }}" class="text-indigo-600 hover:text-indigo-800 font-medium">Detail/Edit</a>
+                            @if(!auth()->user()->isAdmin() && $booking->status === 'completed' && !$booking->review)
+                                <a href="{{ route('reviews.create', ['booking_id' => $booking->id]) }}" class="text-green-600 hover:text-green-800 font-medium">Beri Review</a>
+                            @endif
                             @if(auth()->user()->isAdmin())
                             <form action="{{ route('bookings.destroy', $booking) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus booking ini?');">
                                 @csrf
