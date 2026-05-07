@@ -73,4 +73,18 @@ class AuthController extends Controller
 
         return redirect('/');
     }
+
+    public function deleteAccount(Request $request)
+    {
+        $user = Auth::user();
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        $user->delete();
+
+        return redirect('/')->with('success', 'Akun berhasil dihapus permanen.');
+    }
 }

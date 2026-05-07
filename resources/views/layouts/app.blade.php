@@ -58,9 +58,14 @@
             <h2 class="text-xl font-semibold text-gray-800">@yield('header_title')</h2>
             <div class="flex items-center gap-4">
                 <span class="text-sm font-medium text-gray-600">{{ auth()->user()->name }}</span>
+                <form action="{{ route('account.delete') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun secara permanen? Data Anda tidak bisa dikembalikan.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium mr-2">Hapus Akun</button>
+                </form>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium">Logout</button>
+                    <button type="submit" class="text-sm text-gray-600 hover:text-gray-800 font-medium">Logout</button>
                 </form>
                 <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold border-2 border-indigo-200">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}

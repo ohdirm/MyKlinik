@@ -31,6 +31,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::delete('account/delete', [AuthController::class, 'deleteAccount'])->name('account.delete');
 
     // Ketersediaan dokter — semua user bisa akses
     Route::get('availability', [DoctorAvailabilityController::class, 'index'])->name('availability.index');
@@ -44,10 +45,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
-        
+
         if ($request->user()->isAdmin()) {
             return redirect()->route('dashboard')->with('success', 'Email berhasil diverifikasi.');
         }
+
         return redirect()->route('bookings.index')->with('success', 'Email berhasil diverifikasi.');
     })->middleware(['signed'])->name('verification.verify');
 
