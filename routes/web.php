@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
@@ -85,5 +85,6 @@ Route::prefix('admin')->middleware('auth.admin')->name('admin.')->group(function
     Route::get('/doctor-status', [App\Http\Controllers\Admin\DoctorStatusController::class, 'index'])->name('doctor-status.index');
     Route::patch('/doctor-status/{doctorId}', [App\Http\Controllers\Admin\DoctorStatusController::class, 'update'])->name('doctor-status.update');
     Route::resource('/doctors', DoctorController::class)->names('doctors');
+    Route::resource('/specializations', SpecializationsController::class)->names('specializations');
     Route::resource('/schedules', ScheduleController::class)->names('schedules');
 });
