@@ -3,56 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Klinik App</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    <title>Login Admin — MyKlinik911</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css'])
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased h-screen flex items-center justify-center p-6">
-
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-bold text-indigo-600 tracking-wider mb-2">KLINIK APP</h1>
-            <p class="text-gray-500">Silakan login ke akun Anda</p>
+<body class="bg-gradient-to-br from-brand to-brand-dark min-h-screen flex items-center justify-center p-4 font-sans">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-brand-light text-brand rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900">MyKlinik911</h1>
+            <p class="text-sm text-gray-500">Masuk ke panel administrasi</p>
         </div>
-
-        <form action="{{ route('login.post') }}" method="POST" class="space-y-5">
+        @if(session('error'))
+            <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">{{ session('error') }}</div>
+        @endif
+        @if($errors->any())
+            <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                @foreach($errors->all() as $e)<p>{{ $e }}</p>@endforeach
+            </div>
+        @endif
+        <form method="POST" action="{{ url('/admin/login') }}">
             @csrf
-            
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus
-                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition-all">
-                @error('email')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+            <div class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input type="email" name="email" id="email" class="input-base" value="{{ old('email') }}" required autofocus>
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" name="password" id="password" class="input-base" required>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" name="remember" id="remember" class="rounded border-gray-300 text-brand focus:ring-brand">
+                    <label for="remember" class="ml-2 text-sm text-gray-600">Ingat saya</label>
+                </div>
+                <button type="submit" class="btn-primary w-full py-3">Masuk</button>
             </div>
-
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                <input type="password" id="password" name="password" required
-                    class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition-all">
-            </div>
-
-            <div class="flex items-center justify-between">
-                <label class="flex items-center gap-2">
-                    <input type="checkbox" name="remember" class="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500">
-                    <span class="text-sm text-gray-600">Ingat saya</span>
-                </label>
-                <a href="{{ route('password.request') }}" class="text-sm text-indigo-600 font-medium hover:underline">Lupa password?</a>
-            </div>
-
-            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-all focus:ring-4 focus:ring-indigo-100">
-                Masuk
-            </button>
         </form>
-
-        <p class="text-center text-sm text-gray-600 mt-6">
-            Belum punya akun? <a href="{{ route('register') }}" class="text-indigo-600 font-medium hover:underline">Daftar sekarang</a>
-        </p>
     </div>
-
 </body>
 </html>

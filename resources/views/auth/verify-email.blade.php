@@ -3,48 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Email - Klinik App</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    <title>Verifikasi Email — MyKlinik911</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css'])
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased h-screen flex items-center justify-center p-6">
-
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-        <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            </div>
-            <h1 class="text-2xl font-bold text-gray-900 mb-2">Verifikasi Email Anda</h1>
-            <p class="text-gray-500 text-sm">
-                Terima kasih telah mendaftar! Sebelum memulai, pastikan untuk memverifikasi alamat email Anda dengan mengeklik tautan yang baru saja kami kirimkan ke email Anda.
-            </p>
+<body class="bg-gradient-to-br from-brand to-brand-dark min-h-screen flex items-center justify-center p-4 font-sans">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+        <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
         </div>
 
-        @if (session('success'))
-            <div class="mb-6 bg-green-50 text-green-700 p-4 rounded-lg border border-green-200 text-sm text-center">
-                {{ session('success') }}
-            </div>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">Verifikasi Email Anda</h1>
+        <p class="text-sm text-gray-500 mb-6">
+            Kami telah mengirimkan link verifikasi ke email <strong class="text-gray-700">{{ Auth::user()->email }}</strong>.
+            Silakan cek inbox (atau folder spam) Anda dan klik link tersebut.
+        </p>
+
+        @if(session('success'))
+            <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm">{{ session('success') }}</div>
         @endif
 
-        <div class="space-y-4">
-            <form method="POST" action="{{ route('verification.send') }}">
-                @csrf
-                <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-all focus:ring-4 focus:ring-indigo-100">
-                    Kirim Ulang Email Verifikasi
-                </button>
-            </form>
+        <form method="POST" action="{{ route('verification.send') }}">
+            @csrf
+            <button type="submit" class="btn-primary w-full py-3 mb-3">📧 Kirim Ulang Email Verifikasi</button>
+        </form>
 
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="w-full py-2.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-all text-sm">
-                    Logout
-                </button>
-            </form>
-        </div>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="btn-outline w-full py-3">Logout</button>
+        </form>
     </div>
-
 </body>
 </html>

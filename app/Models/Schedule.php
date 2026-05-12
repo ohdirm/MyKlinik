@@ -2,31 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Schedule extends Model
 {
-    /** @use HasFactory<\Database\Factories\ScheduleFactory> */
-    use HasFactory;
-
     protected $fillable = [
         'doctor_id',
         'day_of_week',
         'start_time',
         'end_time',
         'max_patients',
-        'is_active',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
-            'start_time' => 'datetime:H:i',
-            'end_time' => 'datetime:H:i',
+            'day_of_week' => 'integer',
+            'max_patients' => 'integer',
         ];
     }
 
@@ -38,5 +32,23 @@ class Schedule extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Get day name in Indonesian.
+     */
+    public function getDayNameAttribute(): string
+    {
+        $days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+        return $days[$this->day_of_week] ?? '-';
+    }
+
+    /**
+     * Get formatted time range.
+     */
+    public function getTimeRangeAttribute(): string
+    {
+        return substr($this->start_time, 0, 5).' - '.substr($this->end_time, 0, 5);
     }
 }

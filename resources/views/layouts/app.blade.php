@@ -3,92 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Klinik App')</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="MyKlinik911 — Sistem Pendaftaran Online Klinik. Buat janji temu dengan dokter pilihan Anda secara mudah dan cepat.">
+    <title>@yield('title', 'MyKlinik911 — Pendaftaran Online Klinik')</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    @stack('styles')
 </head>
-<body class="bg-gray-50 text-gray-800 antialiased h-screen flex overflow-hidden">
+<body class="bg-gray-50 min-h-screen font-sans flex flex-col">
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
-        <div class="h-16 flex items-center px-6 border-b border-slate-700">
-            <h1 class="text-xl font-bold tracking-wider text-indigo-400">KLINIK APP</h1>
-        </div>
-        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            @if(auth()->user()->isAdmin())
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors {{ request()->routeIs('dashboard') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    Dashboard
+    {{-- Navbar --}}
+    <nav class="bg-brand text-white shadow-lg sticky top-0 z-40" x-data="{ open: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                {{-- Logo --}}
+                <a href="{{ url('/') }}" class="flex items-center gap-2">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                    <span class="font-bold text-xl tracking-tight">MyKlinik911</span>
                 </a>
-                <a href="{{ route('clinics.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors {{ request()->routeIs('clinics.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    Klinik
-                </a>
-                <a href="{{ route('doctors.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors {{ request()->routeIs('doctors.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                    Daftar Dokter
-                </a>
-                <a href="{{ route('schedules.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors {{ request()->routeIs('schedules.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    Jadwal
-                </a>
-            @endif
-            <a href="{{ route('availability.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors {{ request()->routeIs('availability.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                Ketersediaan Dokter
-            </a>
-            <a href="{{ route('bookings.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors {{ request()->routeIs('bookings.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                Booking Dokter
-            </a>
-            <a href="{{ route('reviews.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium transition-colors {{ request()->routeIs('reviews.*') ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                Ulasan
-            </a>
-        </nav>
-    </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full overflow-hidden">
-        <!-- Header -->
-        <header class="h-16 flex items-center justify-between px-8 bg-white border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">@yield('header_title')</h2>
-            <div class="flex items-center gap-4">
-                <span class="text-sm font-medium text-gray-600">{{ auth()->user()->name }}</span>
-                <form action="{{ route('account.delete') }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun secara permanen? Data Anda tidak bisa dikembalikan.');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium mr-2">Hapus Akun</button>
-                </form>
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="text-sm text-gray-600 hover:text-gray-800 font-medium">Logout</button>
-                </form>
-                <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold border-2 border-indigo-200">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                {{-- Desktop nav --}}
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="{{ url('/') }}" class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition {{ request()->is('/') ? 'bg-white/15' : '' }}">Beranda</a>
+                    @auth
+                        @if(Auth::user()->isPatient())
+                            <a href="{{ route('booking.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition {{ request()->is('booking') ? 'bg-white/15' : '' }}">Booking</a>
+                            <a href="{{ route('status-dokter') }}" class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition {{ request()->is('status-dokter') ? 'bg-white/15' : '' }}">Status Dokter</a>
+                            <a href="{{ route('patient.dashboard') }}" class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition {{ request()->is('antrean-saya') ? 'bg-white/15' : '' }}">Antrean Saya</a>
+                        @endif
+                    @endauth
+
+                    {{-- Auth buttons --}}
+                    @guest
+                        <a href="{{ route('login') }}" class="ml-2 px-4 py-2 rounded-lg text-sm font-medium bg-white/10 hover:bg-white/20 transition">Masuk</a>
+                        <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg text-sm font-medium bg-accent hover:bg-accent-dark transition">Daftar</a>
+                    @else
+                        <div class="relative ml-2" x-data="{ dropdown: false }">
+                            <button @click="dropdown = !dropdown" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">
+                                <div class="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                                <span class="text-sm">{{ Auth::user()->name }}</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                            </button>
+                            <div x-show="dropdown" @click.away="dropdown = false" x-transition class="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg py-2 z-50">
+                                @if(Auth::user()->isPatient())
+                                    <a href="{{ route('patient.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
+                                @endif
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 cursor-pointer">Logout</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endguest
                 </div>
+
+                {{-- Mobile hamburger --}}
+                <button @click="open = !open" class="md:hidden p-2 rounded-lg hover:bg-white/10 transition" aria-label="Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path x-show="open" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </div>
-        </header>
-
-        <!-- Content Body -->
-        <div class="flex-1 overflow-y-auto p-8">
-            @if(session('success'))
-                <div class="mb-6 bg-green-50 text-green-700 p-4 rounded-lg border border-green-200">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="mb-6 bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @yield('content')
         </div>
+
+        {{-- Mobile menu --}}
+        <div x-show="open" x-transition class="md:hidden border-t border-white/10">
+            <div class="px-4 py-3 space-y-1">
+                <a href="{{ url('/') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Beranda</a>
+                @auth
+                    @if(Auth::user()->isPatient())
+                        <a href="{{ route('booking.index') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Booking</a>
+                        <a href="{{ route('status-dokter') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Status Dokter</a>
+                        <a href="{{ route('patient.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Antrean Saya</a>
+                    @endif
+                    <div class="border-t border-white/10 mt-2 pt-2">
+                        <p class="px-3 py-1 text-xs text-white/60">{{ Auth::user()->email }}</p>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-3 py-2 rounded-lg text-sm text-red-300 hover:bg-white/10 cursor-pointer">Logout</button>
+                        </form>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Masuk</a>
+                    <a href="{{ route('register') }}" class="block px-3 py-2 rounded-lg text-sm bg-accent hover:bg-accent-dark">Daftar</a>
+                @endguest
+            </div>
+        </div>
+    </nav>
+
+    {{-- Content --}}
+    <main class="flex-1">
+        @yield('content')
     </main>
 
+    {{-- Footer --}}
+    <footer class="bg-gray-800 text-gray-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-3">MyKlinik911</h3>
+                    <p class="text-sm leading-relaxed">Klinik terpercaya dengan pelayanan kesehatan profesional. Melayani dengan sepenuh hati untuk kesehatan Anda dan keluarga.</p>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold mb-3">Jam Operasional</h3>
+                    <ul class="text-sm space-y-1">
+                        <li>Senin - Jumat: 08:00 - 17:00</li>
+                        <li>Sabtu: 08:00 - 12:00</li>
+                        <li>Minggu & Hari Libur: Tutup</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold mb-3">Hubungi Kami</h3>
+                    <ul class="text-sm space-y-2">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                            <span>0812-3456-7890</span>
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            <span>myklinik911@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+                &copy; {{ date('Y') }} MyKlinik911. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    {{-- Alpine.js CDN --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    @stack('scripts')
 </body>
 </html>

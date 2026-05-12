@@ -2,34 +2,44 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
-    /** @use HasFactory<\Database\Factories\BookingFactory> */
-    use HasFactory;
-
     protected $fillable = [
-        'user_id',
+        'booking_code',
+        'patient_name',
+        'nik',
+        'phone',
+        'birth_date',
+        'gender',
+        'address',
+        'province',
+        'district',
+        'sub_district',
+        'village',
+        'doctor_id',
         'schedule_id',
-        'booking_date',
-        'preferred_start',
-        'preferred_end',
+        'exam_date',
         'queue_number',
         'status',
-        'notes',
+        'rejection_reason',
+        'user_id',
     ];
 
     protected function casts(): array
     {
         return [
-            'booking_date' => 'date',
-            'preferred_start' => 'datetime:H:i',
-            'preferred_end' => 'datetime:H:i',
+            'birth_date' => 'date',
+            'exam_date' => 'date',
+            'queue_number' => 'integer',
         ];
+    }
+
+    public function doctor(): BelongsTo
+    {
+        return $this->belongsTo(Doctor::class);
     }
 
     public function user(): BelongsTo
@@ -42,20 +52,34 @@ class Booking extends Model
         return $this->belongsTo(Schedule::class);
     }
 
-    public function review(): HasOne
+    /**
+     * Get status badge CSS class.
+     */
+    public function getStatusBadgeClassAttribute(): string
     {
-        return $this->hasOne(Review::class);
+        return match ($this->status) {
+            'PENDING' => 'bg-yellow-100 text-yellow-800',
+            'CONFIRMED' => 'bg-green-100 text-green-800',
+            'REJECTED' => 'bg-red-100 text-red-800',
+            'DONE' => 'bg-gray-100 text-gray-800',
+            'CANCELLED' => 'bg-gray-100 text-gray-500',
+            default => 'bg-gray-100 text-gray-800',
+        };
     }
 
-    protected static function booted()
+    /**
+     * Menghitung estimasi kedatangan berdasarkan antrean.
+     * Asumsi 15 menit per pasien sejak jadwal dimulai.
+     */
+    public function getEstimatedTimeAttribute(): ?string
     {
-        static::creating(function ($booking) {
-            if (empty($booking->queue_number)) {
-                $lastQueue = static::where('schedule_id', $booking->schedule_id)
-                    ->where('booking_date', $booking->booking_date)
-                    ->max('queue_number');
-                $booking->queue_number = $lastQueue ? $lastQueue + 1 : 1;
-            }
-        });
+        if (! $this->schedule || ! $this->queue_number) {
+            return null;
+        }
+
+        $startTime = \Carbon\Carbon::createFromTimeString($this->schedule->start_time);
+        $minutesToAdd = ($this->queue_number - 1) * 15;
+        
+        return $startTime->addMinutes($minutesToAdd)->format('H:i');
     }
 }

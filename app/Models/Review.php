@@ -2,23 +2,47 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Review extends Model
 {
-    /** @use HasFactory<\Database\Factories\ReviewFactory> */
-    use HasFactory;
-
     protected $fillable = [
+        'user_id',
+        'doctor_id',
         'booking_id',
+        'type',
         'rating',
         'comment',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'rating' => 'integer',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function doctor(): BelongsTo
+    {
+        return $this->belongsTo(Doctor::class);
+    }
+
     public function booking(): BelongsTo
     {
         return $this->belongsTo(Booking::class);
+    }
+
+    /**
+     * Get star display for rating.
+     */
+    public function getRatingStarsAttribute(): string
+    {
+        return str_repeat('★', $this->rating).str_repeat('☆', 5 - $this->rating);
     }
 }

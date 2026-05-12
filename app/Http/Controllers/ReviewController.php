@@ -9,63 +9,55 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    public function index()
+    public function create(Booking $booking)
     {
-        // Semua user (admin & patient) bisa melihat semua review
-        $reviews = Review::with(['booking.user', 'booking.schedule.doctor.clinic', 'booking.schedule.doctor.specialization'])
-            ->latest()
-            ->paginate(12);
-
-        return view('reviews.index', compact('reviews'));
-    }
-
-    public function create(Request $request)
-    {
-        $booking_id = $request->query('booking_id');
-        $booking = Booking::with('schedule.doctor')->findOrFail($booking_id);
-
-        // Validasi: hanya pasien ybs, status completed, dan belum direview
+        // Ensure the booking belongs to the logged-in user and is DONE
         if ($booking->user_id !== Auth::id()) {
             abort(403);
         }
-        if ($booking->status !== 'completed') {
-            return redirect()->route('bookings.index')->with('error', 'Hanya booking yang telah selesai yang dapat direview.');
-        }
-        if ($booking->review()->exists()) {
-            return redirect()->route('reviews.index')->with('error', 'Anda sudah memberikan review untuk booking ini.');
+
+        if ($booking->status !== 'DONE') {
+            return redirect()->route('patient.dashboard')
+                ->with('error', 'Review hanya bisa diberikan setelah pemeriksaan selesai.');
         }
 
-        return view('reviews.create', compact('booking'));
+        // Check if already reviewed
+        $existingReview = Review::where('user_id', Auth::id())
+            ->where('booking_id', $booking->id)
+            ->first();
+
+        if ($existingReview) {
+            return redirect()->route('patient.dashboard')
+                ->with('error', 'Anda sudah memberikan review untuk kunjungan ini.');
+        }
+
+        $booking->load('doctor', 'schedule');
+
+        return view('patient.review-form', compact('booking'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Booking $booking)
     {
+        if ($booking->user_id !== Auth::id() || $booking->status !== 'DONE') {
+            abort(403);
+        }
+
         $validated = $request->validate([
-            'booking_id' => 'required|exists:bookings,id',
+            'type' => 'required|in:clinic,doctor',
             'rating' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string',
+            'comment' => 'required|string|min:10|max:1000',
         ]);
 
-        $booking = Booking::findOrFail($validated['booking_id']);
+        Review::create([
+            'user_id' => Auth::id(),
+            'doctor_id' => $validated['type'] === 'doctor' ? $booking->doctor_id : null,
+            'booking_id' => $booking->id,
+            'type' => $validated['type'],
+            'rating' => $validated['rating'],
+            'comment' => $validated['comment'],
+        ]);
 
-        if ($booking->user_id !== Auth::id() || $booking->status !== 'completed' || $booking->review()->exists()) {
-            abort(403);
-        }
-
-        Review::create($validated);
-
-        return redirect()->route('reviews.index')->with('success', 'Review berhasil dikirimkan. Terima kasih atas penilaian Anda!');
-    }
-
-    // Admin can delete review
-    public function destroy(Review $review)
-    {
-        if (! Auth::user()->isAdmin()) {
-            abort(403);
-        }
-
-        $review->delete();
-
-        return redirect()->route('reviews.index')->with('success', 'Review berhasil dihapus.');
+        return redirect()->route('patient.dashboard')
+            ->with('success', 'Terima kasih atas review Anda!');
     }
 }

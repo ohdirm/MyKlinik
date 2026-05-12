@@ -10,10 +10,12 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            // One-to-one: satu booking hanya boleh punya satu review
-            $table->foreignId('booking_id')->unique()->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('rating'); // 1–5 bintang
-            $table->text('comment')->nullable();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('doctor_id')->nullable()->constrained('doctors')->cascadeOnDelete();
+            $table->foreignId('booking_id')->nullable()->constrained('bookings')->cascadeOnDelete();
+            $table->enum('type', ['clinic', 'doctor']);
+            $table->tinyInteger('rating'); // 1-5
+            $table->text('comment');
             $table->timestamps();
         });
     }

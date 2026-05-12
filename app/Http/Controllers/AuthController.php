@@ -2,34 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function showLogin()
     {
+        if (Auth::check()) {
+            return redirect()->route('admin.dashboard');
+        }
+
         return view('auth.login');
     }
 
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+            if (! Auth::user()->isAdmin()) {
+                Auth::logout();
 
-            if (Auth::user()->isAdmin()) {
-                return redirect()->intended(route('dashboard'));
+                return back()->withErrors([
+                    'email' => 'Akun Anda tidak memiliki akses admin.',
+                ])->onlyInput('email');
             }
 
-            return redirect()->intended(route('bookings.index'));
+            $request->session()->regenerate();
+
+            return redirect()->intended(route('admin.dashboard'));
         }
 
         return back()->withErrors([
@@ -37,54 +42,12 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function showRegister()
-    {
-        return view('auth.register');
-    }
-
-    public function register(Request $request)
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'patient', // default role
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('bookings.index'));
-    }
-
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
-    }
-
-    public function deleteAccount(Request $request)
-    {
-        $user = Auth::user();
-
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        $user->delete();
-
-        return redirect('/')->with('success', 'Akun berhasil dihapus permanen.');
+        return redirect()->route('admin.login');
     }
 }

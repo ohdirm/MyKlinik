@@ -1,0 +1,152 @@
+@extends('layouts.admin')
+@section('title', 'Kelola Booking — MyKlinik911')
+@section('content')
+<h1 class="text-2xl font-bold text-gray-900 mb-6">Kelola Booking</h1>
+
+{{-- Filter bar --}}
+<div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+    <form method="GET" class="flex gap-4 flex-wrap items-end">
+        <div>
+            <label class="block text-xs text-gray-500 mb-1">Tanggal</label>
+            <input type="date" name="date" value="{{ request('date') }}" class="input-base">
+        </div>
+        <div>
+            <label class="block text-xs text-gray-500 mb-1">Dokter</label>
+            <select name="doctor_id" class="input-base">
+                <option value="">Semua</option>
+                @foreach($doctors as $d)
+                    <option value="{{ $d->id }}" {{ request('doctor_id') == $d->id ? 'selected' : '' }}>{{ $d->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs text-gray-500 mb-1">Status</label>
+            <select name="status" class="input-base">
+                <option value="">Semua</option>
+                @foreach(['PENDING','CONFIRMED','REJECTED','DONE','CANCELLED'] as $s)
+                    <option value="{{ $s }}" {{ request('status') == $s ? 'selected' : '' }}>{{ $s }}</option>
+                @endforeach
+            </select>
+        </div>
+        <button type="submit" class="btn-primary">Filter</button>
+        <a href="{{ route('admin.bookings.index') }}" class="btn-outline">Reset</a>
+    </form>
+</div>
+
+{{-- Table --}}
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-600 text-xs uppercase">
+                <tr>
+                    <th class="px-4 py-3 text-left">Kode</th>
+                    <th class="px-4 py-3 text-left">Nama</th>
+                    <th class="px-4 py-3 text-left">NIK</th>
+                    <th class="px-4 py-3 text-left">Dokter</th>
+                    <th class="px-4 py-3 text-left">Tanggal</th>
+                    <th class="px-4 py-3 text-left">Antrian</th>
+                    <th class="px-4 py-3 text-left">Status</th>
+                    <th class="px-4 py-3 text-left">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                @forelse($bookings as $b)
+                <tr class="hover:bg-gray-50" id="row-{{ $b->id }}">
+                    <td class="px-4 py-3 font-mono font-semibold text-brand">{{ $b->booking_code }}</td>
+                    <td class="px-4 py-3">{{ $b->patient_name }}</td>
+                    <td class="px-4 py-3 font-mono text-xs">{{ $b->nik }}</td>
+                    <td class="px-4 py-3">{{ $b->doctor->name ?? '-' }}</td>
+                    <td class="px-4 py-3">{{ $b->exam_date->format('d/m/Y') }}</td>
+                    <td class="px-4 py-3 font-semibold">{{ $b->queue_number }}</td>
+                    <td class="px-4 py-3"><span class="text-xs font-semibold px-2 py-1 rounded-full {{ $b->status_badge_class }}" id="status-{{ $b->id }}">{{ $b->status }}</span></td>
+                    <td class="px-4 py-3">
+                        <div class="flex gap-1 flex-wrap" id="actions-{{ $b->id }}">
+                            @if($b->status === 'PENDING')
+                                <button onclick="confirmBooking({{ $b->id }})" class="text-xs bg-green-500 hover:bg-green-600 text-white px-2.5 py-1 rounded-lg transition cursor-pointer">Konfirmasi</button>
+                                <button onclick="openRejectModal({{ $b->id }})" class="text-xs bg-red-500 hover:bg-red-600 text-white px-2.5 py-1 rounded-lg transition cursor-pointer">Tolak</button>
+                            @elseif($b->status === 'CONFIRMED')
+                                <button onclick="doneBooking({{ $b->id }})" class="text-xs bg-gray-500 hover:bg-gray-600 text-white px-2.5 py-1 rounded-lg transition cursor-pointer">Selesai</button>
+                            @else
+                                <span class="text-xs text-gray-400">—</span>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="8" class="px-4 py-8 text-center text-gray-400">Tidak ada data</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="px-4 py-3 border-t border-gray-100">{{ $bookings->withQueryString()->links() }}</div>
+</div>
+
+{{-- Reject Modal --}}
+<div id="reject-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl">
+        <h3 class="font-bold text-gray-900 mb-4">Alasan Penolakan</h3>
+        <textarea id="reject-reason" class="input-base mb-1" rows="3" placeholder="Tuliskan alasan penolakan (minimal 10 karakter)"></textarea>
+        <p id="reject-error" class="text-red-500 text-xs mb-3 hidden">Alasan harus minimal 10 karakter.</p>
+        <input type="hidden" id="reject-booking-id">
+        <div class="flex gap-3">
+            <button onclick="submitReject()" class="btn-primary flex-1 bg-red-600 hover:bg-red-700">Tolak Booking</button>
+            <button onclick="document.getElementById('reject-modal').classList.add('hidden')" class="btn-outline flex-1">Batal</button>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+function confirmBooking(id) {
+    if (!confirm('Konfirmasi booking ini?')) return;
+    fetch(`/admin/bookings/${id}/confirm`, {method:'PATCH',headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'}})
+        .then(r=>r.json()).then(data=>{
+            if(data.success){
+                window.open(data.wa_link,'_blank');
+                updateRow(id,'CONFIRMED','bg-green-100 text-green-800');
+            }
+        }).catch(()=>alert('Gagal mengkonfirmasi.'));
+}
+
+function openRejectModal(id) {
+    document.getElementById('reject-booking-id').value = id;
+    document.getElementById('reject-reason').value = '';
+    document.getElementById('reject-error').classList.add('hidden');
+    document.getElementById('reject-modal').classList.remove('hidden');
+}
+
+function submitReject() {
+    const id = document.getElementById('reject-booking-id').value;
+    const reason = document.getElementById('reject-reason').value;
+    if (reason.length < 10) { document.getElementById('reject-error').classList.remove('hidden'); return; }
+    fetch(`/admin/bookings/${id}/reject`, {method:'PATCH',headers:{'X-CSRF-TOKEN':csrf,'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({rejection_reason:reason})})
+        .then(r=>r.json()).then(data=>{
+            if(data.success){
+                document.getElementById('reject-modal').classList.add('hidden');
+                updateRow(id,'REJECTED','bg-red-100 text-red-800');
+            }
+        }).catch(()=>alert('Gagal menolak.'));
+}
+
+function doneBooking(id) {
+    if (!confirm('Tandai booking ini selesai?')) return;
+    fetch(`/admin/bookings/${id}/done`, {method:'PATCH',headers:{'X-CSRF-TOKEN':csrf,'Accept':'application/json'}})
+        .then(r=>r.json()).then(data=>{
+            if(data.success) updateRow(id,'DONE','bg-gray-100 text-gray-800');
+        }).catch(()=>alert('Gagal.'));
+}
+
+function updateRow(id, status, badgeClass) {
+    const badge = document.getElementById('status-'+id);
+    if(badge){badge.textContent=status;badge.className='text-xs font-semibold px-2 py-1 rounded-full '+badgeClass;}
+    const actions = document.getElementById('actions-'+id);
+    if(actions){
+        if(status==='CONFIRMED') actions.innerHTML='<button onclick="doneBooking('+id+')" class="text-xs bg-gray-500 hover:bg-gray-600 text-white px-2.5 py-1 rounded-lg transition cursor-pointer">Selesai</button>';
+        else actions.innerHTML='<span class="text-xs text-gray-400">—</span>';
+    }
+}
+</script>
+@endpush
+@endsection
