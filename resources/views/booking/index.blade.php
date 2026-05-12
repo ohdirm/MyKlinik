@@ -44,14 +44,14 @@
                                 </select>
                             </div>
                             <div>
+                                <label for="exam-date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Periksa <span class="text-red-500">*</span></label>
+                                <input type="date" name="exam_date" id="exam-date" class="input-base" value="{{ old('exam_date') }}" min="{{ now()->addDay()->format('Y-m-d') }}" max="{{ now()->addDays(14)->format('Y-m-d') }}" required>
+                            </div>
+                            <div>
                                 <label for="select-jadwal" class="block text-sm font-medium text-gray-700 mb-1">Jadwal/Waktu <span class="text-red-500">*</span></label>
                                 <select name="schedule_id" id="select-jadwal" class="input-base" disabled required>
                                     <option value="">— Pilih jadwal —</option>
                                 </select>
-                            </div>
-                            <div>
-                                <label for="exam-date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Periksa <span class="text-red-500">*</span></label>
-                                <input type="date" name="exam_date" id="exam-date" class="input-base" value="{{ old('exam_date') }}" min="{{ now()->addDay()->format('Y-m-d') }}" max="{{ now()->addDays(14)->format('Y-m-d') }}" required>
                             </div>
                             <div class="grid grid-cols-3 gap-3">
                                 <div>
