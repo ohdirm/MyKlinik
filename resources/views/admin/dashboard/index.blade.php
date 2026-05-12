@@ -3,9 +3,6 @@
 @section('content')
 <div class="flex items-center justify-between mb-6">
     <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-    <button onclick="document.getElementById('reset-modal').classList.remove('hidden')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition cursor-pointer">
-        🔴 Tutup Klinik & Reset Antrean
-    </button>
 </div>
 
 {{-- Reset Modal --}}
