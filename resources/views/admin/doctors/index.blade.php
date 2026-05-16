@@ -13,7 +13,7 @@
                     <th class="px-4 py-3 text-left">Nama</th>
                     <th class="px-4 py-3 text-left">Spesialisasi</th>
                     <th class="px-4 py-3 text-left">Status</th>
-                    <th class="px-4 py-3 text-left">Aksi</th>
+                    <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -22,10 +22,13 @@
                     <td class="px-4 py-3 font-medium">{{ $d->name }}</td>
                     <td class="px-4 py-3">{{ $d->specialization_label }}</td>
                     <td class="px-4 py-3"><span class="text-xs font-semibold px-2 py-1 rounded-full {{ $d->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $d->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
-                    <td class="px-4 py-3">
-                        <div class="flex gap-2">
-                            <a href="{{ route('admin.doctors.edit', $d) }}" class="text-xs text-brand hover:underline">Edit</a>
-                            <form method="POST" action="{{ route('admin.doctors.destroy', $d) }}" onsubmit="return confirm('Hapus dokter ini?')">@csrf @method('DELETE')<button class="text-xs text-red-500 hover:underline cursor-pointer">Hapus</button></form>
+                    <td class="px-4 py-3 text-center">
+                        <div class="inline-flex items-center gap-2">
+                            <a href="{{ route('admin.doctors.edit', $d) }}" class="inline-flex items-center justify-center rounded-full border border-brand/20 bg-brand/10 px-3 py-1 text-[11px] font-semibold text-brand transition hover:bg-brand/20">Edit</a>
+                            <form method="POST" action="{{ route('admin.doctors.destroy', $d) }}" onsubmit="return confirm('Hapus dokter ini?')" class="inline-flex items-center">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="inline-flex items-center justify-center rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-semibold text-red-600 transition hover:bg-red-100">Hapus</button>
+                            </form>
                         </div>
                     </td>
                 </tr>

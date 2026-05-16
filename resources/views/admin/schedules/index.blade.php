@@ -24,10 +24,13 @@
                     <td class="px-4 py-3">{{ $s->day_name }}</td>
                     <td class="px-4 py-3">{{ $s->time_range }}</td>
                     <td class="px-4 py-3">{{ $s->max_patients }}</td>
-                    <td class="px-4 py-3">
-                        <div class="flex gap-2">
-                            <a href="{{ route('admin.schedules.edit', $s) }}" class="text-xs text-brand hover:underline">Edit</a>
-                            <form method="POST" action="{{ route('admin.schedules.destroy', $s) }}" onsubmit="return confirm('Hapus jadwal ini?')">@csrf @method('DELETE')<button class="text-xs text-red-500 hover:underline cursor-pointer">Hapus</button></form>
+                    <td class="px-4 py-3 text-center">
+                        <div class="inline-flex items-center gap-2 justify-center">
+                            <a href="{{ route('admin.schedules.edit', $s) }}" class="inline-flex items-center justify-center rounded-full border border-brand/20 bg-brand/10 px-3 py-1 text-[11px] font-semibold text-brand transition hover:bg-brand/20">Edit</a>
+                            <form method="POST" action="{{ route('admin.schedules.destroy', $s) }}" onsubmit="return confirm('Hapus jadwal ini?')" class="inline-flex items-center">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="inline-flex items-center justify-center rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-semibold text-red-600 transition hover:bg-red-100">Hapus</button>
+                            </form>
                         </div>
                     </td>
                 </tr>
