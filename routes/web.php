@@ -15,6 +15,7 @@ use App\Http\Controllers\WilayahController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SpecializationsController;
 
 // ── GUEST (tanpa login) ──
 Route::get('/', [HomeController::class, 'index'])->name('home');
