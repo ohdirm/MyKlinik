@@ -11,12 +11,12 @@ class ScheduleController extends Controller
 {
     public function index()
     {
-        $schedules = Schedule::with('doctor')
-            ->orderBy('doctor_id')
-            ->orderBy('day_of_week')
-            ->paginate(20);
+        $doctors = Doctor::where('is_active', true)
+            ->with(['schedules' => fn($q) => $q->orderBy('day_of_week')])
+            ->orderBy('name')
+            ->get();
 
-        return view('admin.schedules.index', compact('schedules'));
+        return view('admin.schedules.index', compact('doctors'));
     }
 
     public function create()

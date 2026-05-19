@@ -3,6 +3,7 @@
 @section('content')
 <h1 class="text-2xl font-bold text-gray-900 mb-6">Kelola Booking</h1>
 
+<div x-data="{ showDetail: false, selected: null, bookings: {{ Js::from($bookings->items()) }} }">
 {{-- Filter bar --}}
 <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
     <form method="GET" class="flex gap-4 flex-wrap items-end">
@@ -61,13 +62,12 @@
                     <td class="px-4 py-3"><span class="text-xs font-semibold px-2 py-1 rounded-full {{ $b->status_badge_class }}" id="status-{{ $b->id }}">{{ $b->status }}</span></td>
                     <td class="px-4 py-3">
                         <div class="flex gap-1 flex-wrap" id="actions-{{ $b->id }}">
+                            <button @click="selected = bookings.find(b => b.id === {{ $b->id }}); showDetail = true" class="text-xs bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition cursor-pointer">Detail</button>
                             @if($b->status === 'PENDING')
                                 <button onclick="confirmBooking({{ $b->id }})" class="text-xs bg-green-500 hover:bg-green-600 text-white px-2.5 py-1 rounded-lg transition cursor-pointer">Konfirmasi</button>
                                 <button onclick="openRejectModal({{ $b->id }})" class="text-xs bg-red-500 hover:bg-red-600 text-white px-2.5 py-1 rounded-lg transition cursor-pointer">Tolak</button>
                             @elseif($b->status === 'CONFIRMED')
                                 <button onclick="doneBooking({{ $b->id }})" class="text-xs bg-gray-500 hover:bg-gray-600 text-white px-2.5 py-1 rounded-lg transition cursor-pointer">Selesai</button>
-                            @else
-                                <span class="text-xs text-gray-400">—</span>
                             @endif
                         </div>
                     </td>
@@ -79,6 +79,55 @@
         </table>
     </div>
     <div class="px-4 py-3 border-t border-gray-100">{{ $bookings->withQueryString()->links() }}</div>
+</div>
+
+{{-- Detail Modal (Alpine) --}}
+<div x-show="showDetail" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" x-transition style="display: none;">
+    <div @click.away="showDetail = false" class="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-5 border-b pb-3">
+            <h3 class="text-xl font-bold text-gray-900">Detail Pasien & Booking</h3>
+            <button @click="showDetail = false" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <template x-if="selected">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                {{-- Kiri --}}
+                <div class="space-y-3">
+                    <div><span class="text-gray-500 block text-xs">Nama Pasien</span><strong x-text="selected.patient_name" class="text-base text-gray-900"></strong></div>
+                    <div><span class="text-gray-500 block text-xs">NIK</span><span x-text="selected.nik" class="font-mono text-gray-800"></span></div>
+                    <div><span class="text-gray-500 block text-xs">Jenis Kelamin</span><span x-text="selected.gender === 'L' ? 'Laki-laki' : 'Perempuan'" class="text-gray-800"></span></div>
+                    <div><span class="text-gray-500 block text-xs">Tanggal Lahir</span><span x-text="new Date(selected.birth_date).toLocaleDateString('id-ID')" class="text-gray-800"></span></div>
+                    <div><span class="text-gray-500 block text-xs">No. HP/WA</span><span x-text="selected.phone" class="font-mono text-gray-800"></span></div>
+                    <div>
+                        <span class="text-gray-500 block text-xs">Alamat Lengkap</span>
+                        <p class="text-gray-800 leading-relaxed">
+                            <span x-text="selected.address"></span>, 
+                            <span x-text="selected.village"></span>, 
+                            <span x-text="selected.sub_district"></span>, 
+                            <span x-text="selected.district"></span>, 
+                            <span x-text="selected.province"></span>
+                        </p>
+                    </div>
+                </div>
+                {{-- Kanan --}}
+                <div class="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <div><span class="text-gray-500 block text-xs">Kode Booking</span><span x-text="selected.booking_code" class="font-bold text-brand tracking-widest text-lg"></span></div>
+                    <div><span class="text-gray-500 block text-xs">Nomor Antrean</span><span x-text="selected.queue_number" class="font-bold text-xl text-gray-900"></span></div>
+                    <div><span class="text-gray-500 block text-xs">Tanggal Periksa</span><span x-text="new Date(selected.exam_date).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'})" class="text-gray-800 font-medium"></span></div>
+                    <div><span class="text-gray-500 block text-xs">Dokter</span><span x-text="selected.doctor?.name" class="text-gray-800 font-medium"></span></div>
+                    <div><span class="text-gray-500 block text-xs">Jadwal Praktik</span><span x-text="`${selected.schedule?.day_name}, ${selected.schedule?.start_time.slice(0,5)} - ${selected.schedule?.end_time.slice(0,5)}`" class="text-gray-800"></span></div>
+                    <div>
+                        <span class="text-gray-500 block text-xs mb-1">Status</span>
+                        <span x-text="selected.status" class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-200 text-gray-800"></span>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <div class="mt-6 text-right">
+            <button @click="showDetail = false" class="btn-outline px-6">Tutup</button>
+        </div>
+    </div>
 </div>
 
 {{-- Reject Modal --}}
@@ -93,6 +142,7 @@
             <button onclick="document.getElementById('reject-modal').classList.add('hidden')" class="btn-outline flex-1">Batal</button>
         </div>
     </div>
+</div>
 </div>
 
 @push('scripts')

@@ -47,6 +47,14 @@
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
                     <input type="password" name="password_confirmation" id="password_confirmation" class="input-base" required>
                 </div>
+                <div>
+                    <label class="flex items-start gap-2 cursor-pointer">
+                        <input type="checkbox" name="terms" id="terms" class="mt-1 rounded border-gray-300 text-brand shadow-sm focus:border-brand-light focus:ring focus:ring-brand-light focus:ring-opacity-50" required>
+                        <span class="text-sm text-gray-600">
+                            Saya menyetujui <a href="#" class="text-brand font-medium hover:underline">Syarat & Ketentuan</a> serta <a href="#" class="text-brand font-medium hover:underline">Kebijakan Privasi</a> mengenai data pribadi.
+                        </span>
+                    </label>
+                </div>
                 <button type="submit" class="btn-primary w-full py-3">Daftar</button>
             </div>
         </form>

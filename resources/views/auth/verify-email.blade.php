@@ -15,17 +15,36 @@
 
         <h1 class="text-2xl font-bold text-gray-900 mb-2">Verifikasi Email Anda</h1>
         <p class="text-sm text-gray-500 mb-6">
-            Kami telah mengirimkan link verifikasi ke email <strong class="text-gray-700">{{ Auth::user()->email }}</strong>.
-            Silakan cek inbox (atau folder spam) Anda dan klik link tersebut.
+            Kami telah mengirimkan kode verifikasi 6 digit ke email <strong class="text-gray-700">{{ Auth::user()->email }}</strong>.
+            Silakan cek inbox (atau folder spam) Anda dan masukkan kode tersebut di bawah ini.
         </p>
 
         @if(session('success'))
             <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm">{{ session('success') }}</div>
         @endif
 
+        @if($errors->any())
+            <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                <ul class="list-disc list-inside text-left">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('verification.verify-code') }}" class="mb-4">
+            @csrf
+            <div class="mb-4">
+                <label for="code" class="block text-sm font-medium text-gray-700 mb-1 text-left">Kode Verifikasi 6 Digit</label>
+                <input type="text" name="code" id="code" class="input-base text-center text-xl tracking-widest font-bold" required maxlength="6" pattern="\d{6}" placeholder="000000">
+            </div>
+            <button type="submit" class="btn-primary w-full py-3">Verifikasi Kode</button>
+        </form>
+
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
-            <button type="submit" class="btn-primary w-full py-3 mb-3">📧 Kirim Ulang Email Verifikasi</button>
+            <button type="submit" class="w-full py-3 text-brand font-medium hover:underline mb-3">📧 Belum terima kode? Kirim Ulang</button>
         </form>
 
         <form method="POST" action="{{ route('logout') }}">
