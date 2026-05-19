@@ -7,7 +7,13 @@
     @php $st = $doctor->status; $currentStatus = $st->current_status ?? 'AVAILABLE'; @endphp
     <div class="bg-white rounded-xl shadow-sm p-6" id="ds-card-{{ $doctor->id }}">
         <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 rounded-full bg-brand-light text-brand flex items-center justify-center font-bold shrink-0">{{ $doctor->initials }}</div>
+            @if($doctor->photo)
+                <img src="{{ asset('storage/' . $doctor->photo) }}"
+                     alt="{{ $doctor->name }}"
+                     class="w-12 h-12 rounded-full object-cover shrink-0 border-2 border-brand/20">
+            @else
+                <div class="w-12 h-12 rounded-full bg-brand-light text-brand flex items-center justify-center font-bold shrink-0">{{ $doctor->initials }}</div>
+            @endif
             <div>
                 <h3 class="font-semibold text-gray-900">{{ $doctor->name }}</h3>
                 <p class="text-xs text-gray-500">{{ $doctor->specialization_label }}</p>
@@ -20,7 +26,7 @@
         </div>
         <div class="{{ $currentStatus === 'IN_EXAMINATION' ? '' : 'hidden' }}" id="queue-input-{{ $doctor->id }}">
             <label class="block text-xs text-gray-500 mb-1">Antrian saat ini</label>
-            <input type="number" class="input-base" id="queue-number-{{ $doctor->id }}" value="{{ $st->current_queue_number ?? '' }}" min="1" placeholder="No. antrian">
+            <input type="number" class="input-base" id="queue-number-{{ $doctor->id }}" value="{{ !empty($st->current_queue_number) ? $st->current_queue_number : '' }}" min="1" placeholder="No. antrian">
         </div>
         <button onclick="saveStatus({{ $doctor->id }})" class="btn-primary w-full mt-3 text-sm py-2">Simpan</button>
     </div>
@@ -51,14 +57,21 @@ function selectStatus(doctorId, status, btn) {
 
 function saveStatus(doctorId) {
     const status = selectedStatuses[doctorId] || document.querySelector('#ds-card-'+doctorId+' [data-status].bg-brand')?.dataset.status || 'AVAILABLE';
-    const queueNumber = document.getElementById('queue-number-'+doctorId)?.value || null;
+    let queueVal = document.getElementById('queue-number-'+doctorId)?.value;
+    const queueNumber = (queueVal && queueVal !== "0") ? queueVal : null;
     fetch(`/admin/doctor-status/${doctorId}`, {
         method:'PATCH',
         headers:{'X-CSRF-TOKEN':csrf,'Content-Type':'application/json','Accept':'application/json'},
         body:JSON.stringify({current_status:status,current_queue_number:queueNumber})
-    }).then(r=>r.json()).then(data=>{
-        if(data.success) showToast('Status berhasil diperbarui!','success');
-    }).catch(()=>showToast('Gagal menyimpan.','error'));
+    }).then(async r=>{
+        const data = await r.json();
+        if(r.ok && data.success) {
+            showToast('Status berhasil diperbarui!','success');
+        } else {
+            const errorMsg = data.message || 'Gagal menyimpan.';
+            showToast(errorMsg, 'error');
+        }
+    }).catch(()=>showToast('Gagal terhubung ke server.','error'));
 }
 
 function showToast(msg, type) {

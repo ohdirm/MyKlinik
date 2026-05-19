@@ -53,21 +53,22 @@ class Doctor extends Model
 
     /**
      * Get human-readable specialization label.
+     * Looks up from the specializations table first, falls back to formatted value.
      */
     public function getSpecializationLabelAttribute(): string
     {
-        return match ($this->specialization) {
-            'UMUM' => 'Umum',
-            'SPESIALIS_ANAK' => 'Spesialis Anak',
-            'SPESIALIS_KANDUNGAN' => 'Spesialis Kandungan',
-            'SPESIALIS_PENYAKIT_DALAM' => 'Spesialis Penyakit Dalam',
-            'SPESIALIS_BEDAH' => 'Spesialis Bedah',
-            'SPESIALIS_MATA' => 'Spesialis Mata',
-            'SPESIALIS_THT' => 'Spesialis THT',
-            'SPESIALIS_KULIT' => 'Spesialis Kulit',
-            'SPESIALIS_JANTUNG' => 'Spesialis Jantung',
-            default => $this->specialization,
-        };
+        static $cache = [];
+
+        $value = $this->specialization;
+
+        if (!isset($cache[$value])) {
+            $spec = \App\Models\Specialization::where('value', $value)->first();
+            $cache[$value] = $spec
+                ? $spec->label
+                : ucwords(strtolower(str_replace('_', ' ', $value)));
+        }
+
+        return $cache[$value];
     }
 
     /**

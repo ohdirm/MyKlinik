@@ -15,7 +15,7 @@ use App\Http\Controllers\WilayahController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SpecializationsController;
+use App\Http\Controllers\Admin\SpecializationController;
 
 // ── GUEST (tanpa login) ──
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -86,6 +86,10 @@ Route::prefix('admin')->middleware('auth.admin')->name('admin.')->group(function
     Route::get('/doctor-status', [App\Http\Controllers\Admin\DoctorStatusController::class, 'index'])->name('doctor-status.index');
     Route::patch('/doctor-status/{doctorId}', [App\Http\Controllers\Admin\DoctorStatusController::class, 'update'])->name('doctor-status.update');
     Route::resource('/doctors', DoctorController::class)->names('doctors');
-    Route::resource('/specializations', SpecializationsController::class)->names('specializations');
+    // Specialization management
+    Route::get('/specializations', [SpecializationController::class, 'index'])->name('specializations.index');
+    Route::post('/specializations', [SpecializationController::class, 'store'])->name('specializations.store');
+    Route::put('/specializations/{specialization}', [SpecializationController::class, 'update'])->name('specializations.update');
+    Route::delete('/specializations/{specialization}', [SpecializationController::class, 'destroy'])->name('specializations.destroy');
     Route::resource('/schedules', ScheduleController::class)->names('schedules');
 });
