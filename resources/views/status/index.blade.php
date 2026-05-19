@@ -12,7 +12,13 @@
             @php $st = $doctor->status; @endphp
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition" id="doctor-card-{{ $doctor->id }}">
                 <div class="flex items-center gap-4 mb-4">
-                    <div class="w-14 h-14 rounded-full bg-brand-light text-brand flex items-center justify-center font-bold text-lg shrink-0">{{ $doctor->initials }}</div>
+                    @if($doctor->photo)
+                        <img src="{{ asset('storage/' . $doctor->photo) }}"
+                             alt="{{ $doctor->name }}"
+                             class="w-14 h-14 rounded-full object-cover shrink-0 border-2 border-brand/20">
+                    @else
+                        <div class="w-14 h-14 rounded-full bg-brand-light text-brand flex items-center justify-center font-bold text-lg shrink-0">{{ $doctor->initials }}</div>
+                    @endif
                     <div>
                         <h3 class="font-semibold text-gray-900">{{ $doctor->name }}</h3>
                         <p class="text-sm text-gray-500">{{ $doctor->specialization_label }}</p>
