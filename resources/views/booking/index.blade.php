@@ -2,7 +2,7 @@
 @section('title', 'Pendaftaran Online — MyKlinik911')
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 py-10"
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 py-10 transition-colors duration-200"
      x-data="bookingWizard()"
      x-init="init()">
 
@@ -10,12 +10,12 @@
 
         {{-- Header --}}
         <div class="text-center mb-8">
-            <div class="inline-flex items-center gap-2 bg-teal-100 text-teal-700 text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
+            <div class="inline-flex items-center gap-2 bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300 text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                 Pendaftaran Online
             </div>
-            <h1 class="text-3xl font-bold text-gray-900">Buat Janji Temu</h1>
-            <p class="text-gray-500 mt-1 text-sm">Selesaikan dalam 3 langkah mudah</p>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Buat Janji Temu</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">Selesaikan dalam 3 langkah mudah</p>
         </div>
 
         {{-- Step Indicator --}}
@@ -51,7 +51,7 @@
         @endif
 
         {{-- Card --}}
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-800 transition-colors duration-200">
             <form method="POST" action="{{ route('booking.store') }}" id="booking-form" @submit="handleSubmit">
                 @csrf
 
@@ -64,7 +64,7 @@
                     <div class="p-6 space-y-5">
                         {{-- Dokter --}}
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Dokter <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Pilih Dokter <span class="text-red-500">*</span></label>
 
                             {{-- Search & Filter --}}
                             <div class="flex gap-2 mb-3">
@@ -81,11 +81,10 @@
                                 </select>
                             </div>
 
-                            {{-- Doctor Cards (scrollable) --}}
-                            <div class="space-y-2 max-h-64 overflow-y-auto pr-1 rounded-xl" id="doctor-cards">
+                            {{-- Doctor Cards (scrolla                             <div class="space-y-2 max-h-64 overflow-y-auto pr-1 rounded-xl" id="doctor-cards">
                                 @foreach($doctors as $doc)
-                                <label class="relative flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-blue-50"
-                                       :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-blue-50 shadow-sm' : 'border-gray-200'"
+                                <label class="relative flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-blue-50 dark:hover:bg-gray-800"
+                                       :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-blue-50 shadow-sm dark:bg-gray-800/80' : 'border-gray-200 dark:border-gray-700'"
                                        x-show="(doctorSearch === '' || '{{ strtolower($doc->name) }}'.includes(doctorSearch.toLowerCase())) && (spFilter === '' || spFilter === '{{ $doc->specialization_label }}')"
                                        >
                                     <input type="radio" name="doctor_id" value="{{ $doc->id }}" class="sr-only" x-model="doctorId" @change="onDoctorChange()" {{ old('doctor_id') == $doc->id ? 'checked' : '' }}>
@@ -93,15 +92,15 @@
                                         {{ strtoupper(substr($doc->name, 3, 1)) }}
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="font-semibold text-gray-900 text-sm leading-tight">{{ $doc->name }}</p>
-                                        <p class="text-xs text-teal-600 font-medium mt-0.5">{{ $doc->specialization_label }}</p>
+                                        <p class="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{{ $doc->name }}</p>
+                                        <p class="text-xs text-teal-600 dark:text-teal-400 font-medium mt-0.5">{{ $doc->specialization_label }}</p>
                                     </div>
                                     <div class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors"
-                                         :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand' : 'border-gray-300'">
+                                         :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand' : 'border-gray-300 dark:border-gray-600'">
                                         <div class="w-1.5 h-1.5 rounded-full bg-white" x-show="doctorId == '{{ $doc->id }}'"></div>
                                     </div>
                                 </label>
-                                @endforeach
+                                @endforeachendforeach
                                 <p x-show="$el.previousElementSibling && [...$el.parentElement.querySelectorAll('label')].every(l => l.style.display === 'none')"
                                    class="text-center text-sm text-gray-400 py-4">Dokter tidak ditemukan</p>
                             </div>
@@ -109,7 +108,7 @@
 
                         {{-- Tanggal --}}
                         <div>
-                            <label for="exam-date" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Periksa <span class="text-red-500">*</span></label>
+                            <label for="exam-date" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tanggal Periksa <span class="text-red-500">*</span></label>
                             <input type="date" name="exam_date" id="exam-date" x-model="examDate" @change="onDateChange()"
                                    class="input-base"
                                    min="{{ now()->addDay()->format('Y-m-d') }}"
@@ -119,7 +118,7 @@
 
                         {{-- Jadwal --}}
                         <div>
-                            <label for="select-jadwal" class="block text-sm font-semibold text-gray-700 mb-2">Jadwal Waktu <span class="text-red-500">*</span></label>
+                            <label for="select-jadwal" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jadwal Waktu <span class="text-red-500">*</span></label>
                             <div x-show="loadingSchedule" class="flex items-center gap-2 text-sm text-gray-400 py-3">
                                 <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
                                 Memuat jadwal...
@@ -143,37 +142,37 @@
                     </div>
                     <div class="p-6 space-y-5">
                         <div>
-                            <label for="nik" class="block text-sm font-semibold text-gray-700 mb-2">NIK <span class="text-red-500">*</span></label>
+                            <label for="nik" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">NIK <span class="text-red-500">*</span></label>
                             <input type="text" name="nik" id="nik" class="input-base" maxlength="16" placeholder="Masukkan 16 digit NIK" value="{{ old('nik') }}" required>
                         </div>
                         <div>
-                            <label for="patient_name" class="block text-sm font-semibold text-gray-700 mb-2">Nama Pasien <span class="text-red-500">*</span></label>
+                            <label for="patient_name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nama Pasien <span class="text-red-500">*</span></label>
                             <input type="text" name="patient_name" id="patient_name" class="input-base" placeholder="Nama lengkap sesuai KTP" value="{{ old('patient_name', Auth::user()->name) }}" required>
-                            <p class="text-xs text-gray-400 mt-1">Terisi otomatis dari akun Anda. Ubah jika mendaftarkan orang lain.</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Terisi otomatis dari akun Anda. Ubah jika mendaftarkan orang lain.</p>
                         </div>
                         <div>
-                            <label for="birth_date_input" class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
+                            <label for="birth_date_input" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
                             <input type="date" name="birth_date" id="birth_date_input" class="input-base" value="{{ old('birth_date') }}" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
                             <div class="grid grid-cols-2 gap-3">
                                 <label class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all"
-                                       :class="gender === 'L' ? 'border-brand bg-blue-50' : 'border-gray-200 hover:border-gray-300'">
+                                       :class="gender === 'L' ? 'border-brand bg-blue-50 dark:bg-gray-800' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'">
                                     <input type="radio" name="gender" value="L" class="sr-only" x-model="gender" {{ old('gender') === 'L' ? 'checked' : '' }}>
                                     <span class="text-xl">👨</span>
-                                    <span class="font-medium text-sm text-gray-700">Laki-laki</span>
+                                    <span class="font-medium text-sm text-gray-700 dark:text-gray-300">Laki-laki</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all"
-                                       :class="gender === 'P' ? 'border-brand bg-blue-50' : 'border-gray-200 hover:border-gray-300'">
+                                       :class="gender === 'P' ? 'border-brand bg-blue-50 dark:bg-gray-800' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'">
                                     <input type="radio" name="gender" value="P" class="sr-only" x-model="gender" {{ old('gender') === 'P' ? 'checked' : '' }}>
                                     <span class="text-xl">👩</span>
-                                    <span class="font-medium text-sm text-gray-700">Perempuan</span>
+                                    <span class="font-medium text-sm text-gray-700 dark:text-gray-300">Perempuan</span>
                                 </label>
                             </div>
                         </div>
                         <div>
-                            <label for="phone" class="block text-sm font-semibold text-gray-700 mb-2">No HP/WhatsApp <span class="text-red-500">*</span></label>
+                            <label for="phone" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">No HP/WhatsApp <span class="text-red-500">*</span></label>
                             <input type="text" name="phone" id="phone" class="input-base" maxlength="15" placeholder="08xxxxxxxxxx" value="{{ old('phone') }}" required>
                         </div>
                     </div>
@@ -187,39 +186,39 @@
                     </div>
                     <div class="p-6 space-y-5">
                         <div>
-                            <label for="address" class="block text-sm font-semibold text-gray-700 mb-2">Alamat Lengkap <span class="text-red-500">*</span></label>
+                            <label for="address" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Alamat Lengkap <span class="text-red-500">*</span></label>
                             <textarea name="address" id="address" rows="3" class="input-base" placeholder="Nama jalan, nomor rumah, RT/RW" required>{{ old('address') }}</textarea>
                         </div>
                         <div>
-                            <label for="province" class="block text-sm font-semibold text-gray-700 mb-2">Provinsi <span class="text-red-500">*</span></label>
+                            <label for="province" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Provinsi <span class="text-red-500">*</span></label>
                             <select name="province" id="province" class="input-base" required>
                                 <option value="">— Pilih Provinsi —</option>
                             </select>
                         </div>
                         <div>
-                            <label for="district" class="block text-sm font-semibold text-gray-700 mb-2">Kabupaten/Kota <span class="text-red-500">*</span></label>
+                            <label for="district" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kabupaten/Kota <span class="text-red-500">*</span></label>
                             <select name="district" id="district" class="input-base" disabled required>
                                 <option value="">— Pilih Kabupaten —</option>
                             </select>
                         </div>
                         <div>
-                            <label for="sub_district" class="block text-sm font-semibold text-gray-700 mb-2">Kecamatan <span class="text-red-500">*</span></label>
+                            <label for="sub_district" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kecamatan <span class="text-red-500">*</span></label>
                             <select name="sub_district" id="sub_district" class="input-base" disabled required>
                                 <option value="">— Pilih Kecamatan —</option>
                             </select>
                         </div>
                         <div>
-                            <label for="village" class="block text-sm font-semibold text-gray-700 mb-2">Kelurahan/Desa <span class="text-red-500">*</span></label>
+                            <label for="village" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kelurahan/Desa <span class="text-red-500">*</span></label>
                             <select name="village" id="village" class="input-base" disabled required>
                                 <option value="">— Pilih Kelurahan —</option>
                             </select>
                         </div>
 
                         {{-- Ringkasan --}}
-                        <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 text-sm space-y-2">
-                            <p class="font-semibold text-gray-700 mb-2">📋 Ringkasan Booking</p>
-                            <div class="flex justify-between text-gray-600"><span>Dokter</span><span class="font-medium text-gray-900" x-text="selectedDoctorName || '—'"></span></div>
-                            <div class="flex justify-between text-gray-600"><span>Tanggal</span><span class="font-medium text-gray-900" x-text="examDate ? new Date(examDate).toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) : '—'"></span></div>
+                        <div class="bg-gray-50 dark:bg-gray-950 rounded-xl p-4 border border-gray-100 dark:border-gray-800 text-sm space-y-2">
+                            <p class="font-semibold text-gray-700 dark:text-gray-300 mb-2">📋 Ringkasan Booking</p>
+                            <div class="flex justify-between text-gray-600 dark:text-gray-400"><span>Dokter</span><span class="font-medium text-gray-900 dark:text-white" x-text="selectedDoctorName || '—'"></span></div>
+                            <div class="flex justify-between text-gray-600 dark:text-gray-400"><span>Tanggal</span><span class="font-medium text-gray-900 dark:text-white" x-text="examDate ? new Date(examDate).toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) : '—'"></span></div>
                         </div>
                     </div>
                 </div>
@@ -227,7 +226,7 @@
                 {{-- Navigation Buttons --}}
                 <div class="px-6 pb-6 flex gap-3">
                     <button type="button" x-show="step > 1" @click="step--"
-                            class="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition text-sm">
+                            class="flex-1 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition text-sm">
                         ← Sebelumnya
                     </button>
                     <button type="button" x-show="step < 3" @click="nextStep()"
@@ -254,29 +253,29 @@
 @if(session('booking'))
 @php $bk = session('booking'); @endphp
 <div id="success-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl text-center animate-bounce-in">
-        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center border border-gray-100 dark:border-gray-800 animate-bounce-in">
+        <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 mb-1">Pendaftaran Berhasil!</h3>
-        <p class="text-sm text-gray-500 mb-4">Kode Booking Anda</p>
-        <p class="text-4xl font-bold text-brand tracking-widest mb-5">{{ $bk->booking_code }}</p>
-        <div class="bg-gray-50 rounded-xl p-4 mb-4 text-left text-sm space-y-2">
-            <div class="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
-                <span class="text-gray-500">Nomor Antrean:</span>
-                <span class="font-bold text-3xl text-brand">{{ $bk->queue_number }}</span>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Pendaftaran Berhasil!</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Kode Booking Anda</p>
+        <p class="text-4xl font-bold text-brand dark:text-blue-400 tracking-widest mb-5">{{ $bk->booking_code }}</p>
+        <div class="bg-gray-50 dark:bg-gray-950 rounded-xl p-4 mb-4 text-left text-sm space-y-2 border border-gray-100 dark:border-gray-800">
+            <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2 mb-2">
+                <span class="text-gray-500 dark:text-gray-400">Nomor Antrean:</span>
+                <span class="font-bold text-3xl text-brand dark:text-blue-400">{{ $bk->queue_number }}</span>
             </div>
             @if($bk->estimated_time)
-            <div class="flex justify-between items-center bg-blue-50 p-2 rounded-lg">
-                <span class="text-blue-800 font-medium">🕒 Estimasi Dilayani:</span>
-                <span class="font-bold text-blue-900">Jam {{ $bk->estimated_time }}</span>
+            <div class="flex justify-between items-center bg-blue-50 dark:bg-blue-950/40 p-2 rounded-lg">
+                <span class="text-blue-800 dark:text-blue-300 font-medium">🕒 Estimasi Dilayani:</span>
+                <span class="font-bold text-blue-900 dark:text-blue-200">Jam {{ $bk->estimated_time }}</span>
             </div>
             @endif
-            <p><span class="text-gray-500">Dokter:</span> <span class="font-medium">{{ $bk->doctor->name }}</span></p>
-            <p><span class="text-gray-500">Tanggal:</span> <span class="font-medium">{{ $bk->exam_date->format('d/m/Y') }}</span></p>
-            <p><span class="text-gray-500">Jadwal:</span> <span class="font-medium">{{ $bk->schedule->day_name }}, {{ $bk->schedule->time_range }}</span></p>
+            <p><span class="text-gray-500 dark:text-gray-400">Dokter:</span> <span class="font-medium text-gray-950 dark:text-gray-200">{{ $bk->doctor->name }}</span></p>
+            <p><span class="text-gray-500 dark:text-gray-400">Tanggal:</span> <span class="font-medium text-gray-950 dark:text-gray-200">{{ $bk->exam_date->format('d/m/Y') }}</span></p>
+            <p><span class="text-gray-500 dark:text-gray-400">Jadwal:</span> <span class="font-medium text-gray-950 dark:text-gray-200">{{ $bk->schedule->day_name }}, {{ $bk->schedule->time_range }}</span></p>
         </div>
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-5 text-xs text-amber-800 text-left">
+        <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-3 mb-5 text-xs text-amber-800 dark:text-amber-300 text-left">
             <strong>💡 Tips:</strong> Datanglah mendekati jam estimasi. Pantau antrean melalui menu <strong>Antrean Saya</strong>.
         </div>
         <div class="flex gap-3">

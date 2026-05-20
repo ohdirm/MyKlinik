@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 @section('title', 'Edit Dokter — MyKlinik911')
 @section('content')
-<h1 class="text-2xl font-bold text-gray-900 mb-6">Edit Dokter</h1>
-<div class="bg-white rounded-xl shadow-sm p-6 max-w-2xl">
+<h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Edit Dokter</h1>
+<div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm p-6 max-w-2xl transition-colors duration-200">
     @if($errors->any())
         <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"><ul class="list-disc list-inside">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
     @endif
@@ -10,13 +10,13 @@
         @csrf @method('PUT')
         <div class="space-y-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama</label>
                 <input type="text" name="name" class="input-base" value="{{ old('name', $doctor->name) }}" required>
             </div>
 
             {{-- ── SPESIALISASI dengan tombol tambah baru ── --}}
             <div x-data="specializationPicker('{{ old('specialization', $doctor->specialization) }}')" x-init="init()">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Spesialisasi</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Spesialisasi</label>
                 <div class="flex gap-2 items-center">
                     <select name="specialization" x-ref="selectEl" class="input-base flex-1" required>
                         @foreach($specializations as $spec)
@@ -35,23 +35,23 @@
                         Tambah
                     </button>
                 </div>
-                <p class="mt-1 text-xs text-gray-400">✦ = spesialisasi kustom</p>
+                <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">✦ = spesialisasi kustom</p>
 
                 {{-- Modal Tambah Spesialisasi --}}
                 <div x-show="showModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" style="display:none">
-                    <div @click.outside="closeModal()" class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6" x-transition.scale>
-                        <h2 class="text-lg font-bold text-gray-900 mb-4">Tambah Spesialisasi Baru</h2>
+                    <div @click.outside="closeModal()" class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 transition-colors duration-200" x-transition.scale>
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Tambah Spesialisasi Baru</h2>
 
                         <div x-show="errorMsg" class="mb-3 bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm" x-text="errorMsg"></div>
                         <div x-show="successMsg" class="mb-3 bg-green-50 border border-green-200 text-green-700 px-3 py-2 rounded-lg text-sm" x-text="successMsg"></div>
 
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Spesialisasi</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Spesialisasi</label>
                             <input type="text" x-model="newLabel"
                                 @keydown.enter.prevent="saveSpecialization()"
                                 placeholder="contoh: Spesialis Saraf"
                                 class="input-base w-full">
-                            <p class="text-xs text-gray-400 mt-1">Kode otomatis dibuat dari nama yang Anda masukkan.</p>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Kode otomatis dibuat dari nama yang Anda masukkan.</p>
                         </div>
 
                         <div class="flex gap-3 justify-end">
@@ -68,18 +68,18 @@
             {{-- ── END SPESIALISASI ── --}}
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
                 <textarea name="bio" class="input-base" rows="3">{{ old('bio', $doctor->bio) }}</textarea>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Foto</label>
-                @if($doctor->photo)<p class="text-xs text-gray-500 mb-1">Foto saat ini: {{ basename($doctor->photo) }}</p>@endif
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Foto</label>
+                @if($doctor->photo)<p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Foto saat ini: {{ basename($doctor->photo) }}</p>@endif
                 <input type="file" name="photo" accept="image/*" class="input-base">
             </div>
             <div class="flex items-center gap-2">
                 <input type="hidden" name="is_active" value="0">
-                <input type="checkbox" name="is_active" value="1" class="rounded border-gray-300 text-brand focus:ring-brand" {{ old('is_active', $doctor->is_active) ? 'checked' : '' }}>
-                <label class="text-sm text-gray-700">Aktif</label>
+                <input type="checkbox" name="is_active" value="1" class="rounded border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-brand focus:ring-brand focus:ring-offset-white dark:focus:ring-offset-gray-900" {{ old('is_active', $doctor->is_active) ? 'checked' : '' }}>
+                <label class="text-sm text-gray-700 dark:text-gray-300">Aktif</label>
             </div>
             <div class="flex gap-3 pt-2">
                 <button type="submit" class="btn-primary">Perbarui</button>

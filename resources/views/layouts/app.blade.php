@@ -11,8 +11,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans flex flex-col">
+<body class="bg-gray-50 dark:bg-gray-950 min-h-screen font-sans flex flex-col text-gray-900 dark:text-gray-100 transition-colors duration-200" x-data="{ darkMode: document.documentElement.classList.contains('dark') }">
 
     {{-- Navbar --}}
     <nav class="bg-brand text-white shadow-lg sticky top-0 z-40" x-data="{ open: false }">
@@ -38,7 +45,7 @@
                     {{-- Auth buttons --}}
                     @guest
                         <a href="{{ route('login') }}" class="ml-2 px-4 py-2 rounded-lg text-sm font-medium bg-white/10 hover:bg-white/20 transition">Masuk</a>
-                        <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg text-sm font-medium bg-accent hover:bg-accent-dark transition">Daftar</a>
+                        <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg text-sm font-medium bg-accent hover:bg-accent-dark text-white transition">Daftar</a>
                     @else
                         <div class="relative ml-2" x-data="{ dropdown: false }">
                             <button @click="dropdown = !dropdown" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">
@@ -57,6 +64,12 @@
                             </div>
                         </div>
                     @endguest
+
+                    {{-- Theme Toggle --}}
+                    <button @click="darkMode = !darkMode; localStorage.setItem('theme', darkMode ? 'dark' : 'light'); document.documentElement.classList.toggle('dark', darkMode)" class="ml-2 p-2 rounded-lg hover:bg-white/10 text-white/80 hover:text-white transition cursor-pointer" aria-label="Toggle theme">
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M3 12h2.25m-.386-6.364l1.591 1.591M12 18.75a6.75 6.75 0 110-13.5 6.75 6.75 0 010 13.5z"/></svg>
+                        <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
+                    </button>
                 </div>
 
                 {{-- Mobile hamburger --}}
@@ -90,6 +103,18 @@
                     <a href="{{ route('login') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Masuk</a>
                     <a href="{{ route('register') }}" class="block px-3 py-2 rounded-lg text-sm bg-accent hover:bg-accent-dark">Daftar</a>
                 @endguest
+
+                {{-- Theme Toggle Mobile --}}
+                <button @click="darkMode = !darkMode; localStorage.setItem('theme', darkMode ? 'dark' : 'light'); document.documentElement.classList.toggle('dark', darkMode)" class="w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-sm hover:bg-white/10 cursor-pointer">
+                    <span x-show="!darkMode" class="flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M3 12h2.25m-.386-6.364l1.591 1.591M12 18.75a6.75 6.75 0 110-13.5 6.75 6.75 0 010 13.5z"/></svg>
+                        Mode Gelap
+                    </span>
+                    <span x-show="darkMode" class="flex items-center gap-2" style="display: none;">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
+                        Mode Terang
+                    </span>
+                </button>
             </div>
         </div>
     </nav>

@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -9,12 +12,14 @@
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-brand: #1a56db;
-    --color-brand-dark: #1e40af;
-    --color-brand-light: #eff6ff;
+    --color-brand: #0F5D8C;
+    --color-brand-dark: #0a4066;
+    --color-brand-light: #e8f2f9;
 
-    --color-accent: #16a34a;
-    --color-accent-dark: #15803d;
+    --color-accent: #C51F27;
+    --color-accent-dark: #a01920;
+
+    --color-surface: #F1F1F1;
 
     --radius-xl: 0.75rem;
     --radius-2xl: 1rem;
@@ -35,3 +40,31 @@
 @utility btn-outline {
     @apply border border-gray-300 text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-xl transition-colors cursor-pointer;
 }
+
+nav, header {
+    background-color: #ffffff;
+    color: #0F5D8C;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dark nav, .dark header {
+    background-color: #1f2937;
+    color: #f3f4f6;
+    border-color: #374151;
+}
+
+.dark .input-base {
+    background-color: #1f2937 !important;
+    border-color: #4b5563 !important;
+    color: #ffffff !important;
+}
+
+.dark .btn-outline {
+    border-color: #4b5563 !important;
+    color: #d1d5db !important;
+}
+
+.dark .btn-outline:hover {
+    background-color: #374151 !important;
+}
+
