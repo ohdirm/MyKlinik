@@ -81,7 +81,8 @@
                                 </select>
                             </div>
 
-                            {{-- Doctor Cards (scrolla                             <div class="space-y-2 max-h-64 overflow-y-auto pr-1 rounded-xl" id="doctor-cards">
+                            {{-- Doctor Cards (scrollable) --}}
+                            <div class="space-y-2 max-h-64 overflow-y-auto pr-1 rounded-xl" id="doctor-cards">
                                 @foreach($doctors as $doc)
                                 <label class="relative flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-blue-50 dark:hover:bg-gray-800"
                                        :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-blue-50 shadow-sm dark:bg-gray-800/80' : 'border-gray-200 dark:border-gray-700'"
@@ -100,7 +101,7 @@
                                         <div class="w-1.5 h-1.5 rounded-full bg-white" x-show="doctorId == '{{ $doc->id }}'"></div>
                                     </div>
                                 </label>
-                                @endforeachendforeach
+                                @endforeach
                                 <p x-show="$el.previousElementSibling && [...$el.parentElement.querySelectorAll('label')].every(l => l.style.display === 'none')"
                                    class="text-center text-sm text-gray-400 py-4">Dokter tidak ditemukan</p>
                             </div>
