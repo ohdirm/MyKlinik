@@ -76,10 +76,34 @@ class Doctor extends Model
      */
     public function getInitialsAttribute(): string
     {
-        $words = explode(' ', $this->name);
+        $titles = ['dr.', 'dr', 'sp.', 'sp', 'prof.', 'prof', 'dra.', 'dra', 'drs.', 'drs'];
+        $words = collect(explode(' ', $this->name))
+            ->filter(fn ($w) => !in_array(strtolower(trim($w)), $titles))
+            ->values();
+
+        if ($words->isEmpty()) {
+            return strtoupper(substr($this->name, 0, 1));
+        }
 
         return strtoupper(
-            collect($words)->take(2)->map(fn ($w) => $w[0])->implode('')
+            $words->take(2)->map(fn ($w) => mb_substr($w, 0, 1))->implode('')
         );
+    }
+
+    /**
+     * Get photo URL or fallback.
+     */
+    public function getPhotoUrlAttribute(): ?string
+    {
+        if ($this->photo && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->photo)) {
+            return asset('storage/' . $this->photo);
+        }
+
+        // Check if photo column has a full URL or relative to public
+        if ($this->photo && (str_starts_with($this->photo, 'http') || file_exists(public_path($this->photo)))) {
+            return str_starts_with($this->photo, 'http') ? $this->photo : asset($this->photo);
+        }
+
+        return null;
     }
 }

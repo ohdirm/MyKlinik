@@ -3,10 +3,18 @@
 @section('content')
 <div class="py-8">
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <a href="{{ route('patient.dashboard') }}" class="text-sm text-brand hover:underline mb-4 inline-block">← Kembali ke Dashboard</a>
+        {{-- Back Button --}}
+        <div class="mb-6 flex">
+            <a href="{{ route('patient.dashboard') }}" class="inline-flex items-center gap-2 group text-sm font-medium transition-all" style="color: var(--ui-text-muted);">
+                <div class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-800 flex items-center justify-center transition-all group-hover:border-brand group-hover:bg-brand group-hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+                </div>
+                <span class="group-hover:text-brand">Kembali ke Dashboard</span>
+            </a>
+        </div>
 
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-            <h1 class="text-xl font-bold text-gray-900 mb-2">Beri Review</h1>
+        <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-800">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Beri Review</h1>
 
             {{-- Booking info --}}
             <div class="bg-gray-50 rounded-xl p-4 mb-6 text-sm space-y-1">

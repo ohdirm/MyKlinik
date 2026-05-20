@@ -27,8 +27,12 @@ $dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
         {{-- Doctor Header --}}
         <div class="flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                    {{ strtoupper(substr($doctor->name, 3, 1)) }}
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm border border-white dark:border-gray-800 overflow-hidden">
+                    @if($doctor->photo_url)
+                        <img src="{{ $doctor->photo_url }}" alt="{{ $doctor->name }}" class="w-full h-full object-cover">
+                    @else
+                        {{ $doctor->initials }}
+                    @endif
                 </div>
                 <div>
                     <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ $doctor->name }}</p>

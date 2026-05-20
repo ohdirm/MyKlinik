@@ -3,6 +3,16 @@
 @section('content')
 <div class="py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {{-- Back Button --}}
+        <div class="mb-6 flex">
+            <a href="{{ url('/') }}" class="inline-flex items-center gap-2 group text-sm font-medium transition-all" style="color: var(--ui-text-muted);">
+                <div class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-800 flex items-center justify-center transition-all group-hover:border-brand group-hover:bg-brand group-hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+                </div>
+                <span class="group-hover:text-brand">Kembali ke Beranda</span>
+            </a>
+        </div>
+
         <div class="text-center mb-10">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Status Dokter</h1>
             <p class="text-gray-500 dark:text-gray-400">Pantau ketersediaan dokter secara real-time</p>

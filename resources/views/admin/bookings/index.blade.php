@@ -56,7 +56,18 @@
                     <td class="px-4 py-3 font-mono font-semibold text-brand dark:text-blue-400">{{ $b->booking_code }}</td>
                     <td class="px-4 py-3">{{ $b->patient_name }}</td>
                     <td class="px-4 py-3 font-mono text-xs">{{ $b->nik }}</td>
-                    <td class="px-4 py-3">{{ $b->doctor->name ?? '-' }}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold text-[10px] shrink-0 shadow-sm overflow-hidden">
+                                @if($b->doctor->photo_url)
+                                    <img src="{{ $b->doctor->photo_url }}" alt="{{ $b->doctor->name }}" class="w-full h-full object-cover">
+                                @else
+                                    {{ $b->doctor->initials ?? '-' }}
+                                @endif
+                            </div>
+                            <span class="font-medium text-gray-700 dark:text-gray-300">{{ $b->doctor->name ?? '-' }}</span>
+                        </div>
+                    </td>
                     <td class="px-4 py-3">{{ $b->exam_date->format('d/m/Y') }}</td>
                     <td class="px-4 py-3 font-semibold">{{ $b->queue_number }}</td>
                     <td class="px-4 py-3"><span class="text-xs font-semibold px-2 py-1 rounded-full {{ $b->status_badge_class }}" id="status-{{ $b->id }}">{{ $b->status }}</span></td>

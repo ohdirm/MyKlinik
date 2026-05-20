@@ -19,61 +19,68 @@
         }
     </script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-950 min-h-screen font-sans flex flex-col text-gray-900 dark:text-gray-100 transition-colors duration-200" x-data="{ darkMode: document.documentElement.classList.contains('dark') }">
+<body class="min-h-screen font-sans flex flex-col transition-colors duration-300" x-data="{ darkMode: document.documentElement.classList.contains('dark') }">
 
     {{-- Navbar --}}
-    <nav class="bg-brand text-white shadow-lg sticky top-0 z-40" x-data="{ open: false }">
+    <nav class="bg-white/80 dark:bg-gray-950/80 text-gray-900 dark:text-white shadow-sm sticky top-0 z-40 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-colors duration-300" x-data="{ open: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 {{-- Logo --}}
                 <a href="{{ url('/') }}" class="flex items-center gap-2">
-                    <img src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911" style="width:150px;">
-                    <span class="font-bold text-xl tracking-tight">MyKlinik911</span>
+                    <img src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911" class="w-32 md:w-40 drop-shadow-sm">
+                    <span class="font-bold text-xl tracking-tight hidden sm:inline-block">MyKlinik911</span>
                 </a>
 
                 {{-- Desktop nav --}}
                 <div class="hidden md:flex items-center gap-1">
-                    <a href="{{ url('/') }}" class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition {{ request()->is('/') ? 'bg-white/15' : '' }}">Beranda</a>
+                    <a href="{{ url('/') }}" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all active:scale-95 {{ request()->is('/') ? 'bg-brand/10 text-brand' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand dark:hover:text-white' }}">Beranda</a>
                     @auth
                         @if(Auth::user()->isPatient())
-                            <a href="{{ route('booking.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition {{ request()->is('booking') ? 'bg-white/15' : '' }}">Booking</a>
-                            <a href="{{ route('status-dokter') }}" class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition {{ request()->is('status-dokter') ? 'bg-white/15' : '' }}">Status Dokter</a>
-                            <a href="{{ route('patient.dashboard') }}" class="px-4 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition {{ request()->is('antrean-saya') ? 'bg-white/15' : '' }}">Antrean Saya</a>
+                            <a href="{{ route('booking.index') }}" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all active:scale-95 {{ request()->is('booking') ? 'bg-brand/10 text-brand' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand dark:hover:text-white' }}">Booking</a>
+                            <a href="{{ route('status-dokter') }}" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all active:scale-95 {{ request()->is('status-dokter') ? 'bg-brand/10 text-brand' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand dark:hover:text-white' }}">Status Dokter</a>
+                            <a href="{{ route('patient.dashboard') }}" class="px-4 py-2 rounded-xl text-sm font-semibold transition-all active:scale-95 {{ request()->is('antrean-saya') ? 'bg-brand/10 text-brand' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-brand dark:hover:text-white' }}">Antrean Saya</a>
                         @endif
                     @endauth
 
                     {{-- Auth buttons --}}
                     @guest
-                        <a href="{{ route('login') }}" class="ml-2 px-4 py-2 rounded-lg text-sm font-medium bg-white/10 hover:bg-white/20 transition">Masuk</a>
-                        <a href="{{ route('register') }}" class="px-4 py-2 rounded-lg text-sm font-medium bg-accent hover:bg-accent-dark text-white transition">Daftar</a>
+                        <a href="{{ route('login') }}" class="ml-2 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">Masuk</a>
+                        <a href="{{ route('register') }}" class="px-6 py-2 rounded-xl text-sm font-semibold bg-accent hover:bg-accent-dark text-white transition-all shadow-sm shadow-accent/20">Daftar</a>
                     @else
                         <div class="relative ml-2" x-data="{ dropdown: false }">
-                            <button @click="dropdown = !dropdown" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition cursor-pointer">
-                                <div class="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
-                                <span class="text-sm">{{ Auth::user()->name }}</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                            <button @click="dropdown = !dropdown" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all cursor-pointer">
+                                <div class="w-8 h-8 bg-brand/10 dark:bg-brand/20 text-brand rounded-full flex items-center justify-center text-xs font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ Auth::user()->name }}</span>
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
                             </button>
-                            <div x-show="dropdown" @click.away="dropdown = false" x-transition class="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg py-2 z-50">
+                            <div x-show="dropdown" @click.away="dropdown = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" class="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-2xl shadow-xl py-2 z-50 border border-gray-100 dark:border-gray-700">
                                 @if(Auth::user()->isPatient())
-                                    <a href="{{ route('patient.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">Dashboard</a>
+                                    <a href="{{ route('patient.dashboard') }}" class="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                        <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        Dashboard
+                                    </a>
                                 @endif
+                                <div class="border-t border-gray-100 dark:border-gray-700 my-1"></div>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 cursor-pointer">Logout</button>
+                                    <button type="submit" class="w-full flex items-center gap-2 text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
+                                        Logout
+                                    </button>
                                 </form>
                             </div>
                         </div>
                     @endguest
 
                     {{-- Theme Toggle --}}
-                    <button @click="darkMode = !darkMode; localStorage.setItem('theme', darkMode ? 'dark' : 'light'); document.documentElement.classList.toggle('dark', darkMode)" class="ml-2 p-2 rounded-lg hover:bg-white/10 text-white/80 hover:text-white transition cursor-pointer" aria-label="Toggle theme">
-                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M3 12h2.25m-.386-6.364l1.591 1.591M12 18.75a6.75 6.75 0 110-13.5 6.75 6.75 0 010 13.5z"/></svg>
+                    <button @click="darkMode = !darkMode; localStorage.setItem('theme', darkMode ? 'dark' : 'light'); document.documentElement.classList.toggle('dark', darkMode)" class="ml-2 p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-brand dark:hover:text-white transition-all cursor-pointer" aria-label="Toggle theme">
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M3 12h2.25m-.386-6.364l 1.591 1.591M12 18.75a6.75 6.75 0 110-13.5 6.75 6.75 0 010 13.5z"/></svg>
                         <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
                     </button>
                 </div>
 
                 {{-- Mobile hamburger --}}
-                <button @click="open = !open" class="md:hidden p-2 rounded-lg hover:bg-white/10 transition" aria-label="Menu">
+                <button @click="open = !open" class="md:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-all" aria-label="Menu">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                         <path x-show="open" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
@@ -83,25 +90,25 @@
         </div>
 
         {{-- Mobile menu --}}
-        <div x-show="open" x-transition class="md:hidden border-t border-white/10">
-            <div class="px-4 py-3 space-y-1">
-                <a href="{{ url('/') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Beranda</a>
+        <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="md:hidden border-t border-gray-100 dark:border-gray-800 bg-white/95 dark:bg-gray-950/95 backdrop-blur-md">
+            <div class="px-4 py-4 space-y-2">
+                <a href="{{ url('/') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-brand/5 hover:text-brand">Beranda</a>
                 @auth
                     @if(Auth::user()->isPatient())
-                        <a href="{{ route('booking.index') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Booking</a>
-                        <a href="{{ route('status-dokter') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Status Dokter</a>
-                        <a href="{{ route('patient.dashboard') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Antrean Saya</a>
+                        <a href="{{ route('booking.index') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-brand/5 hover:text-brand">Booking</a>
+                        <a href="{{ route('status-dokter') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-brand/5 hover:text-brand">Status Dokter</a>
+                        <a href="{{ route('patient.dashboard') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-brand/5 hover:text-brand">Antrean Saya</a>
                     @endif
-                    <div class="border-t border-white/10 mt-2 pt-2">
-                        <p class="px-3 py-1 text-xs text-white/60">{{ Auth::user()->email }}</p>
+                    <div class="border-t border-gray-100 dark:border-gray-800 mt-2 pt-2">
+                        <p class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-widest">{{ Auth::user()->email }}</p>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full text-left px-3 py-2 rounded-lg text-sm text-red-300 hover:bg-white/10 cursor-pointer">Logout</button>
+                            <button type="submit" class="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer">Logout</button>
                         </form>
                     </div>
                 @else
-                    <a href="{{ route('login') }}" class="block px-3 py-2 rounded-lg text-sm hover:bg-white/10">Masuk</a>
-                    <a href="{{ route('register') }}" class="block px-3 py-2 rounded-lg text-sm bg-accent hover:bg-accent-dark">Daftar</a>
+                    <a href="{{ route('login') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-brand/5 hover:text-brand">Masuk</a>
+                    <a href="{{ route('register') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold bg-accent text-white hover:bg-accent-dark text-center">Daftar</a>
                 @endguest
 
                 {{-- Theme Toggle Mobile --}}
@@ -125,36 +132,40 @@
     </main>
 
     {{-- Footer --}}
-    <footer class="bg-gray-800 text-gray-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer class="bg-gray-900 dark:bg-black text-gray-400 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div>
-                    <h3 class="text-white font-bold text-lg mb-3">MyKlinik911</h3>
-                    <p class="text-sm leading-relaxed">Klinik terpercaya dengan pelayanan kesehatan profesional. Melayani dengan sepenuh hati untuk kesehatan Anda dan keluarga.</p>
+                    <h3 class="text-white font-bold text-xl mb-4 tracking-tight">MyKlinik911</h3>
+                    <p class="text-sm leading-relaxed opacity-80">Klinik terpercaya dengan pelayanan kesehatan profesional. Melayani dengan sepenuh hati untuk kesehatan Anda dan keluarga.</p>
                 </div>
                 <div>
-                    <h3 class="text-white font-semibold mb-3">Jam Operasional</h3>
-                    <ul class="text-sm space-y-1">
-                        <li>Senin - Jumat: 08:00 - 17:00</li>
-                        <li>Sabtu: 08:00 - 12:00</li>
-                        <li>Minggu & Hari Libur: Tutup</li>
+                    <h3 class="text-white font-semibold mb-4">Jam Operasional</h3>
+                    <ul class="text-sm space-y-2 opacity-80">
+                        <li class="flex justify-between"><span>Senin - Jumat</span><span>08:00 - 17:00</span></li>
+                        <li class="flex justify-between"><span>Sabtu</span><span>08:00 - 12:00</span></li>
+                        <li class="flex justify-between text-red-400"><span>Minggu & Libur</span><span>Tutup</span></li>
                     </ul>
                 </div>
                 <div>
-                    <h3 class="text-white font-semibold mb-3">Hubungi Kami</h3>
-                    <ul class="text-sm space-y-2">
-                        <li class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                            <span>0812-3456-7890</span>
+                    <h3 class="text-white font-semibold mb-4">Hubungi Kami</h3>
+                    <ul class="text-sm space-y-3">
+                        <li class="flex items-center gap-3 group">
+                            <div class="w-8 h-8 rounded-full bg-brand/20 flex items-center justify-center text-brand group-hover:bg-brand group-hover:text-white transition-all">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                            </div>
+                            <span class="opacity-80 group-hover:opacity-100 transition-opacity">0812-3456-7890</span>
                         </li>
-                        <li class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                            <span>myklinik911@gmail.com</span>
+                        <li class="flex items-center gap-3 group">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white transition-all">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            </div>
+                            <span class="opacity-80 group-hover:opacity-100 transition-opacity">myklinik911@gmail.com</span>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-500">
+            <div class="border-t border-gray-800 mt-10 pt-8 text-center text-xs opacity-50">
                 &copy; {{ date('Y') }} MyKlinik911. All rights reserved.
             </div>
         </div>

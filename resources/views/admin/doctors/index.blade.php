@@ -19,8 +19,19 @@
             <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
                 @forelse($doctors as $d)
                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $d->name }}</td>
-                    <td class="px-4 py-3">{{ $d->specialization_label }}</td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm border border-white dark:border-gray-800 overflow-hidden">
+                                @if($d->photo_url)
+                                    <img src="{{ $d->photo_url }}" alt="{{ $d->name }}" class="w-full h-full object-cover">
+                                @else
+                                    {{ $d->initials }}
+                                @endif
+                            </div>
+                            <span class="font-medium text-gray-900 dark:text-white">{{ $d->name }}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-gray-600 dark:text-gray-400 font-medium">{{ $d->specialization_label }}</td>
                     <td class="px-4 py-3"><span class="text-xs font-semibold px-2 py-1 rounded-full {{ $d->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $d->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
                     <td class="px-4 py-3 text-center">
                         <div class="inline-flex items-center gap-2">

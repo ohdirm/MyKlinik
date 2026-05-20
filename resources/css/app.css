@@ -2,7 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -12,6 +11,7 @@
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
+    /* Brand Colors */
     --color-brand: #0F5D8C;
     --color-brand-dark: #0a4066;
     --color-brand-light: #e8f2f9;
@@ -19,52 +19,103 @@
     --color-accent: #C51F27;
     --color-accent-dark: #a01920;
 
-    --color-surface: #F1F1F1;
+    /* Semantic UI Colors - Adaptable for Dark Mode */
+    --color-ui-bg: #f9fafb;
+    --color-ui-surface: #ffffff;
+    --color-ui-text: #111827;
+    --color-ui-text-muted: #6b7280;
+    --color-ui-border: #e5e7eb;
 
     --radius-xl: 0.75rem;
     --radius-2xl: 1rem;
+
+    /* Transitions */
+    --transition-all: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@layer base {
+    :root {
+        color-scheme: light;
+        --ui-bg: #f9fafb;
+        --ui-surface: #ffffff;
+        --ui-text: #111827;
+        --ui-text-muted: #6b7280;
+        --ui-border: #e5e7eb;
+        --ui-card-hover: rgba(15, 93, 140, 0.05);
+    }
+
+    .dark {
+        color-scheme: dark;
+        --ui-bg: #030712;
+        --ui-surface: #111827;
+        --ui-text: #f9fafb;
+        --ui-text-muted: #9ca3af;
+        --ui-border: #374151;
+        --ui-card-hover: rgba(255, 255, 255, 0.05);
+    }
+
+    body {
+        background-color: var(--ui-bg);
+        color: var(--ui-text);
+        transition: var(--transition-all);
+    }
 }
 
 @utility input-base {
-    @apply w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent;
+    @apply w-full border rounded-xl px-4 py-2.5 text-sm transition-all duration-200 outline-none;
+    background-color: var(--ui-surface);
+    border-color: var(--ui-border);
+    color: var(--ui-text);
+
+    &:focus {
+        @apply ring-4 ring-brand/15 border-brand;
+        border-color: var(--color-brand);
+    }
+
+    &::placeholder {
+        color: var(--ui-text-muted);
+    }
 }
 
 @utility btn-primary {
-    @apply bg-brand hover:bg-brand-dark text-white font-semibold px-4 py-2 rounded-xl transition-colors cursor-pointer;
+    @apply bg-brand hover:bg-brand-dark text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 shadow-sm hover:shadow-md flex items-center justify-center gap-2;
 }
 
 @utility btn-accent {
-    @apply bg-accent hover:bg-accent-dark text-white font-semibold px-4 py-2 rounded-xl transition-colors cursor-pointer;
+    @apply bg-accent hover:bg-accent-dark text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 shadow-sm hover:shadow-md flex items-center justify-center gap-2;
 }
 
 @utility btn-outline {
-    @apply border border-gray-300 text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-xl transition-colors cursor-pointer;
+    @apply border font-medium px-6 py-2.5 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 flex items-center justify-center gap-2;
+    background-color: transparent;
+    border-color: var(--ui-border);
+    color: var(--ui-text);
+
+    &:hover {
+        background-color: var(--ui-card-hover);
+        border-color: var(--ui-text-muted);
+    }
 }
 
-nav, header {
-    background-color: #ffffff;
-    color: #0F5D8C;
-    border-bottom: 1px solid #e5e7eb;
+/* Glassmorphism Classes */
+@utility glass-card {
+    @apply backdrop-blur-md border;
+    background-color: rgba(var(--ui-surface), 0.8);
+    border-color: var(--ui-border);
 }
 
-.dark nav, .dark header {
-    background-color: #1f2937;
-    color: #f3f4f6;
-    border-color: #374151;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
 }
-
-.dark .input-base {
-    background-color: #1f2937 !important;
-    border-color: #4b5563 !important;
-    color: #ffffff !important;
+::-webkit-scrollbar-track {
+    background: var(--ui-bg);
 }
-
-.dark .btn-outline {
-    border-color: #4b5563 !important;
-    color: #d1d5db !important;
+::-webkit-scrollbar-thumb {
+    background: var(--ui-border);
+    border-radius: 10px;
 }
-
-.dark .btn-outline:hover {
-    background-color: #374151 !important;
+::-webkit-scrollbar-thumb:hover {
+    background: var(--ui-text-muted);
 }
 

@@ -7,6 +7,15 @@
      x-init="init()">
 
     <div class="max-w-2xl mx-auto px-4">
+        {{-- Back Button --}}
+        <div class="mb-6 flex">
+            <a href="{{ url('/') }}" class="inline-flex items-center gap-2 group text-sm font-medium transition-all" style="color: var(--ui-text-muted);">
+                <div class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-800 flex items-center justify-center transition-all group-hover:border-brand group-hover:bg-brand group-hover:text-white">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+                </div>
+                <span class="group-hover:text-brand">Kembali ke Beranda</span>
+            </a>
+        </div>
 
         {{-- Header --}}
         <div class="text-center mb-8">
@@ -23,8 +32,8 @@
             <template x-for="(label, i) in ['Jadwal', 'Data Pasien', 'Domisili']" :key="i">
                 <div class="flex items-center">
                     <div class="flex flex-col items-center">
-                        <div class="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300"
-                             :class="step > i+1 ? 'bg-teal-500 text-white' : (step === i+1 ? 'bg-brand text-white shadow-lg scale-110' : 'bg-gray-200 text-gray-400')">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2"
+                             :class="step > i+1 ? 'bg-teal-500 border-teal-500 text-white' : (step === i+1 ? 'bg-brand border-brand text-white shadow-lg scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400')">
                             <template x-if="step > i+1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                             </template>
@@ -51,7 +60,7 @@
         @endif
 
         {{-- Card --}}
-        <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+        <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800 transition-all duration-300">
             <form method="POST" action="{{ route('booking.store') }}" id="booking-form" @submit="handleSubmit">
                 @csrf
 
@@ -84,13 +93,17 @@
                             {{-- Doctor Cards (scrollable) --}}
                             <div class="space-y-2 max-h-64 overflow-y-auto pr-1 rounded-xl" id="doctor-cards">
                                 @foreach($doctors as $doc)
-                                <label class="relative flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-blue-50 dark:hover:bg-gray-800"
-                                       :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-blue-50 shadow-sm dark:bg-gray-800/80' : 'border-gray-200 dark:border-gray-700'"
+                                <label class="relative flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-brand/5 dark:hover:bg-brand/10 group"
+                                       :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand/5 shadow-sm dark:bg-brand/10' : 'border-gray-100 dark:border-gray-800'"
                                        x-show="(doctorSearch === '' || '{{ strtolower($doc->name) }}'.includes(doctorSearch.toLowerCase())) && (spFilter === '' || spFilter === '{{ $doc->specialization_label }}')"
                                        >
                                     <input type="radio" name="doctor_id" value="{{ $doc->id }}" class="sr-only" x-model="doctorId" @change="onDoctorChange()" {{ old('doctor_id') == $doc->id ? 'checked' : '' }}>
-                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold flex-shrink-0">
-                                        {{ strtoupper(substr($doc->name, 3, 1)) }}
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold flex-shrink-0 shadow-sm border-2 border-white/10 overflow-hidden">
+                                        @if($doc->photo_url)
+                                            <img src="{{ $doc->photo_url }}" alt="{{ $doc->name }}" class="w-full h-full object-cover">
+                                        @else
+                                            {{ $doc->initials }}
+                                        @endif
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{{ $doc->name }}</p>
@@ -158,14 +171,14 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
                             <div class="grid grid-cols-2 gap-3">
-                                <label class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all"
-                                       :class="gender === 'L' ? 'border-brand bg-blue-50 dark:bg-gray-800' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'">
+                                <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95"
+                                       :class="gender === 'L' ? 'border-brand bg-brand/5 dark:bg-brand/10' : 'border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700'">
                                     <input type="radio" name="gender" value="L" class="sr-only" x-model="gender" {{ old('gender') === 'L' ? 'checked' : '' }}>
                                     <span class="text-xl">👨</span>
                                     <span class="font-medium text-sm text-gray-700 dark:text-gray-300">Laki-laki</span>
                                 </label>
-                                <label class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all"
-                                       :class="gender === 'P' ? 'border-brand bg-blue-50 dark:bg-gray-800' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'">
+                                <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95"
+                                       :class="gender === 'P' ? 'border-brand bg-brand/5 dark:bg-brand/10' : 'border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700'">
                                     <input type="radio" name="gender" value="P" class="sr-only" x-model="gender" {{ old('gender') === 'P' ? 'checked' : '' }}>
                                     <span class="text-xl">👩</span>
                                     <span class="font-medium text-sm text-gray-700 dark:text-gray-300">Perempuan</span>
@@ -227,7 +240,8 @@
                 {{-- Navigation Buttons --}}
                 <div class="px-6 pb-6 flex gap-3">
                     <button type="button" x-show="step > 1" @click="step--"
-                            class="flex-1 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold hover:bg-gray-50 dark:hover:bg-gray-800 transition text-sm">
+                            class="flex-1 py-3.5 rounded-xl border font-semibold transition-all active:scale-95 text-sm"
+                            style="background-color: var(--ui-surface); border-color: var(--ui-border); color: var(--ui-text);">
                         ← Sebelumnya
                     </button>
                     <button type="button" x-show="step < 3" @click="nextStep()"
