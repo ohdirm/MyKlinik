@@ -7,6 +7,7 @@ use App\Mail\BookingConfirmed;
 use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Schedule;
+use App\Notifications\BookingStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -114,30 +115,10 @@ class BookingController extends Controller
             // Log error but continue
         }
 
-        // Build WhatsApp link
-        $msg = urlencode(
-            "*KONFIRMASI PENDAFTARAN - MyKlinik911*\n\n"
-            ."Halo *{$booking->patient_name}*, Anda telah terdaftar (Walk-in).\n\n"
-            ."📌 *Detail Booking:*\n"
-            ."- Kode: {$booking->booking_code}\n"
-            ."- No. Antrean: *{$booking->queue_number}*\n\n"
-            ."🩺 *Jadwal Periksa:*\n"
-            ."- Dokter: {$booking->doctor->name}\n"
-            ."- Tanggal: {$booking->exam_date->format('d/m/Y')}\n"
-            ."- Jam: {$booking->schedule->time_range}\n\n"
-            ."💡 *Penting:*\n"
-            ."- Datanglah *15 menit* sebelum jadwal untuk verifikasi.\n"
-            ."- Tunjukkan pesan ini ke petugas pendaftaran.\n\n"
-            .'Terima kasih.'
-        );
-
-        $phone = ltrim($booking->phone, '0');
-        $waLink = "https://wa.me/62{$phone}?text={$msg}";
-
         return response()->json([
             'success' => true,
             'booking' => $booking,
-            'wa_link' => $waLink,
+            'wa_link' => $booking->whatsapp_link,
         ]);
     }
 
@@ -147,32 +128,24 @@ class BookingController extends Controller
         $booking->update(['status' => 'CONFIRMED']);
 
         // Send confirmation email automatically
+        $emailSent = false;
         try {
             Mail::to($booking->user->email ?? $booking->email)->send(new BookingConfirmed($booking));
+            $emailSent = true;
         } catch (\Exception $e) {
             // Log error but continue
         }
 
-        $msg = urlencode(
-            "*KONFIRMASI PENDAFTARAN - MyKlinik911*\n\n"
-            ."Halo *{$booking->patient_name}*, booking Anda telah *DIKONFIRMASI*.\n\n"
-            ."📌 *Detail Booking:*\n"
-            ."- Kode: {$booking->booking_code}\n"
-            ."- No. Antrean: *{$booking->queue_number}*\n\n"
-            ."🩺 *Jadwal Periksa:*\n"
-            ."- Dokter: {$booking->doctor->name}\n"
-            ."- Tanggal: {$booking->exam_date->format('d/m/Y')}\n"
-            ."- Jam: {$booking->schedule->time_range}\n\n"
-            ."💡 *Penting:*\n"
-            ."- Datanglah *15 menit* sebelum jadwal untuk verifikasi.\n"
-            ."- Tunjukkan pesan ini ke petugas pendaftaran.\n\n"
-            .'Terima kasih.'
-        );
+        // Send in-app notification to patient
+        if ($booking->user) {
+            $booking->user->notify(new BookingStatusNotification($booking, 'confirmed'));
+        }
 
-        $phone = ltrim($booking->phone, '0');
-        $waLink = "https://wa.me/62{$phone}?text={$msg}";
-
-        return response()->json(['success' => true, 'wa_link' => $waLink]);
+        return response()->json([
+            'success' => true,
+            'wa_link' => $booking->whatsapp_link,
+            'email_sent' => $emailSent,
+        ]);
     }
 
     public function reject(Request $request, int $id)
@@ -181,19 +154,29 @@ class BookingController extends Controller
             'rejection_reason' => 'required|string|min:10',
         ]);
 
-        $booking = Booking::findOrFail($id);
+        $booking = Booking::with('user')->findOrFail($id);
         $booking->update([
             'status' => 'REJECTED',
             'rejection_reason' => $request->rejection_reason,
         ]);
+
+        // Send in-app notification to patient
+        if ($booking->user) {
+            $booking->user->notify(new BookingStatusNotification($booking, 'rejected'));
+        }
 
         return response()->json(['success' => true]);
     }
 
     public function done(int $id)
     {
-        $booking = Booking::findOrFail($id);
+        $booking = Booking::with('user', 'doctor')->findOrFail($id);
         $booking->update(['status' => 'DONE']);
+
+        // Send in-app notification to patient
+        if ($booking->user) {
+            $booking->user->notify(new BookingStatusNotification($booking, 'done'));
+        }
 
         return response()->json(['success' => true]);
     }

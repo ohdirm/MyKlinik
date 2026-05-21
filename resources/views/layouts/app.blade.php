@@ -47,6 +47,73 @@
                         <a href="{{ route('login') }}" class="ml-2 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">Masuk</a>
                         <a href="{{ route('register') }}" class="px-6 py-2 rounded-xl text-sm font-semibold bg-accent hover:bg-accent-dark text-white transition-all shadow-sm shadow-accent/20">Daftar</a>
                     @else
+                        {{-- 🔔 Notification Bell --}}
+                        @if(Auth::user()->isPatient())
+                        <div class="relative ml-2" x-data="notificationBell()" x-init="fetchNotifications(); setInterval(() => fetchNotifications(), 30000)">
+                            <button @click="open = !open; if(open) fetchNotifications()" class="relative p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-brand dark:hover:text-white transition-all cursor-pointer" aria-label="Notifikasi">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                                <span x-show="unreadCount > 0" x-text="unreadCount > 9 ? '9+' : unreadCount" class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-black text-white bg-red-500 rounded-full px-1 shadow-lg animate-pulse" style="display: none;"></span>
+                            </button>
+
+                            {{-- Dropdown --}}
+                            <div x-show="open" @click.away="open = false"
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="transform opacity-0 scale-95 -translate-y-2"
+                                 x-transition:enter-end="transform opacity-100 scale-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-100"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-95"
+                                 class="absolute right-0 mt-2 w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 z-50 overflow-hidden" style="display: none;">
+
+                                {{-- Header --}}
+                                <div class="px-5 py-3.5 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/80 dark:bg-gray-950/80">
+                                    <h3 class="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2">
+                                        🔔 Notifikasi
+                                        <span x-show="unreadCount > 0" x-text="unreadCount" class="text-[10px] font-black bg-red-500 text-white px-1.5 py-0.5 rounded-full" style="display: none;"></span>
+                                    </h3>
+                                    <button x-show="unreadCount > 0" @click="markAllAsRead()" class="text-xs text-brand hover:text-blue-700 font-semibold cursor-pointer transition-colors" style="display: none;">
+                                        Tandai Semua Dibaca
+                                    </button>
+                                </div>
+
+                                {{-- List --}}
+                                <div class="max-h-80 overflow-y-auto divide-y divide-gray-50 dark:divide-gray-800">
+                                    <template x-if="notifications.length === 0">
+                                        <div class="px-5 py-10 text-center">
+                                            <div class="w-14 h-14 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-3">
+                                                <svg class="w-7 h-7 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                                            </div>
+                                            <p class="text-sm text-gray-400 dark:text-gray-500">Belum ada notifikasi</p>
+                                        </div>
+                                    </template>
+
+                                    <template x-for="notif in notifications" :key="notif.id">
+                                        <div @click="markAsRead(notif.id); notif.read = true"
+                                             class="px-5 py-3.5 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer transition-colors relative"
+                                             :class="notif.read ? 'opacity-60' : ''">
+                                            <div class="flex gap-3">
+                                                <div class="text-xl shrink-0 mt-0.5" x-text="notif.icon"></div>
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex items-center gap-2 mb-0.5">
+                                                        <p class="text-sm font-bold text-gray-900 dark:text-white truncate" x-text="notif.title"></p>
+                                                        <span x-show="!notif.read" class="w-2 h-2 rounded-full bg-brand shrink-0 animate-pulse"></span>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed" x-text="notif.message"></p>
+                                                    <p class="text-[10px] text-gray-400 dark:text-gray-600 mt-1.5 font-medium" x-text="notif.time"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                {{-- Footer --}}
+                                <div x-show="notifications.length > 0" class="px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-950/80 text-center" style="display: none;">
+                                    <a href="{{ route('patient.dashboard') }}" class="text-xs font-semibold text-brand hover:text-blue-700 transition-colors">Lihat Dashboard →</a>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         <div class="relative ml-2" x-data="{ dropdown: false }">
                             <button @click="dropdown = !dropdown" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all cursor-pointer">
                                 <div class="w-8 h-8 bg-brand/10 dark:bg-brand/20 text-brand rounded-full flex items-center justify-center text-xs font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
@@ -170,6 +237,61 @@
             </div>
         </div>
     </footer>
+
+    {{-- Notification Bell Component --}}
+    @auth
+    @if(Auth::user()->isPatient())
+    <script>
+        function notificationBell() {
+            return {
+                open: false,
+                notifications: [],
+                unreadCount: 0,
+                csrf: document.querySelector('meta[name="csrf-token"]')?.content,
+
+                fetchNotifications() {
+                    fetch('/notifications', {
+                        headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        this.notifications = data.notifications || [];
+                        this.unreadCount = data.unread_count || 0;
+                    })
+                    .catch(() => {});
+                },
+
+                markAsRead(id) {
+                    fetch(`/notifications/${id}/read`, {
+                        method: 'PATCH',
+                        headers: { 'X-CSRF-TOKEN': this.csrf, 'Accept': 'application/json' }
+                    })
+                    .then(() => {
+                        const n = this.notifications.find(n => n.id === id);
+                        if (n && !n.read) {
+                            n.read = true;
+                            this.unreadCount = Math.max(0, this.unreadCount - 1);
+                        }
+                    })
+                    .catch(() => {});
+                },
+
+                markAllAsRead() {
+                    fetch('/notifications/read-all', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': this.csrf, 'Accept': 'application/json' }
+                    })
+                    .then(() => {
+                        this.notifications.forEach(n => n.read = true);
+                        this.unreadCount = 0;
+                    })
+                    .catch(() => {});
+                }
+            };
+        }
+    </script>
+    @endif
+    @endauth
 
     {{-- Alpine.js CDN --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

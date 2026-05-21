@@ -85,4 +85,37 @@ class Booking extends Model
 
         return $startTime->addMinutes($minutesToAdd)->format('H:i');
     }
+
+    /**
+     * Generate WhatsApp confirmation link.
+     */
+    public function getWhatsappLinkAttribute(): string
+    {
+        $statusText = $this->status === 'CONFIRMED' ? '*DIKONFIRMASI*' : 'diterima';
+        $sourceText = $this->booking_source === 'WALK_IN' ? '(Walk-in)' : '';
+
+        $msg = urlencode(
+            "*KONFIRMASI PENDAFTARAN - MyKlinik911*\n\n"
+            ."Halo *{$this->patient_name}*, booking Anda telah {$statusText} {$sourceText}.\n\n"
+            ."📌 *Detail Booking:*\n"
+            ."- Kode: {$this->booking_code}\n"
+            ."- No. Antrean: *{$this->queue_number}*\n\n"
+            ."🩺 *Jadwal Periksa:*\n"
+            .'- Dokter: '.($this->doctor->name ?? '-')."\n"
+            .'- Tanggal: '.($this->exam_date ? $this->exam_date->format('d/m/Y') : '-')."\n"
+            .'- Jam: '.($this->schedule->time_range ?? '-')."\n\n"
+            ."💡 *Penting:*\n"
+            ."- Datanglah *15 menit* sebelum jadwal untuk verifikasi.\n"
+            ."- Tunjukkan pesan ini ke petugas pendaftaran.\n\n"
+            .'Terima kasih.'
+        );
+
+        $phone = ltrim($this->phone, '0');
+        // Ensure starting with 62
+        if (! str_starts_with($phone, '62')) {
+            $phone = '62'.$phone;
+        }
+
+        return "https://wa.me/{$phone}?text={$msg}";
+    }
 }

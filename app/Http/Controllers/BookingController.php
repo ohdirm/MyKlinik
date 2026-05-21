@@ -7,6 +7,7 @@ use App\Mail\BookingSubmitted;
 use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Schedule;
+use App\Notifications\BookingStatusNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -71,6 +72,9 @@ class BookingController extends Controller
         } catch (\Exception $e) {
             // Log error but continue
         }
+
+        // Send in-app notification
+        auth()->user()->notify(new BookingStatusNotification($booking, 'submitted'));
 
         return redirect()->back()->with('booking', $booking);
     }

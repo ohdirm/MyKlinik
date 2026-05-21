@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DoctorStatusController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientAuthController;
 use App\Http\Controllers\PatientDashboardController;
 use App\Http\Controllers\ReviewController;
@@ -48,6 +49,11 @@ Route::middleware('auth.patient')->group(function () {
     Route::get('/antrean-saya', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
     Route::get('/review/{booking}', [ReviewController::class, 'create'])->name('review.create');
     Route::post('/review/{booking}', [ReviewController::class, 'store'])->name('review.store');
+
+    // ── Notifikasi ──
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
 
 // ── AJAX / JSON (publik) ──
