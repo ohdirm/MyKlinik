@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -26,6 +27,8 @@ class Booking extends Model
         'status',
         'rejection_reason',
         'user_id',
+        'complaint',
+        'booking_source',
     ];
 
     protected function casts(): array
@@ -77,9 +80,9 @@ class Booking extends Model
             return null;
         }
 
-        $startTime = \Carbon\Carbon::createFromTimeString($this->schedule->start_time);
+        $startTime = Carbon::createFromTimeString($this->schedule->start_time);
         $minutesToAdd = ($this->queue_number - 1) * 15;
-        
+
         return $startTime->addMinutes($minutesToAdd)->format('H:i');
     }
 }

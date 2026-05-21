@@ -24,12 +24,13 @@ class BookingRequest extends FormRequest
             'gender' => ['required', 'in:L,P'],
             'doctor_id' => ['required', 'exists:doctors,id'],
             'schedule_id' => ['required', 'exists:schedules,id'],
-            'exam_date' => ['required', 'date', 'after:today', 'before_or_equal:'.now()->addDays(14)->toDateString()],
+            'exam_date' => ['required', 'date', 'after_or_equal:today', 'before_or_equal:'.now()->addDays(14)->toDateString()],
             'address' => ['required', 'string'],
             'province' => ['required', 'string'],
             'district' => ['required', 'string'],
             'sub_district' => ['required', 'string'],
             'village' => ['required', 'string'],
+            'complaint' => ['nullable', 'string', 'max:1000'],
         ];
     }
 

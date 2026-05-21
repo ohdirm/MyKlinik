@@ -29,29 +29,33 @@
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
+            {{-- Honeypot field for bot protection --}}
+            <div style="display: none;">
+                <input type="text" name="website_url" tabindex="-1" autocomplete="off">
+            </div>
             <div class="space-y-4">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                    <input type="text" name="name" id="name" class="input-base" value="{{ old('name') }}" required autofocus>
+                    <input type="text" name="name" id="name" class="input-base" value="{{ old('name') }}" placeholder="Masukkan Nama" required autofocus>
                 </div>
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" name="email" id="email" class="input-base" value="{{ old('email') }}" required>
+                    <input type="email" name="email" id="email" class="input-base" value="{{ old('email') }}" placeholder="example.911@gmail.com" required>
                 </div>
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" name="password" id="password" class="input-base" required minlength="8">
+                    <input type="password" name="password" id="password" class="input-base" placeholder="Masukkan Password" required minlength="8">
                     <p class="text-xs text-gray-400 mt-1">Minimal 8 karakter</p>
                 </div>
                 <div>
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="input-base" required>
+                    <input type="password" name="password_confirmation" id="password_confirmation" class="input-base" placeholder="Masukkan Ulang Password" required>
                 </div>
                 <div>
                     <label class="flex items-start gap-2 cursor-pointer">
                         <input type="checkbox" name="terms" id="terms" class="mt-1 rounded border-gray-300 text-brand shadow-sm focus:border-brand-light focus:ring focus:ring-brand-light focus:ring-opacity-50" required>
                         <span class="text-sm text-gray-600">
-                            Saya menyetujui <a href="#" class="text-brand font-medium hover:underline">Syarat & Ketentuan</a> serta <a href="#" class="text-brand font-medium hover:underline">Kebijakan Privasi</a> mengenai data pribadi.
+                            Saya menyetujui <a href="{{ route('terms') }}" target="_blank" class="text-brand font-medium hover:underline">Syarat & Ketentuan</a> serta <a href="{{ route('privacy') }}" target="_blank" class="text-brand font-medium hover:underline">Kebijakan Privasi</a> mengenai data pribadi.
                         </span>
                     </label>
                 </div>

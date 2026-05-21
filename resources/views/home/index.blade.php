@@ -14,13 +14,13 @@
             },
             {
                 image: '{{ asset('assets/clinic_bg2.png') }}',
-                title: 'Layanan Keluarga &<br><span class=\'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]\'>Spesialis Anak</span>',
-                desc: 'Konsultasi medis ramah anak dengan dokter spesialis berpengalaman untuk kenyamanan buah hati Anda.'
+                title: 'Konsultasi Nyaman <br><span class=\'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]\'>Bersama Dokter Ahli</span>',
+                desc: 'Temui tim dokter profesional dan berpengalaman yang siap memberikan solusi kesehatan terbaik untuk Anda dan keluarga.'
             },
             {
                 image: '{{ asset('assets/clinic_bg3.png') }}',
-                title: 'Fasilitas & Diagnostik<br><span class=\'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]\'>Modern & Presisi</span>',
-                desc: 'Didukung oleh teknologi medis terkini untuk hasil diagnosis yang cepat, akurat, dan terpercaya.'
+                title: 'Layanan Medis<br><span class=\'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]\'>Lengkap & Terintegrasi</span>',
+                desc: 'Mulai dari pemeriksaan umum hingga laboratorium, semua tersedia dalam satu tempat tanpa perlu antre lama.'
             }
         ],
         next() { this.activeSlide = (this.activeSlide + 1) % this.slides.length },

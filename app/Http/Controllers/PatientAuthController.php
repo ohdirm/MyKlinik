@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VerifyEmailCode;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmailCode;
 
 class PatientAuthController extends Controller
 {
@@ -58,6 +57,11 @@ class PatientAuthController extends Controller
 
     public function register(Request $request)
     {
+        // Honeypot check: If the hidden field 'website_url' is filled, it's a bot.
+        if ($request->filled('website_url')) {
+            return back()->withInput();
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',

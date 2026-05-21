@@ -75,11 +75,42 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Pilih Dokter <span class="text-red-500">*</span></label>
 
+                            {{-- ── Complaint Analysis / Doctor Suggestion ── --}}
+                            <div class="bg-brand/5 dark:bg-brand/10 border border-brand/20 dark:border-brand/30 rounded-2xl p-4 mb-5 shadow-inner">
+                                <label class="block text-xs font-bold text-brand dark:text-blue-400 uppercase tracking-wider mb-2">
+                                    🩺 Punya keluhan spesifik?
+                                </label>
+                                <div class="flex gap-2">
+                                    <textarea x-model="complaint" rows="2" class="input-base text-sm py-2 px-3" placeholder="Contoh: sakit perut, demam tinggi, pusing..."></textarea>
+                                    <button type="button" @click="analyzeComplaint()" class="bg-brand text-white px-4 rounded-xl hover:bg-brand/90 transition border-0 cursor-pointer flex flex-col items-center justify-center gap-1 shrink-0">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" x-show="!analyzing"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+                                        <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24" x-show="analyzing"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                                        <span class="text-[10px] font-bold uppercase" x-text="analyzing ? '...' : 'Cari'"></span>
+                                    </button>
+                                </div>
+
+                                {{-- Suggestion result --}}
+                                <div x-show="suggestion" class="mt-3 p-3 rounded-xl border text-xs space-y-1 bg-white dark:bg-gray-800 shadow-sm animate-fade-in" x-transition>
+                                    <div class="flex items-start gap-2">
+                                        <span class="text-brand">💡</span>
+                                        <div class="flex-1">
+                                            <p class="font-bold text-gray-900 dark:text-white" x-text="`Saran: ${suggestion?.suggested_doctor?.name}`"></p>
+                                            <p class="text-gray-500 dark:text-gray-400 italic mt-0.5" x-text="suggestion?.matched_specialization ? `Gejala Anda cocok dengan spesialisasi ${suggestion.matched_specialization.label}` : 'Dokter ini dapat melayani keluhan Anda.'"></p>
+                                            <p x-show="suggestion?.fallback" class="text-amber-600 dark:text-amber-400 font-medium mt-1" x-text="suggestion?.fallback_reason"></p>
+                                            <button type="button" @click="applySuggestion()" class="mt-3 w-full bg-brand/10 dark:bg-brand/20 text-brand dark:text-blue-400 py-2.5 rounded-xl text-xs font-bold hover:bg-brand hover:text-white transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 border border-brand/20">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                                                Pilih Dokter Ini & Gunakan Jadwal
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             {{-- Search & Filter --}}
                             <div class="flex gap-2 mb-3">
                                 <div class="relative flex-1">
                                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-                                    <input type="text" x-model="doctorSearch" placeholder="Cari nama dokter..."
+                                    <input type="text" x-model="doctorSearch" placeholder="Atau cari nama dokter di sini..."
                                            class="input-base pl-9 text-sm">
                                 </div>
                                 <select x-model="spFilter" class="input-base text-sm w-44">
@@ -125,7 +156,7 @@
                             <label for="exam-date" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tanggal Periksa <span class="text-red-500">*</span></label>
                             <input type="date" name="exam_date" id="exam-date" x-model="examDate" @change="onDateChange()"
                                    class="input-base"
-                                   min="{{ now()->addDay()->format('Y-m-d') }}"
+                                   min="{{ now()->format('Y-m-d') }}"
                                    max="{{ now()->addDays(14)->format('Y-m-d') }}"
                                    value="{{ old('exam_date') }}" required>
                         </div>
@@ -187,8 +218,10 @@
                         </div>
                         <div>
                             <label for="phone" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">No HP/WhatsApp <span class="text-red-500">*</span></label>
-                            <input type="text" name="phone" id="phone" class="input-base" maxlength="15" placeholder="08xxxxxxxxxx" value="{{ old('phone') }}" required>
+                            <input type="text" name="phone" id="phone" class="input-base" maxlength="15" placeholder="08xxxxxxxxxx" value="{{ old('phone', Auth::user()->phone ?? '') }}" required>
                         </div>
+                        {{-- Hidden Complaint Field for Form Submit --}}
+                        <input type="hidden" name="complaint" :value="complaint">
                     </div>
                 </div>
 
@@ -315,6 +348,9 @@
             selectedDoctorName: '',
             doctorSearch: '',
             spFilter: '',
+            complaint: '{{ old('complaint', '') }}',
+            analyzing: false,
+            suggestion: null,
 
             init() {
                 // If old input exists, jump to correct step
@@ -350,6 +386,59 @@
                         this.loadingSchedule = false;
                     })
                     .catch(() => { this.loadingSchedule = false; });
+            },
+
+            analyzeComplaint() {
+                if (this.complaint.trim().length < 3) { alert('Silakan tuliskan keluhan Anda terlebih dahulu.'); return; }
+                this.analyzing = true;
+                this.suggestion = null;
+
+                fetch('/api/suggest-doctor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ complaint: this.complaint, date: this.examDate || new Date().toISOString().slice(0,10) })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    this.analyzing = false;
+                    if (data.suggested_doctor) {
+                        this.suggestion = data;
+                    } else {
+                        alert('Maaf, kami tidak menemukan dokter yang spesifik untuk keluhan tersebut.');
+                    }
+                })
+                .catch(() => { this.analyzing = false; alert('Gagal menganalisis keluhan.'); });
+            },
+
+            applySuggestion() {
+                if (!this.suggestion) return;
+                this.doctorId = this.suggestion.suggested_doctor.id;
+                this.spFilter = ''; // Reset filter so selected doctor shows
+                this.doctorSearch = '';
+                
+                // If the user hasn't picked a date, set to today
+                if (!this.examDate) {
+                    this.examDate = new Date().toISOString().slice(0,10);
+                }
+
+                this.schedules = this.suggestion.schedules;
+                this.selectedDoctorName = this.suggestion.suggested_doctor.name;
+                
+                // Set schedule if only one
+                if (this.schedules.length === 1) {
+                    setTimeout(() => {
+                        const sel = document.getElementById('select-jadwal');
+                        if (sel) sel.value = this.schedules[0].id;
+                    }, 50);
+                }
+
+                this.suggestion = null;
+                // Scroll to schedules
+                document.getElementById('select-jadwal').scrollIntoView({ behavior: 'smooth', block: 'center' });
             },
 
             nextStep() {

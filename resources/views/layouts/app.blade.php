@@ -144,7 +144,7 @@
                     <ul class="text-sm space-y-2 opacity-80">
                         <li class="flex justify-between"><span>Senin - Jumat</span><span>08:00 - 17:00</span></li>
                         <li class="flex justify-between"><span>Sabtu</span><span>08:00 - 12:00</span></li>
-                        <li class="flex justify-between text-red-400"><span>Minggu & Libur</span><span>Tutup</span></li>
+                        <li class="flex justify-between text-red-400"><span>Minggu & Hari Libur</span><span>Tutup</span></li>
                     </ul>
                 </div>
                 <div>

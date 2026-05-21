@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookingRequest;
+use App\Mail\BookingSubmitted;
 use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Schedule;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class BookingController extends Controller
@@ -63,6 +64,13 @@ class BookingController extends Controller
         ]));
 
         $booking->load('doctor', 'schedule');
+
+        // Send submission email automatically
+        try {
+            Mail::to(auth()->user()->email)->send(new BookingSubmitted($booking));
+        } catch (\Exception $e) {
+            // Log error but continue
+        }
 
         return redirect()->back()->with('booking', $booking);
     }

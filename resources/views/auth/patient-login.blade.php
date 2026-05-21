@@ -36,11 +36,11 @@
             <div class="space-y-4">
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" name="email" id="email" class="input-base" value="{{ old('email') }}" required autofocus>
+                    <input type="email" name="email" id="email" class="input-base" value="{{ old('email') }}" placeholder="example.911@gmail.com" required autofocus>
                 </div>
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" name="password" id="password" class="input-base" required>
+                    <input type="password" name="password" id="password" class="input-base" placeholder="Masukkan Password" required>
                 </div>
                 <div class="flex items-center">
                     <input type="checkbox" name="remember" id="remember" class="rounded border-gray-300 text-brand focus:ring-brand">
