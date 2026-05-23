@@ -5,17 +5,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Models\DoctorStatus;
+use App\Models\Specialization;
 use Illuminate\Http\Request;
 
 class DoctorStatusController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $doctors = Doctor::where('is_active', true)
-            ->with('status')
-            ->get();
+        $query = Doctor::where('is_active', true)->with('status');
 
-        return view('admin.doctor-status.index', compact('doctors'));
+        if ($request->filled('specialization')) {
+            $query->where('specialization', $request->specialization);
+        }
+
+        $doctors = $query->get();
+        $specializations = Specialization::orderBy('label')->get();
+
+        return view('admin.doctor-status.index', compact('doctors', 'specializations'));
     }
 
     public function update(Request $request, int $doctorId)

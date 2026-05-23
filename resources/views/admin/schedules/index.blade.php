@@ -2,15 +2,26 @@
 @section('title', 'Kelola Jadwal — MyKlinik911')
 @section('content')
 
-<div class="flex items-center justify-between mb-6">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Jadwal Dokter</h1>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Kelola jadwal praktik per dokter</p>
     </div>
-    <a href="{{ route('admin.schedules.create') }}" class="btn-primary flex items-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-        Tambah Jadwal
-    </a>
+    <div class="flex items-center gap-3">
+        <form method="GET" action="{{ route('admin.schedules.index') }}" id="filter-schedule-spec-form">
+            <select name="specialization" onchange="document.getElementById('filter-schedule-spec-form').submit()"
+                    class="text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
+                <option value="">Semua Spesialisasi</option>
+                @foreach($specializations as $spec)
+                    <option value="{{ $spec->value }}" {{ request('specialization') === $spec->value ? 'selected' : '' }}>{{ $spec->label }}</option>
+                @endforeach
+            </select>
+        </form>
+        <a href="{{ route('admin.schedules.create') }}" class="btn-primary flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+            Tambah Jadwal
+        </a>
+    </div>
 </div>
 
 @if(session('success'))

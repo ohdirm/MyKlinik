@@ -5,18 +5,25 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Models\Schedule;
+use App\Models\Specialization;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $doctors = Doctor::where('is_active', true)
-            ->with(['schedules' => fn($q) => $q->orderBy('day_of_week')])
-            ->orderBy('name')
-            ->get();
+        $query = Doctor::where('is_active', true)
+            ->with(['schedules' => fn ($q) => $q->orderBy('day_of_week')])
+            ->orderBy('name');
 
-        return view('admin.schedules.index', compact('doctors'));
+        if ($request->filled('specialization')) {
+            $query->where('specialization', $request->specialization);
+        }
+
+        $doctors = $query->get();
+        $specializations = Specialization::orderBy('label')->get();
+
+        return view('admin.schedules.index', compact('doctors', 'specializations'));
     }
 
     public function create()

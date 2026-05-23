@@ -1,7 +1,18 @@
 @extends('layouts.admin')
 @section('title', 'Status Dokter — Admin MyKlinik911')
 @section('content')
-<h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Status Dokter</h1>
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Status Dokter</h1>
+    <form method="GET" action="{{ route('admin.doctor-status.index') }}" id="filter-specialization-form">
+        <select name="specialization" onchange="document.getElementById('filter-specialization-form').submit()"
+                class="text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
+            <option value="">Semua Spesialisasi</option>
+            @foreach($specializations as $spec)
+                <option value="{{ $spec->value }}" {{ request('specialization') === $spec->value ? 'selected' : '' }}>{{ $spec->label }}</option>
+            @endforeach
+        </select>
+    </form>
+</div>
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @foreach($doctors as $doctor)
     @php $st = $doctor->status; $currentStatus = $st->current_status ?? 'AVAILABLE'; @endphp

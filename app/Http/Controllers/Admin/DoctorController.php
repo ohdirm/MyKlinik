@@ -10,11 +10,18 @@ use Illuminate\Support\Facades\Storage;
 
 class DoctorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $doctors = Doctor::latest()->paginate(15);
+        $query = Doctor::latest();
 
-        return view('admin.doctors.index', compact('doctors'));
+        if ($request->filled('specialization')) {
+            $query->where('specialization', $request->specialization);
+        }
+
+        $doctors = $query->paginate(15)->withQueryString();
+        $specializations = Specialization::orderBy('label')->get();
+
+        return view('admin.doctors.index', compact('doctors', 'specializations'));
     }
 
     public function create()
@@ -31,11 +38,11 @@ class DoctorController extends Controller
         $validValues = Specialization::pluck('value')->toArray();
 
         $validated = $request->validate([
-            'name'           => 'required|string|max:255',
-            'specialization' => ['required', 'string', 'in:' . implode(',', $validValues)],
-            'bio'            => 'nullable|string',
-            'photo'          => 'nullable|image|max:2048',
-            'is_active'      => 'boolean',
+            'name' => 'required|string|max:255',
+            'specialization' => ['required', 'string', 'in:'.implode(',', $validValues)],
+            'bio' => 'nullable|string',
+            'photo' => 'nullable|image|max:2048',
+            'is_active' => 'boolean',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -74,11 +81,11 @@ class DoctorController extends Controller
         $validValues = Specialization::pluck('value')->toArray();
 
         $validated = $request->validate([
-            'name'           => 'required|string|max:255',
-            'specialization' => ['required', 'string', 'in:' . implode(',', $validValues)],
-            'bio'            => 'nullable|string',
-            'photo'          => 'nullable|image|max:2048',
-            'is_active'      => 'boolean',
+            'name' => 'required|string|max:255',
+            'specialization' => ['required', 'string', 'in:'.implode(',', $validValues)],
+            'bio' => 'nullable|string',
+            'photo' => 'nullable|image|max:2048',
+            'is_active' => 'boolean',
         ]);
 
         if ($request->hasFile('photo')) {

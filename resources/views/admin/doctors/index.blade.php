@@ -1,9 +1,20 @@
 @extends('layouts.admin')
 @section('title', 'Kelola Dokter — MyKlinik911')
 @section('content')
-<div class="flex items-center justify-between mb-6">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dokter</h1>
-    <a href="{{ route('admin.doctors.create') }}" class="btn-primary">+ Tambah Dokter</a>
+    <div class="flex items-center gap-3">
+        <form method="GET" action="{{ route('admin.doctors.index') }}" id="filter-doctor-spec-form">
+            <select name="specialization" onchange="document.getElementById('filter-doctor-spec-form').submit()"
+                    class="text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
+                <option value="">Semua Spesialisasi</option>
+                @foreach($specializations as $spec)
+                    <option value="{{ $spec->value }}" {{ request('specialization') === $spec->value ? 'selected' : '' }}>{{ $spec->label }}</option>
+                @endforeach
+            </select>
+        </form>
+        <a href="{{ route('admin.doctors.create') }}" class="btn-primary">+ Tambah Dokter</a>
+    </div>
 </div>
 <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm overflow-hidden transition-colors duration-200">
     <div class="overflow-x-auto">
