@@ -27,9 +27,10 @@
         {{-- Sidebar --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 w-64 bg-brand text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col">
             {{-- Logo --}}
-            <div class="flex items-center gap-2 px-6 h-16 border-b border-white/10 shrink-0">
-                <svg class="w-7 h-7 text-accent" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                <span class="font-bold text-lg text-white">MyKlinik911</span>
+            <div class="flex items-center px-6 h-16 border-b border-white/10 shrink-0">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center hover:opacity-90 transition-opacity">
+                    <img src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911 Logo" class="h-11 w-auto">
+                </a>
             </div>
 
             {{-- Menu --}}

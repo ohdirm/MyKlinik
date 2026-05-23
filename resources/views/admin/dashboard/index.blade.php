@@ -5,24 +5,6 @@
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
 </div>
 
-{{-- Reset Modal --}}
-<div id="reset-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 max-w-md w-full shadow-xl">
-        <h3 class="font-bold text-gray-900 dark:text-white text-lg mb-2">⚠️ Tutup Klinik</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Tindakan ini akan:</p>
-        <ul class="text-sm text-gray-600 dark:text-gray-300 mb-4 space-y-1 list-disc list-inside">
-            <li>Mengubah semua status dokter menjadi <strong>Tidak Tersedia</strong></li>
-            <li>Mereset nomor antrean ke 0</li>
-            <li>Membatalkan semua booking hari ini yang masih PENDING/CONFIRMED</li>
-        </ul>
-        <p class="text-sm text-red-600 font-semibold mb-4">Tindakan ini tidak dapat dibatalkan!</p>
-        <div class="flex gap-3">
-            <button onclick="resetDaily()" class="btn-primary flex-1 bg-red-600 hover:bg-red-700 cursor-pointer">Ya, Tutup Klinik</button>
-            <button onclick="document.getElementById('reset-modal').classList.add('hidden')" class="btn-outline flex-1 cursor-pointer">Batal</button>
-        </div>
-    </div>
-</div>
-
 @push('scripts')
 <script>
 function resetDaily() {

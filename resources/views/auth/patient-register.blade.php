@@ -10,10 +10,8 @@
 <body class="bg-gradient-to-br from-brand to-brand-dark min-h-screen flex items-center justify-center p-4 font-sans">
     <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
         <div class="text-center mb-6">
-            <a href="{{ route('home') }}" class="inline-block">
-                <div class="w-16 h-16 bg-brand-light text-brand rounded-2xl flex items-center justify-center mx-auto mb-3">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                </div>
+            <a href="{{ route('home') }}" class="inline-block mb-3 hover:opacity-90 transition-opacity">
+                <img src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911 Logo" class="h-20 w-auto mx-auto">
             </a>
             <h1 class="text-2xl font-bold text-gray-900">Daftar Akun Baru</h1>
             <p class="text-sm text-gray-500">Buat akun untuk mulai booking dokter</p>
