@@ -2,7 +2,7 @@
 @section('title', 'Pendaftaran Online — MyKlinik911')
 @section('content')
 
-<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900 py-10 transition-colors duration-200"
+<div class="min-h-screen bg-gradient-to-br from-[#f2faf5] via-white to-[#e8f5ed] dark:from-[#141b18] dark:via-[#0a0f0d] dark:to-[#141b18] py-10 transition-colors duration-200"
      x-data="bookingWizard()"
      x-init="init()">
 
@@ -15,25 +15,23 @@
                 </div>
                 <span class="group-hover:text-brand">Kembali ke Beranda</span>
             </a>
-        </div>
-
-        {{-- Header --}}
+        </div>        {{-- Header --}}
         <div class="text-center mb-8">
-            <div class="inline-flex items-center gap-2 bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300 text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
+            <div class="inline-flex items-center gap-2 bg-brand/10 text-brand-dark dark:bg-brand/20 dark:text-brand text-xs font-semibold px-4 py-1.5 rounded-full mb-3">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                 Pendaftaran Online
             </div>
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Buat Janji Temu</h1>
             <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">Selesaikan dalam 3 langkah mudah</p>
         </div>
-
+ 
         {{-- Step Indicator --}}
         <div class="flex items-center justify-center mb-8">
             <template x-for="(label, i) in ['Jadwal', 'Data Pasien', 'Domisili']" :key="i">
                 <div class="flex items-center">
                     <div class="flex flex-col items-center">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2"
-                             :class="step > i+1 ? 'bg-teal-500 border-teal-500 text-white' : (step === i+1 ? 'bg-brand border-brand text-white shadow-lg scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400')">
+                             :class="step > i+1 ? 'bg-brand-dark border-brand-dark text-white' : (step === i+1 ? 'bg-brand border-brand text-white shadow-lg scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400')">
                             <template x-if="step > i+1">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                             </template>
@@ -45,10 +43,10 @@
                               :class="step === i+1 ? 'text-brand' : 'text-gray-400'" x-text="label"></span>
                     </div>
                     <div x-show="i < 2" class="w-16 h-0.5 mb-4 mx-1 transition-colors duration-300"
-                         :class="step > i+1 ? 'bg-teal-400' : 'bg-gray-200'"></div>
+                         :class="step > i+1 ? 'bg-brand-dark' : 'bg-gray-200'"></div>
                 </div>
             </template>
-        </div>
+        </div>v>
 
         {{-- Error bag --}}
         @if($errors->any())
@@ -314,16 +312,16 @@
         </div>
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Pendaftaran Berhasil!</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Kode Booking Anda</p>
-        <p class="text-4xl font-bold text-brand dark:text-blue-400 tracking-widest mb-5">{{ $bk->booking_code }}</p>
+        <p class="text-4xl font-bold text-brand dark:text-brand tracking-widest mb-5">{{ $bk->booking_code }}</p>
         <div class="bg-gray-50 dark:bg-gray-950 rounded-xl p-4 mb-4 text-left text-sm space-y-2 border border-gray-100 dark:border-gray-800">
             <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2 mb-2">
                 <span class="text-gray-500 dark:text-gray-400">Nomor Antrean:</span>
-                <span class="font-bold text-3xl text-brand dark:text-blue-400">{{ $bk->queue_number }}</span>
+                <span class="font-bold text-3xl text-brand dark:text-brand">{{ $bk->queue_number }}</span>
             </div>
             @if($bk->estimated_time)
-            <div class="flex justify-between items-center bg-blue-50 dark:bg-blue-950/40 p-2 rounded-lg">
-                <span class="text-blue-800 dark:text-blue-300 font-medium">🕒 Estimasi Dilayani:</span>
-                <span class="font-bold text-blue-900 dark:text-blue-200">Jam {{ $bk->estimated_time }}</span>
+            <div class="flex justify-between items-center bg-brand/10 dark:bg-brand/20 p-2 rounded-lg">
+                <span class="text-brand-dark dark:text-brand font-medium">🕒 Estimasi Dilayani:</span>
+                <span class="font-bold text-brand-dark dark:text-brand">Jam {{ $bk->estimated_time }}</span>
             </div>
             @endif
             <p><span class="text-gray-500 dark:text-gray-400">Dokter:</span> <span class="font-medium text-gray-950 dark:text-gray-200">{{ $bk->doctor->name }}</span></p>

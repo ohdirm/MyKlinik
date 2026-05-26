@@ -62,7 +62,7 @@
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-5 leading-tight tracking-tight drop-shadow-md transition-all duration-300"
                 x-html="slides[activeSlide].title">
             </h1>
-            <p class="text-lg md:text-xl text-blue-50/95 mb-8 max-w-2xl mx-auto font-medium drop-shadow-sm transition-all duration-300"
+            <p class="text-lg md:text-xl text-white/85 mb-8 max-w-2xl mx-auto font-medium drop-shadow-sm transition-all duration-300"
                x-text="slides[activeSlide].desc">
             </p>
         </div>
@@ -229,7 +229,7 @@
 <section class="py-16 bg-gradient-to-r from-brand to-brand-dark text-white">
     <div class="max-w-4xl mx-auto px-4 text-center">
         <h2 class="text-3xl font-bold mb-4">Siap Untuk Berkonsultasi?</h2>
-        <p class="text-blue-100 mb-8">Daftar sekarang dan buat janji temu dengan dokter pilihan Anda</p>
+        <p class="text-white/90 mb-8">Daftar sekarang dan buat janji temu dengan dokter pilihan Anda</p>
         @auth
             <a href="{{ route('booking.index') }}" class="inline-block bg-accent hover:bg-accent-dark text-white px-8 py-3.5 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg">
                 Buat Janji Sekarang

@@ -27,9 +27,9 @@
         {{-- Sidebar --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 w-64 bg-brand text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col">
             {{-- Logo --}}
-            <div class="flex items-center px-6 h-16 border-b border-gray-100 dark:border-white/10 border-r border-gray-200 dark:border-none shrink-0 bg-brand-light dark:bg-black transition-colors duration-200">
+            <div class="flex items-center px-6 h-24 border-b border-gray-100 dark:border-white/10 border-r border-gray-200 dark:border-none shrink-0 bg-brand-light dark:bg-black transition-colors duration-200">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center hover:opacity-90 transition-opacity">
-                    <img src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911 Logo" class="h-14 w-auto drop-shadow-sm transition-all duration-300">
+                    <img src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911 Logo" class="h-18 w-auto drop-shadow-sm transition-all duration-300">
                 </a>
             </div>
 

@@ -23,7 +23,7 @@
                      alt="{{ $doctor->name }}"
                      class="w-12 h-12 rounded-full object-cover shrink-0 border-2 border-brand/20">
             @else
-                <div class="w-12 h-12 rounded-full bg-brand-light dark:bg-brand/20 text-brand dark:text-blue-300 flex items-center justify-center font-bold shrink-0">{{ $doctor->initials }}</div>
+                <div class="w-12 h-12 rounded-full bg-brand-light dark:bg-brand/10 text-brand-dark dark:text-brand flex items-center justify-center font-bold shrink-0">{{ $doctor->initials }}</div>
             @endif
             <div>
                 <h3 class="font-semibold text-gray-900 dark:text-white">{{ $doctor->name }}</h3>
