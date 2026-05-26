@@ -11,18 +11,18 @@
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* Brand Colors */
-    --color-brand: #0F5D8C;
-    --color-brand-dark: #0a4066;
-    --color-brand-light: #e8f2f9;
+    /* Brand Colors (Mint & Sage) */
+    --color-brand: #A8D5BA;
+    --color-brand-dark: #6B9080;
+    --color-brand-light: #F6FBF8;
 
-    --color-accent: #C51F27;
-    --color-accent-dark: #a01920;
+    --color-accent: #6B9080;
+    --color-accent-dark: #537264;
 
-    /* Semantic UI Colors - Adaptable for Dark Mode */
-    --color-ui-bg: #f9fafb;
-    --color-ui-surface: #ffffff;
-    --color-ui-text: #111827;
+    /* Semantic UI Colors */
+    --color-ui-bg: #FFFFFF;
+    --color-ui-surface: #FFFFFF;
+    --color-ui-text: #2F2F2F;
     --color-ui-text-muted: #6b7280;
     --color-ui-border: #e5e7eb;
 
@@ -36,22 +36,22 @@
 @layer base {
     :root {
         color-scheme: light;
-        --ui-bg: #f9fafb;
-        --ui-surface: #ffffff;
-        --ui-text: #111827;
-        --ui-text-muted: #6b7280;
-        --ui-border: #e5e7eb;
-        --ui-card-hover: rgba(15, 93, 140, 0.05);
+        --ui-bg: #FFFFFF;
+        --ui-surface: #FFFFFF;
+        --ui-text: #2F2F2F;
+        --ui-text-muted: #6B9080;
+        --ui-border: #e2efe7;
+        --ui-card-hover: rgba(168, 213, 186, 0.1);
     }
 
     .dark {
         color-scheme: dark;
-        --ui-bg: #030712;
-        --ui-surface: #111827;
-        --ui-text: #f9fafb;
-        --ui-text-muted: #9ca3af;
-        --ui-border: #374151;
-        --ui-card-hover: rgba(255, 255, 255, 0.05);
+        --ui-bg: #141b18;
+        --ui-surface: #1c2622;
+        --ui-text: #F6FBF8;
+        --ui-text-muted: #A8D5BA;
+        --ui-border: #283731;
+        --ui-card-hover: rgba(168, 213, 186, 0.05);
     }
 
     body {

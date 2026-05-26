@@ -76,28 +76,29 @@
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Pilih Dokter <span class="text-red-500">*</span></label>
 
                             {{-- ── Complaint Analysis / Doctor Suggestion ── --}}
-                            <div class="bg-brand/5 dark:bg-brand/10 border border-brand/20 dark:border-brand/30 rounded-2xl p-4 mb-5 shadow-inner">
-                                <label class="block text-xs font-bold text-brand dark:text-blue-400 uppercase tracking-wider mb-2">
-                                    🩺 Punya keluhan spesifik?
+                            <div class="bg-[#F6FBF8] dark:bg-[#1c2622]/30 border border-[#e2efe7] dark:border-[#283731] rounded-3xl p-5 mb-5 shadow-sm">
+                                <label class="block text-xs font-black text-brand-dark dark:text-brand uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                                    <svg class="w-4 h-4 text-brand-dark dark:text-brand" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+                                    Punya keluhan spesifik?
                                 </label>
-                                <div class="flex gap-2">
-                                    <textarea x-model="complaint" rows="2" class="input-base text-sm py-2 px-3" placeholder="Contoh: sakit perut, demam tinggi, pusing..."></textarea>
-                                    <button type="button" @click="analyzeComplaint()" class="bg-brand text-white px-4 rounded-xl hover:bg-brand/90 transition border-0 cursor-pointer flex flex-col items-center justify-center gap-1 shrink-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" x-show="!analyzing"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
-                                        <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24" x-show="analyzing"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
-                                        <span class="text-[10px] font-bold uppercase" x-text="analyzing ? '...' : 'Cari'"></span>
+                                <div class="flex gap-3 items-center">
+                                    <textarea x-model="complaint" rows="2" class="flex-1 input-base text-sm py-3 px-4 resize-none rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand" placeholder="Contoh: sakit perut, demam tinggi, pusing..."></textarea>
+                                    <button type="button" @click="analyzeComplaint()" class="w-16 h-16 bg-[#A8D5BA] hover:bg-[#96c4a9] text-[#1b2621] rounded-2xl flex flex-col items-center justify-center gap-1 shrink-0 shadow-sm transition active:scale-95 cursor-pointer border-0">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" x-show="!analyzing"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+                                        <svg class="animate-spin w-5 h-5 text-[#1b2621]" fill="none" viewBox="0 0 24 24" x-show="analyzing"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                                        <span class="text-[9px] font-black uppercase tracking-wider" x-text="analyzing ? '...' : 'Cari'"></span>
                                     </button>
                                 </div>
 
                                 {{-- Suggestion result --}}
-                                <div x-show="suggestion" class="mt-3 p-3 rounded-xl border text-xs space-y-1 bg-white dark:bg-gray-800 shadow-sm animate-fade-in" x-transition>
-                                    <div class="flex items-start gap-2">
-                                        <span class="text-brand">💡</span>
+                                <div x-show="suggestion" class="mt-4 p-4 rounded-2xl border text-xs space-y-2 bg-white dark:bg-gray-950 shadow-sm border-gray-100 dark:border-gray-800 animate-fade-in" x-transition>
+                                    <div class="flex items-start gap-3">
+                                        <span class="text-brand text-lg">💡</span>
                                         <div class="flex-1">
                                             <p class="font-bold text-gray-900 dark:text-white" x-text="`Saran: ${suggestion?.suggested_doctor?.name}`"></p>
-                                            <p class="text-gray-500 dark:text-gray-400 italic mt-0.5" x-text="suggestion?.matched_specialization ? `Gejala Anda cocok dengan spesialisasi ${suggestion.matched_specialization.label}` : 'Dokter ini dapat melayani keluhan Anda.'"></p>
-                                            <p x-show="suggestion?.fallback" class="text-amber-600 dark:text-amber-400 font-medium mt-1" x-text="suggestion?.fallback_reason"></p>
-                                            <button type="button" @click="applySuggestion()" class="mt-3 w-full bg-brand/10 dark:bg-brand/20 text-brand dark:text-blue-400 py-2.5 rounded-xl text-xs font-bold hover:bg-brand hover:text-white transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 border border-brand/20">
+                                            <p class="text-gray-500 dark:text-gray-400 italic mt-1 leading-relaxed" x-text="suggestion?.matched_specialization ? `Gejala Anda cocok dengan spesialisasi ${suggestion.matched_specialization.label}` : 'Dokter ini dapat melayani keluhan Anda.'"></p>
+                                            <p x-show="suggestion?.fallback" class="text-amber-600 dark:text-amber-400 font-semibold mt-1" x-text="suggestion?.fallback_reason"></p>
+                                            <button type="button" @click="applySuggestion()" class="mt-3 w-full bg-brand/10 dark:bg-brand/20 text-brand-dark dark:text-brand py-2.5 rounded-xl text-xs font-bold hover:bg-brand hover:text-[#1b2621] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 border border-brand/20">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                                                 Pilih Dokter Ini & Gunakan Jadwal
                                             </button>
@@ -107,13 +108,13 @@
                             </div>
 
                             {{-- Search & Filter --}}
-                            <div class="flex gap-2 mb-3">
+                            <div class="flex gap-3 mb-4">
                                 <div class="relative flex-1">
-                                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+                                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
                                     <input type="text" x-model="doctorSearch" placeholder="Atau cari nama dokter di sini..."
-                                           class="input-base pl-9 text-sm">
+                                           class="input-base pl-11 text-sm py-3 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand">
                                 </div>
-                                <select x-model="spFilter" class="input-base text-sm w-44">
+                                <select x-model="spFilter" class="input-base text-sm w-48 py-3 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand">
                                     <option value="">Semua Spesialis</option>
                                     @foreach($doctors->pluck('specialization_label')->unique()->sort() as $sp)
                                         <option value="{{ $sp }}">{{ $sp }}</option>
@@ -121,33 +122,39 @@
                                 </select>
                             </div>
 
-                            {{-- Doctor Cards (scrollable) --}}
-                            <div class="space-y-2 max-h-64 overflow-y-auto pr-1 rounded-xl" id="doctor-cards">
+                            {{-- Doctor Cards (scrollable list) --}}
+                            <div class="space-y-3 max-h-80 overflow-y-auto pr-2 rounded-2xl scrollbar-thin scrollbar-thumb-brand/20 scrollbar-track-transparent" id="doctor-cards">
                                 @foreach($doctors as $doc)
-                                <label class="relative flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-brand/5 dark:hover:bg-brand/10 group"
-                                       :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand/5 shadow-sm dark:bg-brand/10' : 'border-gray-100 dark:border-gray-800'"
+                                <label class="relative flex items-center gap-4 p-4 rounded-3xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-brand/5 dark:hover:bg-brand/10 group"
+                                       :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950'"
                                        x-show="(doctorSearch === '' || '{{ strtolower($doc->name) }}'.includes(doctorSearch.toLowerCase())) && (spFilter === '' || spFilter === '{{ $doc->specialization_label }}')"
                                        >
                                     <input type="radio" name="doctor_id" value="{{ $doc->id }}" class="sr-only" x-model="doctorId" @change="onDoctorChange()" {{ old('doctor_id') == $doc->id ? 'checked' : '' }}>
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold flex-shrink-0 shadow-sm border-2 border-white/10 overflow-hidden">
+                                    
+                                    {{-- Avatar circle with initials or photo --}}
+                                    <div class="w-12 h-12 rounded-full bg-brand/20 dark:bg-brand/10 text-brand-dark dark:text-brand flex items-center justify-center font-bold text-sm shrink-0 border-0 overflow-hidden">
                                         @if($doc->photo_url)
                                             <img src="{{ $doc->photo_url }}" alt="{{ $doc->name }}" class="w-full h-full object-cover">
                                         @else
                                             {{ $doc->initials }}
                                         @endif
                                     </div>
+                                    
+                                    {{-- Doctor Info --}}
                                     <div class="flex-1 min-w-0">
-                                        <p class="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{{ $doc->name }}</p>
-                                        <p class="text-xs text-teal-600 dark:text-teal-400 font-medium mt-0.5">{{ $doc->specialization_label }}</p>
+                                        <p class="font-bold text-gray-900 dark:text-white text-sm leading-tight">{{ $doc->name }}</p>
+                                        <p class="text-xs text-brand-dark dark:text-brand font-semibold mt-1">{{ $doc->specialization_label }}</p>
                                     </div>
-                                    <div class="w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors"
-                                         :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand' : 'border-gray-300 dark:border-gray-600'">
-                                        <div class="w-1.5 h-1.5 rounded-full bg-white" x-show="doctorId == '{{ $doc->id }}'"></div>
+                                    
+                                    {{-- Radio indicator --}}
+                                    <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
+                                         :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand' : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950'">
+                                        <div class="w-2 h-2 rounded-full bg-white" x-show="doctorId == '{{ $doc->id }}'"></div>
                                     </div>
                                 </label>
                                 @endforeach
                                 <p x-show="$el.previousElementSibling && [...$el.parentElement.querySelectorAll('label')].every(l => l.style.display === 'none')"
-                                   class="text-center text-sm text-gray-400 py-4">Dokter tidak ditemukan</p>
+                                   class="text-center text-sm text-gray-400 py-6">Dokter tidak ditemukan</p>
                             </div>
                         </div>
 
@@ -155,7 +162,7 @@
                         <div>
                             <label for="exam-date" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tanggal Periksa <span class="text-red-500">*</span></label>
                             <input type="date" name="exam_date" id="exam-date" x-model="examDate" @change="onDateChange()"
-                                   class="input-base"
+                                   class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand"
                                    min="{{ now()->format('Y-m-d') }}"
                                    max="{{ now()->addDays(14)->format('Y-m-d') }}"
                                    value="{{ old('exam_date') }}" required>
@@ -165,10 +172,10 @@
                         <div>
                             <label for="select-jadwal" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jadwal Waktu <span class="text-red-500">*</span></label>
                             <div x-show="loadingSchedule" class="flex items-center gap-2 text-sm text-gray-400 py-3">
-                                <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                                <svg class="animate-spin w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
                                 Memuat jadwal...
                             </div>
-                            <select name="schedule_id" id="select-jadwal" class="input-base" :disabled="schedules.length === 0" x-show="!loadingSchedule" required>
+                            <select name="schedule_id" id="select-jadwal" class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand" :disabled="schedules.length === 0" x-show="!loadingSchedule" required>
                                 <option value="">— Pilih jadwal —</option>
                                 <template x-for="s in schedules" :key="s.id">
                                     <option :value="s.id" x-text="`${s.day_name} — ${s.start_time} - ${s.end_time} (Maks: ${s.max_patients} pasien)`"></option>
@@ -181,9 +188,9 @@
 
                 {{-- ══ STEP 2: Data Pasien ══ --}}
                 <div x-show="step === 2" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
-                    <div class="bg-gradient-to-r from-violet-600 to-purple-600 px-6 py-4">
+                    <div class="bg-gradient-to-r from-brand to-teal-600 px-6 py-4">
                         <h2 class="text-white font-semibold text-lg">Langkah 2: Data Pasien</h2>
-                        <p class="text-white/70 text-xs mt-0.5">Isi data diri pasien yang akan diperiksa</p>
+                        <p class="text-white/85 text-xs mt-0.5">Isi data diri pasien yang akan diperiksa</p>
                     </div>
                     <div class="p-6 space-y-5">
                         <div>
@@ -227,9 +234,9 @@
 
                 {{-- ══ STEP 3: Domisili & Konfirmasi ══ --}}
                 <div x-show="step === 3" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
-                    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4">
+                    <div class="bg-gradient-to-r from-brand to-teal-600 px-6 py-4">
                         <h2 class="text-white font-semibold text-lg">Langkah 3: Alamat & Konfirmasi</h2>
-                        <p class="text-white/70 text-xs mt-0.5">Lengkapi alamat domisili dan kirimkan pendaftaran</p>
+                        <p class="text-white/85 text-xs mt-0.5">Lengkapi alamat domisili dan kirimkan pendaftaran</p>
                     </div>
                     <div class="p-6 space-y-5">
                         <div>
@@ -282,8 +289,8 @@
                         Selanjutnya →
                     </button>
                     <button type="submit" x-show="step === 3"
-                            class="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-3 rounded-xl transition text-sm shadow-sm">
-                        ✅ Daftar Sekarang
+                            class="flex-1 bg-gradient-to-r from-brand to-[#85cca0] hover:from-[#96d7af] hover:to-brand text-white font-bold py-3 rounded-xl transition text-sm shadow-sm active:scale-95 cursor-pointer">
+                        Daftar Sekarang
                     </button>
                 </div>
             </form>

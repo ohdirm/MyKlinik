@@ -51,8 +51,8 @@
              :style="'background-image: url(' + slide.image + ');'">
             
             {{-- Overlays --}}
-            <div class="absolute inset-0 bg-[#0F5D8C]/80 dark:bg-gray-950/90 transition-colors duration-500"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0F5D8C]/50 to-transparent dark:from-gray-950/50"></div>
+            <div class="absolute inset-0 bg-[#2d3e35]/80 dark:bg-[#141b18]/90 transition-colors duration-500"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#2d3e35]/50 to-transparent dark:from-[#141b18]/50"></div>
         </div>
     </template>
 
@@ -115,29 +115,29 @@
 </section>
 
 {{-- About Section --}}
-<section class="py-16 bg-white dark:bg-gray-900 transition-colors duration-200">
+<section class="py-16 bg-[var(--ui-surface)] transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Tentang MyKlinik911</h2>
             <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">Klinik kesehatan modern dengan pelayanan profesional dan sistem antrean digital yang memudahkan Anda.</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="group text-center p-6 rounded-2xl transition-all hover:bg-brand/5 dark:hover:bg-brand/10">
-                <div class="w-16 h-16 bg-brand-light dark:bg-brand/20 text-brand dark:text-blue-300 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform group-hover:scale-110">
+            <div class="group text-center p-6 rounded-2xl transition-all hover:bg-brand/5">
+                <div class="w-16 h-16 bg-brand-light dark:bg-brand/20 text-brand rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform group-hover:scale-110">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
                 </div>
                 <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Dokter Berpengalaman</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Tim dokter profesional dari berbagai spesialisasi siap melayani Anda</p>
             </div>
-            <div class="group text-center p-6 rounded-2xl transition-all hover:bg-brand/5 dark:hover:bg-brand/10">
-                <div class="w-16 h-16 bg-brand-light dark:bg-brand/20 text-brand dark:text-blue-300 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform group-hover:scale-110">
+            <div class="group text-center p-6 rounded-2xl transition-all hover:bg-brand/5">
+                <div class="w-16 h-16 bg-brand-light dark:bg-brand/20 text-brand rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform group-hover:scale-110">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Antrean Digital</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Pantau antrean Anda secara real-time tanpa harus menunggu di klinik</p>
             </div>
-            <div class="group text-center p-6 rounded-2xl transition-all hover:bg-brand/5 dark:hover:bg-brand/10">
-                <div class="w-16 h-16 bg-brand-light dark:bg-brand/20 text-brand dark:text-blue-300 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform group-hover:scale-110">
+            <div class="group text-center p-6 rounded-2xl transition-all hover:bg-brand/5">
+                <div class="w-16 h-16 bg-brand-light dark:bg-brand/20 text-brand rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform group-hover:scale-110">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <h3 class="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Booking Online</h3>
@@ -148,7 +148,7 @@
 </section>
 
 {{-- Doctor Cards --}}
-<section class="py-16 bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
+<section class="py-16 bg-[var(--ui-bg)] transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Dokter Kami</h2>
@@ -156,14 +156,14 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($doctors as $doctor)
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 hover:shadow-md transition-all duration-200">
+            <div class="bg-[var(--ui-surface)] rounded-2xl shadow-sm border border-[var(--ui-border)] p-6 hover:shadow-md transition-all duration-200">
                 <div class="flex items-center gap-4 mb-4">
                     @if($doctor->photo)
                         <img src="{{ asset('storage/' . $doctor->photo) }}"
                              alt="{{ $doctor->name }}"
                              class="w-14 h-14 rounded-full object-cover shrink-0 border-2 border-brand/20">
                     @else
-                        <div class="w-14 h-14 rounded-full bg-brand/10 text-brand dark:text-blue-300 flex items-center justify-center font-bold text-lg shrink-0 border-2 border-brand/20">
+                        <div class="w-14 h-14 rounded-full bg-brand/10 text-brand flex items-center justify-center font-bold text-lg shrink-0 border-2 border-brand/20">
                             {{ $doctor->initials }}
                         </div>
                     @endif
@@ -187,7 +187,7 @@
 </section>
 
 {{-- Reviews Section --}}
-<section class="py-16 bg-white dark:bg-gray-900 transition-colors duration-200">
+<section class="py-16 bg-[var(--ui-surface)] transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Apa Kata Pasien Kami</h2>
@@ -196,9 +196,9 @@
         @if($reviews->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($reviews as $review)
-                <div class="bg-gray-50 dark:bg-gray-950 rounded-2xl p-6 border border-gray-100 dark:border-gray-800">
+                <div class="bg-[var(--ui-bg)] rounded-2xl p-6 border border-[var(--ui-border)]">
                     <div class="flex items-center gap-3 mb-3">
-                        <div class="w-10 h-10 bg-brand-light dark:bg-brand/20 text-brand dark:text-blue-300 rounded-full flex items-center justify-center font-bold text-sm shrink-0">
+                        <div class="w-10 h-10 bg-brand/10 text-brand rounded-full flex items-center justify-center font-bold text-sm shrink-0">
                             {{ strtoupper(substr($review->user->name ?? 'A', 0, 1)) }}
                         </div>
                         <div>
@@ -208,7 +208,7 @@
                     </div>
                     <div class="text-yellow-400 text-lg mb-2">{{ $review->rating_stars }}</div>
                     @if($review->type === 'doctor' && $review->doctor)
-                        <p class="text-xs text-brand dark:text-blue-300 font-semibold mb-1">🩺 {{ $review->doctor->name }}</p>
+                        <p class="text-xs text-[#6B9080] dark:text-[#A8D5BA] font-semibold mb-1">🩺 {{ $review->doctor->name }}</p>
                     @else
                         <p class="text-xs text-accent font-semibold mb-1">🏥 Review Klinik</p>
                     @endif

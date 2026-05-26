@@ -55,7 +55,7 @@
                                 <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
                                     <div>
                                         <p class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] mb-1">Kode Reservasi</p>
-                                        <span class="font-mono font-black text-brand dark:text-blue-400 text-2xl tracking-tighter">{{ $b->booking_code }}</span>
+                                        <span class="font-mono font-black text-brand-dark dark:text-brand text-2xl tracking-tighter">{{ $b->booking_code }}</span>
                                     </div>
                                     <span class="text-[10px] uppercase tracking-widest font-black px-4 py-1.5 rounded-full shadow-sm {{ $b->status_badge_class }}">{{ $b->status }}</span>
                                 </div>
@@ -67,7 +67,7 @@
                                             <div>
                                                 <p class="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-1">Dokter Pemeriksa</p>
                                                 <p class="font-bold text-gray-900 dark:text-white text-lg leading-tight">{{ $b->doctor->name ?? '-' }}</p>
-                                                <p class="text-sm text-brand dark:text-blue-400 font-medium">{{ $b->doctor->specialization_label ?? '' }}</p>
+                                                <p class="text-sm text-brand-dark dark:text-brand font-medium">{{ $b->doctor->specialization_label ?? '' }}</p>
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4">
@@ -83,13 +83,13 @@
                                     <div class="bg-white dark:bg-gray-900/50 rounded-2xl p-6 flex items-center justify-around text-center shadow-inner">
                                         <div>
                                             <p class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-black mb-1">No. Antrean</p>
-                                            <p class="text-5xl font-black text-brand dark:text-blue-400">#{{ $b->queue_number }}</p>
+                                            <p class="text-5xl font-black text-brand-dark dark:text-brand">#{{ $b->queue_number }}</p>
                                         </div>
                                         @if($b->estimated_time)
                                         <div class="w-px h-12 bg-gray-100 dark:bg-gray-800"></div>
                                         <div>
                                             <p class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-black mb-1">Estimasi Jam</p>
-                                            <p class="text-4xl font-black text-blue-600 dark:text-blue-300">{{ $b->estimated_time }}</p>
+                                            <p class="text-4xl font-black text-brand-dark dark:text-brand">{{ $b->estimated_time }}</p>
                                         </div>
                                         @endif
                                     </div>
@@ -167,7 +167,7 @@
             {{-- Sidebar Column --}}
             <div class="lg:col-span-4 space-y-8">
                 {{-- Live Today Queue --}}
-                <div class="bg-brand dark:bg-blue-600 rounded-[2.5rem] p-8 text-white shadow-2xl shadow-brand/20 dark:shadow-none sticky top-24">
+                <div class="bg-gradient-to-br from-brand-dark to-accent-dark dark:from-[#1c2622] dark:to-[#141b18] dark:border dark:border-[#283731] rounded-[2.5rem] p-8 text-white shadow-2xl shadow-brand/20 dark:shadow-none sticky top-24">
                     <h2 class="font-bold text-xl mb-6 flex items-center gap-3 text-white">
                         <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"/></svg>
@@ -179,7 +179,7 @@
                         @forelse($todayQueue->take(6) as $q)
                         <div class="flex items-center justify-between p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10 transition-transform hover:scale-[1.02]">
                             <div class="flex items-center gap-3">
-                                <span class="w-10 h-10 rounded-full bg-white text-brand flex items-center justify-center font-black">#{{ $q['queue_number'] }}</span>
+                                <span class="w-10 h-10 rounded-full bg-white text-brand-dark flex items-center justify-center font-black">#{{ $q['queue_number'] }}</span>
                                 <div class="text-sm font-bold truncate max-w-[120px]">{{ $q['doctor_name'] }}</div>
                             </div>
                             <span class="text-[10px] font-black px-2 py-1 rounded-full {{ $q['status'] === 'CONFIRMED' ? 'bg-white/20 text-white' : 'bg-green-400 text-green-900' }}">
