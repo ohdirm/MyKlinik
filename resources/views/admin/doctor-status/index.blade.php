@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="flex flex-wrap gap-1.5 mb-4">
-            @foreach(['AVAILABLE'=>'Tersedia','IN_EXAMINATION'=>'Memeriksa','NEXT_AVAILABLE'=>'Segera','UNAVAILABLE'=>'Tidak Tersedia'] as $val=>$label)
+            @foreach(['AVAILABLE'=>'Tersedia','IN_EXAMINATION'=>'Melayani','UNAVAILABLE'=>'Tidak Tersedia'] as $val=>$label)
                 <button onclick="selectStatus({{ $doctor->id }},'{{ $val }}',this)" class="text-xs px-3 py-1.5 rounded-full border transition cursor-pointer {{ $currentStatus === $val ? 'bg-brand text-white border-brand' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700' }}" data-status="{{ $val }}">{{ $label }}</button>
             @endforeach
         </div>

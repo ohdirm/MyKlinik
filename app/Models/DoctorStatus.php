@@ -37,7 +37,6 @@ class DoctorStatus extends Model
         return match ($this->current_status) {
             'AVAILABLE' => 'bg-green-100 text-green-800',
             'IN_EXAMINATION' => 'bg-yellow-100 text-yellow-800',
-            'NEXT_AVAILABLE' => 'bg-brand/20 text-brand-dark',
             'UNAVAILABLE' => 'bg-red-100 text-red-800',
             default => 'bg-gray-100 text-gray-800',
         };
@@ -50,8 +49,7 @@ class DoctorStatus extends Model
     {
         return match ($this->current_status) {
             'AVAILABLE' => 'Tersedia',
-            'IN_EXAMINATION' => 'Sedang Memeriksa',
-            'NEXT_AVAILABLE' => 'Segera Tersedia',
+            'IN_EXAMINATION' => 'Sedang Melayani Pasien',
             'UNAVAILABLE' => 'Tidak Tersedia',
             default => $this->current_status,
         };

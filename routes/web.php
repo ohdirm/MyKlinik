@@ -60,6 +60,7 @@ Route::middleware('auth.patient')->group(function () {
 Route::prefix('api')->group(function () {
     Route::get('/doctors', [ApiController::class, 'doctors']);
     Route::get('/schedules/{id}', [ApiController::class, 'schedules']);
+    Route::get('/doctor-capacities', [ApiController::class, 'doctorCapacities']);
     Route::get('/doctor-status', [ApiController::class, 'doctorStatus']);
     Route::post('/suggest-doctor', [ApiController::class, 'suggestDoctor'])->name('api.suggest-doctor');
     Route::get('/wilayah/provinces', [WilayahController::class, 'provinces']);
@@ -80,6 +81,7 @@ Route::prefix('admin')->middleware('auth.admin')->name('admin.')->group(function
     Route::get('/bookings', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('bookings.index');
     Route::post('/bookings', [App\Http\Controllers\Admin\BookingController::class, 'store'])->name('bookings.store');
     Route::patch('/bookings/{id}/confirm', [App\Http\Controllers\Admin\BookingController::class, 'confirm'])->name('bookings.confirm');
+    Route::patch('/bookings/{id}/examine', [App\Http\Controllers\Admin\BookingController::class, 'examine'])->name('bookings.examine');
     Route::patch('/bookings/{id}/reject', [App\Http\Controllers\Admin\BookingController::class, 'reject'])->name('bookings.reject');
     Route::patch('/bookings/{id}/done', [App\Http\Controllers\Admin\BookingController::class, 'done'])->name('bookings.done');
     Route::get('/doctor-status', [App\Http\Controllers\Admin\DoctorStatusController::class, 'index'])->name('doctor-status.index');

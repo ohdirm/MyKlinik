@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\BookingConfirmed;
 use App\Models\Booking;
 use App\Models\Doctor;
+use App\Models\DoctorStatus;
 use App\Models\Schedule;
 use App\Notifications\BookingStatusNotification;
 use Illuminate\Http\Request;
@@ -32,8 +33,9 @@ class BookingController extends Controller
 
         $bookings = $query->latest()->paginate(15);
         $doctors = Doctor::where('is_active', true)->get();
+        $busyDoctorIds = Booking::where('status', 'EXAMINING')->pluck('doctor_id')->unique()->toArray();
 
-        return view('admin.bookings.index', compact('bookings', 'doctors'));
+        return view('admin.bookings.index', compact('bookings', 'doctors', 'busyDoctorIds'));
     }
 
     /**
@@ -168,10 +170,62 @@ class BookingController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function examine(int $id)
+    {
+        $booking = Booking::with('user', 'doctor.status')->findOrFail($id);
+
+        // Check if doctor is already examining someone else
+        $isBusy = Booking::where('doctor_id', $booking->doctor_id)
+            ->where('status', 'EXAMINING')
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($isBusy) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Dokter ini sedang melayani pasien lain. Selesaikan pemeriksaan sebelumnya terlebih dahulu.',
+            ], 422);
+        }
+
+        $booking->update(['status' => 'EXAMINING']);
+
+        // Automatically update doctor status
+        DoctorStatus::updateOrCreate(
+            ['doctor_id' => $booking->doctor_id],
+            [
+                'current_status' => 'IN_EXAMINATION',
+                'current_queue_number' => $booking->queue_number,
+                'updated_at' => now(),
+            ]
+        );
+
+        // Send in-app notification to patient
+        if ($booking->user) {
+            $booking->user->notify(new BookingStatusNotification($booking, 'examining'));
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     public function done(int $id)
     {
-        $booking = Booking::with('user', 'doctor')->findOrFail($id);
+        $booking = Booking::with('user', 'doctor.status')->findOrFail($id);
         $booking->update(['status' => 'DONE']);
+
+        // Automatically update doctor status back to AVAILABLE 
+        // ONLY if no other patients are currently being examined by this doctor
+        $otherExamining = Booking::where('doctor_id', $booking->doctor_id)
+            ->where('status', 'EXAMINING')
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($booking->doctor->status && !$otherExamining) {
+            $booking->doctor->status->update([
+                'current_status' => 'AVAILABLE',
+                'current_queue_number' => null,
+                'updated_at' => now(),
+            ]);
+        }
 
         // Send in-app notification to patient
         if ($booking->user) {

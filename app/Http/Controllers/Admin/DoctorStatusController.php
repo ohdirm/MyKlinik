@@ -27,7 +27,7 @@ class DoctorStatusController extends Controller
     public function update(Request $request, int $doctorId)
     {
         $request->validate([
-            'current_status' => 'required|in:AVAILABLE,IN_EXAMINATION,NEXT_AVAILABLE,UNAVAILABLE',
+            'current_status' => 'required|in:AVAILABLE,IN_EXAMINATION,UNAVAILABLE',
             'current_queue_number' => 'nullable|integer|min:1',
         ]);
 

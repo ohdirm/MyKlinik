@@ -69,9 +69,25 @@
                         <p class="text-white/70 text-xs mt-0.5">Tentukan kapan dan dengan siapa Anda ingin periksa</p>
                     </div>
                     <div class="p-6 space-y-5">
+                        {{-- Tanggal --}}
+                        <div class="bg-brand/5 dark:bg-brand/10 p-5 rounded-3xl border border-brand/20 mb-2">
+                            <label for="exam-date" class="block text-sm font-bold text-brand-dark dark:text-brand mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand text-white flex items-center justify-center text-xs">1</span>
+                                Tentukan Tanggal Periksa <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" name="exam_date" id="exam-date" x-model="examDate" @change="onDateChange()"
+                                   class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand"
+                                   min="{{ now()->format('Y-m-d') }}"
+                                   max="{{ now()->addDays(14)->format('Y-m-d') }}"
+                                   value="{{ old('exam_date') }}" required>
+                        </div>
+
                         {{-- Dokter --}}
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Pilih Dokter <span class="text-red-500">*</span></label>
+                        <div x-show="examDate" x-transition>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand text-white flex items-center justify-center text-xs">2</span>
+                                Pilih Dokter Spesialis / Umum <span class="text-red-500">*</span>
+                            </label>
 
                             {{-- ── Complaint Analysis / Doctor Suggestion ── --}}
                             <div class="bg-[#F6FBF8] dark:bg-[#1c2622]/30 border border-[#e2efe7] dark:border-[#283731] rounded-3xl p-5 mb-5 shadow-sm">
@@ -140,8 +156,20 @@
                                     
                                     {{-- Doctor Info --}}
                                     <div class="flex-1 min-w-0">
-                                        <p class="font-bold text-gray-900 dark:text-white text-sm leading-tight">{{ $doc->name }}</p>
-                                        <p class="text-xs text-brand-dark dark:text-brand font-semibold mt-1">{{ $doc->specialization_label }}</p>
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <p class="font-bold text-gray-900 dark:text-white text-sm leading-tight">{{ $doc->name }}</p>
+                                                <p class="text-xs text-brand-dark dark:text-brand font-semibold mt-1">{{ $doc->specialization_label }}</p>
+                                            </div>
+                                            <template x-if="examDate && doctorCapacities['{{ $doc->id }}']">
+                                                <div class="flex flex-col items-end">
+                                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full transition-all duration-300"
+                                                          :class="doctorCapacities['{{ $doc->id }}'].total_remaining > 0 ? 'bg-brand/10 text-brand-dark dark:bg-brand/20 dark:text-brand' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'"
+                                                          x-text="doctorCapacities['{{ $doc->id }}'].total_remaining > 0 ? `Sisa: ${doctorCapacities['{{ $doc->id }}'].total_remaining} slot` : 'Penuh'">
+                                                    </span>
+                                                </div>
+                                            </template>
+                                        </div>
                                     </div>
                                     
                                     {{-- Radio indicator --}}
@@ -156,19 +184,13 @@
                             </div>
                         </div>
 
-                        {{-- Tanggal --}}
-                        <div>
-                            <label for="exam-date" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tanggal Periksa <span class="text-red-500">*</span></label>
-                            <input type="date" name="exam_date" id="exam-date" x-model="examDate" @change="onDateChange()"
-                                   class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand"
-                                   min="{{ now()->format('Y-m-d') }}"
-                                   max="{{ now()->addDays(14)->format('Y-m-d') }}"
-                                   value="{{ old('exam_date') }}" required>
-                        </div>
 
                         {{-- Jadwal --}}
-                        <div>
-                            <label for="select-jadwal" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jadwal Waktu <span class="text-red-500">*</span></label>
+                        <div x-show="doctorId && examDate" x-transition>
+                            <label for="select-jadwal" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand text-white flex items-center justify-center text-xs">3</span>
+                                Pilih Jadwal Waktu <span class="text-red-500">*</span>
+                            </label>
                             <div x-show="loadingSchedule" class="flex items-center gap-2 text-sm text-gray-400 py-3">
                                 <svg class="animate-spin w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
                                 Memuat jadwal...
@@ -176,7 +198,8 @@
                             <select name="schedule_id" id="select-jadwal" class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand" :disabled="schedules.length === 0" x-show="!loadingSchedule" required>
                                 <option value="">— Pilih jadwal —</option>
                                 <template x-for="s in schedules" :key="s.id">
-                                    <option :value="s.id" x-text="`${s.day_name} — ${s.start_time} - ${s.end_time} (Maks: ${s.max_patients} pasien)`"></option>
+                                    <option :value="s.id" :disabled="s.remaining_capacity <= 0"
+                                            x-text="`${s.day_name} — ${s.start_time} - ${s.end_time} (Sisa: ${s.remaining_capacity} dari ${s.max_patients} pasien)`"></option>
                                 </template>
                             </select>
                             <p x-show="!loadingSchedule && schedules.length === 0 && (doctorId && examDate)" class="text-xs text-amber-600 mt-1">Tidak ada jadwal dokter pada hari ini.</p>
@@ -287,8 +310,17 @@
                         Selanjutnya →
                     </button>
                     <button type="submit" x-show="step === 3"
-                            class="flex-1 bg-gradient-to-r from-brand to-[#85cca0] hover:from-[#96d7af] hover:to-brand text-white font-bold py-3 rounded-xl transition text-sm shadow-sm active:scale-95 cursor-pointer">
-                        Daftar Sekarang
+                            :disabled="submitting"
+                            class="flex-1 bg-gradient-to-r from-brand to-[#85cca0] hover:from-[#96d7af] hover:to-brand text-white font-bold py-3 rounded-xl transition text-sm shadow-sm active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        <template x-if="!submitting">
+                            <span>Daftar Sekarang</span>
+                        </template>
+                        <template x-if="submitting">
+                            <div class="flex items-center justify-center gap-2">
+                                <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                                <span>Memproses...</span>
+                            </div>
+                        </template>
                     </button>
                 </div>
             </form>
@@ -356,6 +388,8 @@
             complaint: '{{ old('complaint', '') }}',
             analyzing: false,
             suggestion: null,
+            doctorCapacities: {},
+            submitting: false,
 
             init() {
                 // If old input exists, jump to correct step
@@ -365,6 +399,9 @@
 
                 if (this.doctorId || this.examDate) {
                     this.loadSchedules();
+                }
+                if (this.examDate) {
+                    this.fetchDoctorCapacities();
                 }
             },
 
@@ -376,6 +413,7 @@
 
             onDateChange() {
                 this.loadSchedules();
+                this.fetchDoctorCapacities();
             },
 
             loadSchedules() {
@@ -384,13 +422,26 @@
                 this.schedules = [];
                 const date = new Date(this.examDate);
                 const dayOfWeek = date.getDay();
-                fetch(`/api/schedules/${this.doctorId}`)
+                fetch(`/api/schedules/${this.doctorId}?date=${this.examDate}`)
                     .then(r => r.json())
                     .then(data => {
                         this.schedules = data.filter(s => s.day_of_week === dayOfWeek);
                         this.loadingSchedule = false;
                     })
                     .catch(() => { this.loadingSchedule = false; });
+            },
+
+            fetchDoctorCapacities() {
+                if (!this.examDate) return;
+                fetch(`/api/doctor-capacities?date=${this.examDate}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        const capacities = {};
+                        data.forEach(item => {
+                            capacities[item.doctor_id] = item;
+                        });
+                        this.doctorCapacities = capacities;
+                    });
             },
 
             analyzeComplaint() {
@@ -469,7 +520,7 @@
             },
 
             handleSubmit(e) {
-                // Allow normal form submit
+                this.submitting = true;
             }
         }
     }

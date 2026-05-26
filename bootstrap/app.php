@@ -14,11 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
-        
+
         $middleware->alias([
             'auth.admin' => CheckAdminAuth::class,
             'auth.patient' => CheckPatientAuth::class,
         ]);
+    })
+    ->withSchedule(function ($schedule) {
+        $schedule->command('bookings:expire')->daily();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

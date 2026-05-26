@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Schedule;
 use App\Models\Specialization;
@@ -19,13 +20,25 @@ class ApiController extends Controller
         return response()->json($doctors);
     }
 
-    public function schedules(int $id)
+    public function schedules(Request $request, int $id)
     {
+        $date = $request->query('date');
+
         $schedules = Schedule::where('doctor_id', $id)
             ->select('id', 'day_of_week', 'start_time', 'end_time', 'max_patients')
             ->orderBy('day_of_week')
             ->get()
-            ->map(function (Schedule $schedule) {
+            ->map(function (Schedule $schedule) use ($date) {
+                $remaining = $schedule->max_patients;
+
+                if ($date) {
+                    $used = Booking::where('schedule_id', $schedule->id)
+                        ->where('exam_date', $date)
+                        ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED'])
+                        ->count();
+                    $remaining = max(0, $schedule->max_patients - $used);
+                }
+
                 return [
                     'id' => $schedule->id,
                     'day_of_week' => $schedule->day_of_week,
@@ -33,10 +46,43 @@ class ApiController extends Controller
                     'start_time' => substr($schedule->start_time, 0, 5),
                     'end_time' => substr($schedule->end_time, 0, 5),
                     'max_patients' => $schedule->max_patients,
+                    'remaining_capacity' => $remaining,
                 ];
             });
 
         return response()->json($schedules);
+    }
+
+    public function doctorCapacities(Request $request)
+    {
+        $dateStr = $request->query('date');
+        if (! $dateStr) {
+            return response()->json([]);
+        }
+
+        $date = Carbon::parse($dateStr);
+        $dayOfWeek = $date->dayOfWeek;
+
+        $doctors = Doctor::where('is_active', true)
+            ->with(['schedules' => function ($q) use ($dayOfWeek) {
+                $q->where('day_of_week', $dayOfWeek);
+            }])
+            ->get()
+            ->map(function ($doctor) use ($dateStr) {
+                $totalMax = $doctor->schedules->sum('max_patients');
+                $totalUsed = Booking::where('doctor_id', $doctor->id)
+                    ->where('exam_date', $dateStr)
+                    ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED'])
+                    ->count();
+
+                return [
+                    'doctor_id' => $doctor->id,
+                    'total_remaining' => max(0, $totalMax - $totalUsed),
+                    'has_schedule' => $doctor->schedules->count() > 0,
+                ];
+            });
+
+        return response()->json($doctors);
     }
 
     public function doctorStatus()
@@ -110,13 +156,21 @@ class ApiController extends Controller
             $schedules = Schedule::where('doctor_id', $suggestedDoctor->id)
                 ->where('day_of_week', $dayOfWeek)
                 ->get()
-                ->map(fn (Schedule $s) => [
-                    'id' => $s->id,
-                    'day_name' => $s->day_name,
-                    'start_time' => substr($s->start_time, 0, 5),
-                    'end_time' => substr($s->end_time, 0, 5),
-                    'max_patients' => $s->max_patients,
-                ]);
+                ->map(function (Schedule $s) use ($dateStr) {
+                    $used = Booking::where('schedule_id', $s->id)
+                        ->where('exam_date', $dateStr)
+                        ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED'])
+                        ->count();
+
+                    return [
+                        'id' => $s->id,
+                        'day_name' => $s->day_name,
+                        'start_time' => substr($s->start_time, 0, 5),
+                        'end_time' => substr($s->end_time, 0, 5),
+                        'max_patients' => $s->max_patients,
+                        'remaining_capacity' => max(0, $s->max_patients - $used),
+                    ];
+                });
         }
 
         return response()->json([
