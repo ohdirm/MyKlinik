@@ -46,7 +46,7 @@
                          :class="step > i+1 ? 'bg-brand-dark' : 'bg-gray-200'"></div>
                 </div>
             </template>
-        </div>v>
+        </div>
 
         {{-- Error bag --}}
         @if($errors->any())
