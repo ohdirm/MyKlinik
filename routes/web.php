@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ArchiveController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\ScheduleController;
@@ -93,4 +94,7 @@ Route::prefix('admin')->middleware('auth.admin')->name('admin.')->group(function
     Route::put('/specializations/{specialization}', [SpecializationController::class, 'update'])->name('specializations.update');
     Route::delete('/specializations/{specialization}', [SpecializationController::class, 'destroy'])->name('specializations.destroy');
     Route::resource('/schedules', ScheduleController::class)->names('schedules');
+    // Archive
+    Route::get('/archive', [ArchiveController::class, 'index'])->name('archive.index');
+    Route::delete('/archive/{id}', [ArchiveController::class, 'destroy'])->name('archive.destroy');
 });
