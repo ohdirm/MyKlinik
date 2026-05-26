@@ -79,8 +79,13 @@ function setRating(value) {
     document.getElementById('rating-input').value = value;
     document.querySelectorAll('.star-btn').forEach(function(btn) {
         const star = parseInt(btn.dataset.star);
-        btn.classList.toggle('text-yellow-400', star <= value);
-        btn.classList.toggle('text-gray-300', star > value);
+        if (star <= value) {
+            btn.classList.add('text-yellow-400');
+            btn.classList.remove('text-gray-300', 'dark:text-gray-600');
+        } else {
+            btn.classList.remove('text-yellow-400');
+            btn.classList.add('text-gray-300', 'dark:text-gray-600');
+        }
     });
 }
 </script>
