@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Status Dokter</h1>
     <form method="GET" action="{{ route('admin.doctor-status.index') }}" id="filter-specialization-form">
         <select name="specialization" onchange="document.getElementById('filter-specialization-form').submit()"
-                class="text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
+                class="text-sm rounded-lg border border-[#e2efe7] dark:border-[#283731] bg-white dark:bg-[#1c2622] text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
             <option value="">Semua Spesialisasi</option>
             @foreach($specializations as $spec)
                 <option value="{{ $spec->value }}" {{ request('specialization') === $spec->value ? 'selected' : '' }}>{{ $spec->label }}</option>
@@ -16,7 +16,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @foreach($doctors as $doctor)
     @php $st = $doctor->status; $currentStatus = $st->current_status ?? 'AVAILABLE'; @endphp
-    <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm p-6 transition-colors duration-200" id="ds-card-{{ $doctor->id }}">
+    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm p-6 transition-colors duration-200" id="ds-card-{{ $doctor->id }}">
         <div class="flex items-center gap-3 mb-4">
             @if($doctor->photo)
                 <img src="{{ asset('storage/' . $doctor->photo) }}"
@@ -32,7 +32,7 @@
         </div>
         <div class="flex flex-wrap gap-1.5 mb-4">
             @foreach(['AVAILABLE'=>'Tersedia','IN_EXAMINATION'=>'Melayani','UNAVAILABLE'=>'Tidak Tersedia'] as $val=>$label)
-                <button onclick="selectStatus({{ $doctor->id }},'{{ $val }}',this)" class="text-xs px-3 py-1.5 rounded-full border transition cursor-pointer {{ $currentStatus === $val ? 'bg-brand text-white border-brand' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700' }}" data-status="{{ $val }}">{{ $label }}</button>
+                <button onclick="selectStatus({{ $doctor->id }},'{{ $val }}',this)" class="text-xs px-3 py-1.5 rounded-full border transition cursor-pointer {{ $currentStatus === $val ? 'bg-brand text-white border-brand' : 'bg-white dark:bg-[#1c2622] text-gray-600 dark:text-gray-300 border-[#e2efe7] dark:border-[#283731] hover:bg-gray-50 dark:hover:bg-[#141b18]' }}" data-status="{{ $val }}">{{ $label }}</button>
             @endforeach
         </div>
         <div class="{{ $currentStatus === 'IN_EXAMINATION' ? '' : 'hidden' }}" id="queue-input-{{ $doctor->id }}">
@@ -57,9 +57,9 @@ function selectStatus(doctorId, status, btn) {
     const card = document.getElementById('ds-card-'+doctorId);
     card.querySelectorAll('[data-status]').forEach(b=>{
         b.classList.remove('bg-brand','text-white','border-brand');
-        b.classList.add('bg-white','dark:bg-gray-800','text-gray-600','dark:text-gray-300','border-gray-300','dark:border-gray-700');
+        b.classList.add('bg-white','dark:bg-[#1c2622]','text-gray-600','dark:text-gray-300','border-[#e2efe7]','dark:border-[#283731]');
     });
-    btn.classList.remove('bg-white','dark:bg-gray-800','text-gray-600','dark:text-gray-300','border-gray-300','dark:border-gray-700');
+    btn.classList.remove('bg-white','dark:bg-[#1c2622]','text-gray-600','dark:text-gray-300','border-[#e2efe7]','dark:border-[#283731]');
     btn.classList.add('bg-brand','text-white','border-brand');
     const queueInput = document.getElementById('queue-input-'+doctorId);
     if(status==='IN_EXAMINATION') queueInput.classList.remove('hidden');

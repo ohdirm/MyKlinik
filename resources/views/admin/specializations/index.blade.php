@@ -20,10 +20,10 @@
 <div id="toast-container" class="fixed top-5 right-5 z-50 space-y-2"></div>
 
 {{-- Table --}}
-<div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm overflow-hidden transition-colors duration-200">
+<div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm overflow-hidden transition-colors duration-200">
     <div class="overflow-x-auto">
         <table class="w-full text-sm" id="spec-table">
-            <thead class="bg-gray-50 dark:bg-gray-950 text-gray-600 dark:text-gray-400 text-xs uppercase">
+            <thead class="bg-[#F6FBF8] dark:bg-[#141b18] text-[#6B9080] dark:text-[#A8D5BA] text-xs uppercase">
                 <tr>
                     <th class="px-5 py-3 text-left w-12">#</th>
                     <th class="px-5 py-3 text-left">Label (Nama Tampilan)</th>
@@ -32,19 +32,19 @@
                     <th class="px-5 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 dark:divide-gray-800" id="spec-tbody">
+            <tbody class="divide-y divide-[#e2efe7] dark:divide-[#283731]" id="spec-tbody">
                 @foreach($specializations as $i => $spec)
-                <tr id="spec-row-{{ $spec->id }}" class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                <tr id="spec-row-{{ $spec->id }}" class="hover:bg-[#F6FBF8] dark:hover:bg-[#1c2622]/50 transition-colors">
                     <td class="px-5 py-3 text-gray-400 dark:text-gray-500 text-xs">{{ $i + 1 }}</td>
                     <td class="px-5 py-3 font-medium text-gray-900 dark:text-white" id="label-{{ $spec->id }}">
                         {{ $spec->label }}
                     </td>
                     <td class="px-5 py-3">
-                        <code class="text-xs bg-gray-100 dark:bg-gray-850 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded font-mono">{{ $spec->value }}</code>
+                        <code class="text-xs bg-[#F6FBF8] dark:bg-[#141b18] text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded font-mono border border-[#e2efe7] dark:border-[#283731]">{{ $spec->value }}</code>
                     </td>
                     <td class="px-5 py-3 text-center">
                         @if($spec->is_default)
-                            <span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                            <span class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300">
                                 <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                                 Default
                             </span>
@@ -78,14 +78,14 @@
             </tbody>
         </table>
     </div>
-    <div class="px-5 py-3 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-500">
+    <div class="px-5 py-3 border-t border-[#e2efe7] dark:border-[#283731] text-xs text-gray-400 dark:text-gray-500">
         Total: <span id="spec-count">{{ $specializations->count() }}</span> spesialisasi
     </div>
 </div>
 
 {{-- ── MODAL TAMBAH ── --}}
 <div id="modal-add" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 hidden" onclick="if(event.target===this)closeAddModal()">
-    <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 transition-colors duration-200">
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Tambah Spesialisasi Baru</h2>
         <div id="add-error" class="hidden mb-3 bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm"></div>
         <div class="mb-4">
@@ -103,7 +103,7 @@
 
 {{-- ── MODAL EDIT ── --}}
 <div id="modal-edit" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 hidden" onclick="if(event.target===this)closeEditModal()">
-    <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 transition-colors duration-200">
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Edit Spesialisasi</h2>
         <div id="edit-error" class="hidden mb-3 bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm"></div>
         <input type="hidden" id="edit-id">

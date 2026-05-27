@@ -6,7 +6,7 @@
     <div class="flex items-center gap-3">
         <form method="GET" action="{{ route('admin.doctors.index') }}" id="filter-doctor-spec-form">
             <select name="specialization" onchange="document.getElementById('filter-doctor-spec-form').submit()"
-                    class="text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
+                    class="text-sm rounded-lg border border-[#e2efe7] dark:border-[#283731] bg-white dark:bg-[#1c2622] text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
                 <option value="">Semua Spesialisasi</option>
                 @foreach($specializations as $spec)
                     <option value="{{ $spec->value }}" {{ request('specialization') === $spec->value ? 'selected' : '' }}>{{ $spec->label }}</option>
@@ -16,10 +16,10 @@
         <a href="{{ route('admin.doctors.create') }}" class="btn-primary">+ Tambah Dokter</a>
     </div>
 </div>
-<div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm overflow-hidden transition-colors duration-200">
+<div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm overflow-hidden transition-colors duration-200">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
-            <thead class="bg-gray-50 dark:bg-gray-950 text-gray-600 dark:text-gray-400 text-xs uppercase">
+            <thead class="bg-[#F6FBF8] dark:bg-[#141b18] text-[#6B9080] dark:text-[#A8D5BA] text-xs uppercase">
                 <tr>
                     <th class="px-4 py-3 text-left">Nama</th>
                     <th class="px-4 py-3 text-left">Spesialisasi</th>
@@ -27,12 +27,12 @@
                     <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody class="divide-y divide-[#e2efe7] dark:divide-[#283731]">
                 @forelse($doctors as $d)
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                <tr class="hover:bg-[#F6FBF8] dark:hover:bg-[#1c2622]/50">
                     <td class="px-4 py-3">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm border border-white dark:border-gray-800 overflow-hidden">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm border border-white dark:border-[#283731] overflow-hidden">
                                 @if($d->photo_url)
                                     <img src="{{ $d->photo_url }}" alt="{{ $d->name }}" class="w-full h-full object-cover">
                                 @else
@@ -60,6 +60,6 @@
             </tbody>
         </table>
     </div>
-    <div class="px-4 py-3 border-t border-gray-100 dark:border-gray-800">{{ $doctors->links() }}</div>
+    <div class="px-4 py-3 border-t border-[#e2efe7] dark:border-[#283731]">{{ $doctors->links() }}</div>
 </div>
 @endsection

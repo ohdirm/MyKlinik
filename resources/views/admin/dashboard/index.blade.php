@@ -23,30 +23,30 @@ function resetDaily() {
 </script>
 @endpush
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-4 border-yellow-400 border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] rounded-xl shadow-sm p-6 border-l-4 border-yellow-400 border border-[#e2efe7] dark:border-[#283731] transition-colors duration-200">
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Pending</p>
         <p class="text-3xl font-bold text-yellow-600">{{ $metrics['pending'] }}</p>
     </div>
-    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-4 border-green-400 border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] rounded-xl shadow-sm p-6 border-l-4 border-green-400 border border-[#e2efe7] dark:border-[#283731] transition-colors duration-200">
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Confirmed</p>
         <p class="text-3xl font-bold text-green-600">{{ $metrics['confirmed'] }}</p>
     </div>
-    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-4 border-red-400 border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] rounded-xl shadow-sm p-6 border-l-4 border-red-400 border border-[#e2efe7] dark:border-[#283731] transition-colors duration-200">
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Rejected</p>
         <p class="text-3xl font-bold text-red-600">{{ $metrics['rejected'] }}</p>
     </div>
-    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-4 border-gray-400 border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] rounded-xl shadow-sm p-6 border-l-4 border-gray-400 border border-[#e2efe7] dark:border-[#283731] transition-colors duration-200">
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Done</p>
-        <p class="text-3xl font-bold text-gray-600">{{ $metrics['done'] }}</p>
+        <p class="text-3xl font-bold text-[#6B9080] dark:text-[#A8D5BA]">{{ $metrics['done'] }}</p>
     </div>
 </div>
-<div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-800 transition-colors duration-200">
-    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+<div class="bg-white dark:bg-[#1c2622] rounded-xl shadow-sm overflow-hidden border border-[#e2efe7] dark:border-[#283731] transition-colors duration-200">
+    <div class="px-6 py-4 border-b border-[#e2efe7] dark:border-[#283731]">
         <h2 class="font-semibold text-gray-900 dark:text-white">Booking Terbaru</h2>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
-            <thead class="bg-gray-50 dark:bg-gray-950 text-gray-600 dark:text-gray-400 text-xs uppercase">
+            <thead class="bg-[#F6FBF8] dark:bg-[#141b18] text-[#6B9080] dark:text-[#A8D5BA] text-xs uppercase">
                 <tr>
                     <th class="px-4 py-3 text-left">Kode</th>
                     <th class="px-4 py-3 text-left">Nama</th>
@@ -56,10 +56,10 @@ function resetDaily() {
                     <th class="px-4 py-3 text-left">Status</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody class="divide-y divide-[#e2efe7] dark:divide-[#283731]">
                 @forelse($recentBookings as $b)
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                    <td class="px-4 py-3 font-mono font-semibold text-brand dark:text-blue-400">{{ $b->booking_code }}</td>
+                <tr class="hover:bg-[#F6FBF8] dark:hover:bg-[#1c2622]/50">
+                    <td class="px-4 py-3 font-mono font-semibold text-brand dark:text-brand-dark">{{ $b->booking_code }}</td>
                     <td class="px-4 py-3">{{ $b->patient_name }}</td>
                     <td class="px-4 py-3">{{ $b->doctor->name ?? '-' }}</td>
                     <td class="px-4 py-3">{{ $b->exam_date->format('d/m/Y') }}</td>

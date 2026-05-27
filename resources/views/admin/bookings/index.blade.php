@@ -11,7 +11,7 @@
 
 <div x-data="{ showDetail: false, selected: null, bookings: {{ Js::from($bookings->items()) }} }">
 {{-- Filter bar --}}
-<div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm p-4 mb-6 transition-colors duration-200">
+<div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm p-4 mb-6 transition-colors duration-200">
     <form method="GET" class="flex gap-4 flex-wrap items-end">
         <div>
             <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Tanggal</label>
@@ -41,10 +41,10 @@
 </div>
 
 {{-- Table --}}
-<div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+<div class="bg-white dark:bg-[#1c2622] rounded-xl shadow-sm overflow-hidden border border-[#e2efe7] dark:border-[#283731] transition-colors duration-200">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
-            <thead class="bg-gray-50 dark:bg-gray-950 text-gray-600 dark:text-gray-400 text-xs uppercase">
+            <thead class="bg-[#F6FBF8] dark:bg-[#141b18] text-[#6B9080] dark:text-[#A8D5BA] text-xs uppercase">
                 <tr>
                     <th class="px-4 py-3 text-left">Kode</th>
                     <th class="px-4 py-3 text-left">Nama</th>
@@ -57,10 +57,10 @@
                     <th class="px-4 py-3 text-left">Aksi</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+            <tbody class="divide-y divide-[#e2efe7] dark:divide-[#283731]">
                 @forelse($bookings as $b)
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50" id="row-{{ $b->id }}">
-                    <td class="px-4 py-3 font-mono font-semibold text-brand dark:text-blue-400">{{ $b->booking_code }}</td>
+                <tr class="hover:bg-[#F6FBF8] dark:hover:bg-[#1c2622]/50" id="row-{{ $b->id }}">
+                    <td class="px-4 py-3 font-mono font-semibold text-brand dark:text-brand-dark">{{ $b->booking_code }}</td>
                     <td class="px-4 py-3">{{ $b->patient_name }}</td>
                     <td class="px-4 py-3 font-mono text-xs">{{ $b->nik }}</td>
                     <td class="px-4 py-3">
@@ -114,11 +114,11 @@
 
                             {{-- Dropdown Menu (⋮) --}}
                             <div class="relative" x-data="{ menuOpen: false }">
-                                <button @click="menuOpen = !menuOpen" class="w-8 h-8 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer">
+                                <button @click="menuOpen = !menuOpen" class="w-8 h-8 rounded-lg border border-[#e2efe7] dark:border-[#283731] flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#1c2622] transition cursor-pointer">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="4" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="10" cy="16" r="1.5"/></svg>
                                 </button>
                                 <div x-show="menuOpen" @click.away="menuOpen = false" x-transition
-                                     class="absolute right-0 top-full mt-1 w-40 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 py-1 text-sm" style="display:none;">
+                                     class="absolute right-0 top-full mt-1 w-40 bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-xl z-50 py-1 text-sm" style="display:none;">
                                     <button @click="selected = bookings.find(b => b.id === {{ $b->id }}); showDetail = true; menuOpen = false"
                                             class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-2.5 cursor-pointer transition">
                                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
@@ -142,13 +142,13 @@
             </tbody>
         </table>
     </div>
-    <div class="px-4 py-3 border-t border-gray-100 dark:border-gray-800">{{ $bookings->withQueryString()->links() }}</div>
+    <div class="px-4 py-3 border-t border-[#e2efe7] dark:border-[#283731]">{{ $bookings->withQueryString()->links() }}</div>
 </div>
 
 {{-- Detail Modal (Alpine) --}}
 <div x-show="showDetail" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" x-transition style="display: none;">
-    <div @click.away="showDetail = false" class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div class="flex justify-between items-center mb-5 border-b border-gray-100 dark:border-gray-800 pb-3">
+    <div @click.away="showDetail = false" class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-5 border-b border-[#e2efe7] dark:border-[#283731] pb-3">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white">Detail Pasien & Booking</h3>
             <button @click="showDetail = false" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -179,8 +179,8 @@
                     </div>
                 </div>
                 {{-- Kanan --}}
-                <div class="space-y-3 bg-gray-50 dark:bg-gray-950 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
-                    <div><span class="text-gray-500 dark:text-gray-400 block text-xs">Kode Booking</span><span x-text="selected.booking_code" class="font-bold text-brand dark:text-blue-400 tracking-widest text-lg"></span></div>
+                <div class="space-y-3 bg-[#F6FBF8] dark:bg-[#141b18] p-4 rounded-xl border border-[#e2efe7] dark:border-[#283731]">
+                    <div><span class="text-gray-500 dark:text-gray-400 block text-xs">Kode Booking</span><span x-text="selected.booking_code" class="font-bold text-brand dark:text-brand-dark tracking-widest text-lg"></span></div>
                     <div><span class="text-gray-500 dark:text-gray-400 block text-xs">Nomor Antrean</span><span x-text="selected.queue_number" class="font-bold text-xl text-gray-900 dark:text-white"></span></div>
                     <div><span class="text-gray-500 dark:text-gray-400 block text-xs">Tanggal Periksa</span><span x-text="new Date(selected.exam_date).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'})" class="text-gray-800 dark:text-gray-200 font-medium"></span></div>
                     <div><span class="text-gray-500 dark:text-gray-400 block text-xs">Dokter</span><span x-text="selected.doctor?.name" class="text-gray-800 dark:text-gray-200 font-medium"></span></div>
@@ -204,7 +204,7 @@
 
 {{-- Reject Modal --}}
 <div id="reject-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-    <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 max-w-md w-full shadow-xl">
+    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl p-6 max-w-md w-full shadow-xl">
         <h3 class="font-bold text-gray-900 dark:text-white mb-4">Alasan Penolakan</h3>
         <textarea id="reject-reason" class="input-base mb-1" rows="3" placeholder="Tuliskan alasan penolakan (minimal 10 karakter)"></textarea>
         <p id="reject-error" class="text-red-500 text-xs mb-3 hidden">Alasan harus minimal 10 karakter.</p>
@@ -221,7 +221,7 @@
 {{-- WALK-IN REGISTRATION MODAL                                    --}}
 {{-- ══════════════════════════════════════════════════════════════ --}}
 <div id="walkin-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" style="display:none;">
-    <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto">
+    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto">
         {{-- Header --}}
         <div class="bg-gradient-to-r from-purple-600 to-brand px-6 py-4 rounded-t-2xl flex items-center justify-between">
             <div>
@@ -387,7 +387,7 @@
             <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Walk-in Berhasil Terdaftar!</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Kode Booking</p>
             <p id="wk-success-code" class="text-4xl font-bold text-brand dark:text-blue-400 tracking-widest mb-2"></p>
-            <div class="bg-gray-50 dark:bg-gray-950 rounded-xl p-4 mb-4 text-left text-sm space-y-2 border border-gray-100 dark:border-gray-800 max-w-sm mx-auto">
+            <div class="bg-[#F6FBF8] dark:bg-[#141b18] rounded-xl p-4 mb-4 text-left text-sm space-y-2 border border-[#e2efe7] dark:border-[#283731] max-w-sm mx-auto">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2 mb-2">
                     <span class="text-gray-500 dark:text-gray-400">Nomor Antrean:</span>
                     <span id="wk-success-queue" class="font-bold text-3xl text-brand dark:text-blue-400"></span>

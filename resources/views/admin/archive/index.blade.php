@@ -10,7 +10,7 @@
 
 <div x-data="{ showDetail: false, selected: null }">
     {{-- Filter Bar --}}
-    <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm p-5 mb-6 transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm p-5 mb-6 transition-colors duration-200">
         <form method="GET" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {{-- Search --}}
@@ -67,10 +67,10 @@
     </div>
 
     {{-- Table --}}
-    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-800 transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] rounded-xl shadow-sm overflow-hidden border border-[#e2efe7] dark:border-[#283731] transition-colors duration-200">
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
-                <thead class="bg-gray-50 dark:bg-gray-950 text-gray-600 dark:text-gray-400 text-xs uppercase">
+                <thead class="bg-[#F6FBF8] dark:bg-[#141b18] text-[#6B9080] dark:text-[#A8D5BA] text-xs uppercase">
                     <tr>
                         <th class="px-4 py-3 text-left">Kode</th>
                         <th class="px-4 py-3 text-left">Pasien</th>
@@ -81,10 +81,10 @@
                         <th class="px-4 py-3 text-right text-red-500">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                <tbody class="divide-y divide-[#e2efe7] dark:divide-[#283731]">
                     @forelse($bookings as $b)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                        <td class="px-4 py-3 font-mono font-bold text-brand dark:text-blue-400">{{ $b->booking_code }}</td>
+                    <tr class="hover:bg-[#F6FBF8] dark:hover:bg-[#1c2622]/50 transition-colors">
+                        <td class="px-4 py-3 font-mono font-bold text-brand dark:text-brand-dark">{{ $b->booking_code }}</td>
                         <td class="px-4 py-3">
                             <div class="font-semibold text-gray-900 dark:text-white">{{ $b->patient_name }}</div>
                             <div class="text-[10px] text-gray-400 font-mono">{{ $b->nik }}</div>
@@ -125,13 +125,13 @@
                 </tbody>
             </table>
         </div>
-        <div class="px-4 py-3 border-t border-gray-100 dark:border-gray-800">{{ $bookings->links() }}</div>
+        <div class="px-4 py-3 border-t border-[#e2efe7] dark:border-[#283731]">{{ $bookings->links() }}</div>
     </div>
 
     {{-- Detail Modal --}}
     <div x-show="showDetail" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" x-transition style="display: none;">
-        <div @click.away="showDetail = false" class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-5 border-b border-gray-100 dark:border-gray-800 pb-3">
+        <div @click.away="showDetail = false" class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-5 border-b border-[#e2efe7] dark:border-[#283731] pb-3">
                 <h3 class="text-xl font-bold text-gray-900 dark:text-white">Detail Riwayat Pasien</h3>
                 <button @click="showDetail = false" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -144,13 +144,13 @@
                         <div><span class="text-gray-500 block text-xs">NIK</span><span x-text="selected.nik" class="font-mono"></span></div>
                         <div><span class="text-gray-500 block text-xs">Jenis Kelamin</span><span x-text="selected.gender === 'L' ? 'Laki-laki' : 'Perempuan'"></span></div>
                         <div><span class="text-gray-500 block text-xs">Alamat</span><p x-text="`${selected.address}, ${selected.village}, ${selected.sub_district}`" class="leading-tight"></p></div>
-                        <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
+                        <div class="pt-2 border-t border-[#e2efe7] dark:border-[#283731]">
                             <span class="text-gray-500 block text-xs">Keluhan Masuk</span>
                             <p x-text="selected.complaint || '-'" class="italic text-gray-700 dark:text-gray-300"></p>
                         </div>
                     </div>
-                    <div class="space-y-3 bg-gray-50 dark:bg-gray-950 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
-                        <div><span class="text-gray-500 block text-xs">Kode Booking</span><span x-text="selected.booking_code" class="font-bold text-brand dark:text-blue-400 tracking-wider"></span></div>
+                    <div class="space-y-3 bg-[#F6FBF8] dark:bg-[#141b18] p-4 rounded-xl border border-[#e2efe7] dark:border-[#283731]">
+                        <div><span class="text-gray-500 block text-xs">Kode Booking</span><span x-text="selected.booking_code" class="font-bold text-brand dark:text-brand-dark tracking-wider"></span></div>
                         <div><span class="text-gray-500 block text-xs">Tanggal Periksa</span><span x-text="new Date(selected.exam_date).toLocaleDateString('id-ID', {weekday:'long', year:'numeric', month:'long', day:'numeric'})" class="font-medium"></span></div>
                         <div><span class="text-gray-500 block text-xs">Dokter Pembuat</span><span x-text="selected.doctor?.name" class="font-medium"></span></div>
                         <div>

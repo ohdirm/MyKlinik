@@ -10,7 +10,7 @@
     <div class="flex items-center gap-3">
         <form method="GET" action="{{ route('admin.schedules.index') }}" id="filter-schedule-spec-form">
             <select name="specialization" onchange="document.getElementById('filter-schedule-spec-form').submit()"
-                    class="text-sm rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
+                    class="text-sm rounded-lg border border-[#e2efe7] dark:border-[#283731] bg-white dark:bg-[#1c2622] text-gray-700 dark:text-gray-200 px-3 py-2 pr-8 focus:ring-2 focus:ring-brand/30 focus:border-brand transition cursor-pointer min-w-[200px]">
                 <option value="">Semua Spesialisasi</option>
                 @foreach($specializations as $spec)
                     <option value="{{ $spec->value }}" {{ request('specialization') === $spec->value ? 'selected' : '' }}>{{ $spec->label }}</option>
@@ -34,11 +34,11 @@ $dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 
 <div class="space-y-4">
     @forelse($doctors as $doctor)
-    <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm overflow-hidden transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm overflow-hidden transition-colors duration-200">
         {{-- Doctor Header --}}
-        <div class="flex items-center justify-between px-5 py-4 bg-gray-50 dark:bg-gray-950 border-b border-gray-100 dark:border-gray-800">
+        <div class="flex items-center justify-between px-5 py-4 bg-[#F6FBF8] dark:bg-[#141b18] border-b border-[#e2efe7] dark:border-[#283731]">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm border border-white dark:border-gray-800 overflow-hidden">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-teal-500 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm border border-white dark:border-[#283731] overflow-hidden">
                     @if($doctor->photo_url)
                         <img src="{{ $doctor->photo_url }}" alt="{{ $doctor->name }}" class="w-full h-full object-cover">
                     @else
@@ -55,16 +55,16 @@ $dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 
         {{-- Schedules --}}
         @if($doctor->schedules->isEmpty())
-            <div class="px-5 py-6 text-center text-sm text-gray-400 dark:text-gray-500">
-                Belum ada jadwal. <a href="{{ route('admin.schedules.create') }}?doctor={{ $doctor->id }}" class="text-brand dark:text-blue-400 hover:underline">Tambah sekarang</a>
+            <div class="px-5 py-6 text-center text-sm text-gray-400 dark:text-gray-500 bg-[#F6FBF8]/40 dark:bg-[#141b18]/40">
+                Belum ada jadwal. <a href="{{ route('admin.schedules.create') }}?doctor={{ $doctor->id }}" class="text-brand dark:text-brand-dark hover:underline">Tambah sekarang</a>
             </div>
         @else
-            <div class="divide-y divide-gray-50 dark:divide-gray-800">
+            <div class="divide-y divide-[#e2efe7] dark:divide-[#283731]">
                 @foreach($doctor->schedules as $s)
-                <div class="flex items-center justify-between px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-850/50 transition-colors">
+                <div class="flex items-center justify-between px-5 py-3 hover:bg-[#F6FBF8] dark:hover:bg-[#1c2622]/50 transition-colors">
                     <div class="flex items-center gap-4">
                         {{-- Day badge --}}
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 min-w-[75px] justify-center shadow-sm">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border border-[#e2efe7] dark:border-[#283731] bg-white dark:bg-[#1c2622] text-[#6B9080] dark:text-[#A8D5BA] min-w-[75px] justify-center shadow-sm">
                             {{ $dayNames[$s->day_of_week] }}
                         </span>
                         {{-- Time --}}
@@ -83,7 +83,7 @@ $dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
                     {{-- Actions --}}
                     <div class="flex items-center gap-2">
                         <a href="{{ route('admin.schedules.edit', $s) }}"
-                           class="inline-flex items-center gap-1 rounded-lg border border-brand/20 bg-brand/10 dark:bg-brand/20 px-3 py-1 text-xs font-semibold text-brand dark:text-blue-300 hover:bg-brand/20 dark:hover:bg-brand/35 transition">
+                           class="inline-flex items-center gap-1 rounded-lg border border-brand/20 bg-brand/10 dark:bg-brand/20 px-3 py-1 text-xs font-semibold text-brand dark:text-brand-dark hover:bg-brand/20 dark:hover:bg-brand/35 transition">
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                             Edit
                         </a>
@@ -101,7 +101,7 @@ $dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
         @endif
     </div>
     @empty
-        <div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm p-12 text-center text-gray-400 dark:text-gray-500 transition-colors duration-200">
+        <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm p-12 text-center text-gray-400 dark:text-gray-500 transition-colors duration-200">
             <svg class="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
             <p class="font-medium text-gray-900 dark:text-white">Belum ada dokter aktif</p>
             <p class="text-sm mt-1">Tambahkan dokter terlebih dahulu sebelum mengatur jadwal.</p>

@@ -18,18 +18,18 @@
         }
     </script>
 </head>
-<body class="bg-surface dark:bg-gray-950 min-h-screen font-sans text-gray-900 dark:text-gray-100 transition-colors duration-200" x-data="{ sidebarOpen: false, darkMode: document.documentElement.classList.contains('dark') }">
+<body class="bg-surface dark:bg-[#141b18] min-h-screen font-sans text-gray-900 dark:text-gray-100 transition-colors duration-200" x-data="{ sidebarOpen: false, darkMode: document.documentElement.classList.contains('dark') }">
     <div class="flex h-screen overflow-hidden">
 
         {{-- Sidebar overlay (mobile) --}}
         <div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-black/50 z-30 lg:hidden" x-transition.opacity></div>
 
         {{-- Sidebar --}}
-        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 w-64 bg-brand text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col">
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-brand-dark to-[#4e6d5e] text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col shadow-xl">
             {{-- Logo --}}
-            <div class="flex items-center px-6 h-24 border-b border-gray-100 dark:border-white/10 border-r border-gray-200 dark:border-none shrink-0 bg-brand-light dark:bg-black transition-colors duration-200">
+            <div class="flex items-center px-6 h-20 border-b border-white/10 shrink-0 bg-transparent transition-colors duration-200">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center hover:opacity-90 transition-opacity">
-                    <img :src="darkMode ? '{{ asset('assets/logodark_app.png') }}' : '{{ asset('assets/logo_app.png') }}'" src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911 Logo" class="h-18 w-auto drop-shadow-sm transition-all duration-300">
+                    <img :src="darkMode ? '{{ asset('assets/logodark_app.png') }}' : '{{ asset('assets/logo_app.png') }}'" src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911 Logo" class="h-28 w-auto drop-shadow-sm transition-all duration-300">
                 </a>
             </div>
 
@@ -80,7 +80,7 @@
         {{-- Main area --}}
         <div class="flex-1 flex flex-col overflow-hidden">
             {{-- Topbar --}}
-            <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-16 flex items-center justify-between px-6 shrink-0 transition-colors duration-200">
+            <header class="bg-white dark:bg-[#1c2622] border-b border-[#e2efe7] dark:border-[#283731] h-20 flex items-center justify-between px-6 shrink-0 transition-colors duration-200">
                 <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-lg hover:bg-brand-light dark:hover:bg-gray-700 transition">
                     <svg class="w-6 h-6 text-brand dark:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
