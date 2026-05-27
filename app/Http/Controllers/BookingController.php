@@ -15,9 +15,28 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $doctors = Doctor::where('is_active', true)->get();
+        // Ensure profile is complete before booking
+        if (! auth()->user()->hasCompleteProfile()) {
+            return redirect()->route('profile.index')
+                ->with('warning', 'Lengkapi data profile terlebih dahulu untuk melakukan konsultasi.');
+        }
 
-        return view('booking.index', compact('doctors'));
+        $doctors = Doctor::where('is_active', true)->get();
+        $profile = auth()->user()->patientProfile;
+        $familyProfiles = auth()->user()->familyProfiles()->get();
+
+        // Pre-format family data for JS (avoids arrow functions in Blade @json)
+        $familyProfilesJson = $familyProfiles->keyBy('id')->mapWithKeys(function ($fp, $id) {
+            return [$id => [
+                'full_name' => $fp->full_name,
+                'nik' => $fp->nik,
+                'birth_date' => $fp->birth_date?->format('Y-m-d'),
+                'gender' => $fp->gender,
+                'phone_number' => $fp->phone_number,
+            ]];
+        });
+
+        return view('booking.index', compact('doctors', 'profile', 'familyProfiles', 'familyProfilesJson'));
     }
 
     public function store(BookingRequest $request)

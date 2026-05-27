@@ -9,10 +9,12 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DoctorStatusController;
+use App\Http\Controllers\FamilyProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PatientAuthController;
 use App\Http\Controllers\PatientDashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WilayahController;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +57,17 @@ Route::middleware('auth.patient')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+
+    // ── Profile ──
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo');
+    Route::get('/profile/check', [ProfileController::class, 'checkComplete'])->name('profile.check');
+
+    // ── Profile Keluarga ──
+    Route::post('/profile/family', [FamilyProfileController::class, 'store'])->name('profile.family.store');
+    Route::put('/profile/family/{familyProfile}', [FamilyProfileController::class, 'update'])->name('profile.family.update');
+    Route::delete('/profile/family/{familyProfile}', [FamilyProfileController::class, 'destroy'])->name('profile.family.destroy');
 });
 
 // ── AJAX / JSON (publik) ──

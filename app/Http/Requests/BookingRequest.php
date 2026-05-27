@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BookingRequest extends FormRequest
 {
@@ -12,11 +13,13 @@ class BookingRequest extends FormRequest
     }
 
     /**
-     * @return array<string, array<int, string>>
+     * @return array<string, array<int, mixed>>
      */
     public function rules(): array
     {
         return [
+            'profile_type' => ['required', Rule::in(['self', 'family'])],
+            'family_profile_id' => ['required_if:profile_type,family', 'nullable', 'exists:family_profiles,id'],
             'patient_name' => ['required', 'string', 'max:255'],
             'nik' => ['required', 'digits:16'],
             'phone' => ['required', 'string', 'max:15'],
@@ -45,6 +48,10 @@ class BookingRequest extends FormRequest
             'exam_date.before_or_equal' => 'Tanggal periksa maksimal 14 hari ke depan.',
             'doctor_id.exists' => 'Dokter tidak ditemukan.',
             'schedule_id.exists' => 'Jadwal tidak ditemukan.',
+            'profile_type.required' => 'Pilih tipe pasien (diri sendiri atau keluarga).',
+            'profile_type.in' => 'Tipe pasien tidak valid.',
+            'family_profile_id.required_if' => 'Pilih anggota keluarga yang akan didaftarkan.',
+            'family_profile_id.exists' => 'Anggota keluarga tidak ditemukan.',
         ];
     }
 }

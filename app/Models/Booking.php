@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Booking extends Model
 {
     use SoftDeletes;
+
     protected $fillable = [
         'booking_code',
         'patient_name',
@@ -31,6 +32,8 @@ class Booking extends Model
         'user_id',
         'complaint',
         'booking_source',
+        'profile_type',
+        'family_profile_id',
     ];
 
     protected function casts(): array
@@ -50,6 +53,11 @@ class Booking extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function familyProfile(): BelongsTo
+    {
+        return $this->belongsTo(FamilyProfile::class);
     }
 
     public function schedule(): BelongsTo

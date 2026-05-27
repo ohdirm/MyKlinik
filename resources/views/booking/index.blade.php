@@ -211,34 +211,98 @@
                 <div x-show="step === 2" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
                     <div class="bg-gradient-to-r from-brand to-teal-600 px-6 py-4">
                         <h2 class="text-white font-semibold text-lg">Langkah 2: Data Pasien</h2>
-                        <p class="text-white/85 text-xs mt-0.5">Isi data diri pasien yang akan diperiksa</p>
+                        <p class="text-white/85 text-xs mt-0.5">Pilih pasien yang akan diperiksa</p>
                     </div>
                     <div class="p-6 space-y-5">
+
+                        {{-- Patient Type Selector --}}
+                        <input type="hidden" name="profile_type" :value="profileType">
+                        <input type="hidden" name="family_profile_id" :value="profileType === 'family' ? selectedFamilyId : ''">
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand text-white flex items-center justify-center text-xs">1</span>
+                                Siapa yang akan diperiksa? <span class="text-red-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95 bg-white dark:bg-[#141b18]"
+                                       :class="profileType === 'self' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-[#e2efe7] dark:border-[#283731] hover:border-brand/40'">
+                                    <input type="radio" value="self" class="sr-only" x-model="profileType" @change="onProfileTypeChange()">
+                                    <div class="w-10 h-10 rounded-full bg-brand/10 dark:bg-brand/20 flex items-center justify-center shrink-0">
+                                        <svg class="w-5 h-5 text-brand-dark dark:text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="font-semibold text-sm text-gray-700 dark:text-gray-300 block">Diri Sendiri</span>
+                                        <span class="text-[10px] text-gray-400">Data dari profile</span>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95 bg-white dark:bg-[#141b18]"
+                                       :class="profileType === 'family' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-[#e2efe7] dark:border-[#283731] hover:border-brand/40'"
+                                       @if($familyProfiles->isEmpty()) title="Tambahkan anggota keluarga di menu Profile terlebih dahulu" @endif>
+                                    <input type="radio" value="family" class="sr-only" x-model="profileType" @change="onProfileTypeChange()" @if($familyProfiles->isEmpty()) disabled @endif>
+                                    <div class="w-10 h-10 rounded-full bg-brand/10 dark:bg-brand/20 flex items-center justify-center shrink-0">
+                                        <svg class="w-5 h-5 text-brand-dark dark:text-brand" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/></svg>
+                                    </div>
+                                    <div>
+                                        <span class="font-semibold text-sm text-gray-700 dark:text-gray-300 block">Anggota Keluarga</span>
+                                        <span class="text-[10px] text-gray-400">{{ $familyProfiles->count() }} anggota</span>
+                                    </div>
+                                </label>
+                            </div>
+                            @if($familyProfiles->isEmpty())
+                            <p class="text-xs text-amber-600 dark:text-amber-400 mt-2 flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+                                <a href="{{ route('profile.index', ['tab' => 'family']) }}" class="underline hover:text-amber-700">Tambahkan anggota keluarga</a> di menu Profile untuk booking atas nama mereka.
+                            </p>
+                            @endif
+                        </div>
+
+                        {{-- Family Member Dropdown --}}
+                        <div x-show="profileType === 'family'" x-transition>
+                            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-2">
+                                <span class="w-6 h-6 rounded-full bg-brand text-white flex items-center justify-center text-xs">2</span>
+                                Pilih Anggota Keluarga <span class="text-red-500">*</span>
+                            </label>
+                            <select x-model="selectedFamilyId" @change="onFamilySelect()" class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-[#141b18] focus:ring-1 focus:ring-brand focus:border-brand">
+                                <option value="">— Pilih anggota keluarga —</option>
+                                @foreach($familyProfiles as $fp)
+                                <option value="{{ $fp->id }}">{{ $fp->full_name }} ({{ $fp->relationship }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Auto-fill Info Banner --}}
+                        <div x-show="profileType === 'self' || (profileType === 'family' && selectedFamilyId)" x-transition
+                             class="bg-brand/5 dark:bg-brand/10 border border-brand/20 rounded-2xl px-4 py-3 flex items-center gap-3">
+                            <svg class="w-5 h-5 text-brand shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <p class="text-xs text-brand-dark dark:text-brand font-medium">Data pasien terisi otomatis dari profile. Anda dapat mengubahnya jika diperlukan.</p>
+                        </div>
+
+                        {{-- Patient Fields --}}
                         <div>
                             <label for="nik" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">NIK <span class="text-red-500">*</span></label>
-                            <input type="text" name="nik" id="nik" class="input-base" maxlength="16" placeholder="Masukkan 16 digit NIK" value="{{ old('nik') }}" required>
+                            <input type="text" name="nik" id="nik" class="input-base" maxlength="16" placeholder="Masukkan 16 digit NIK" x-model="patientNik" required>
                         </div>
                         <div>
                             <label for="patient_name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nama Pasien <span class="text-red-500">*</span></label>
-                            <input type="text" name="patient_name" id="patient_name" class="input-base" placeholder="Nama lengkap sesuai KTP" value="{{ old('patient_name', Auth::user()->name) }}" required>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Terisi otomatis dari akun Anda. Ubah jika mendaftarkan orang lain.</p>
+                            <input type="text" name="patient_name" id="patient_name" class="input-base" placeholder="Nama lengkap sesuai KTP" x-model="patientName" required>
                         </div>
                         <div>
                             <label for="birth_date_input" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
-                            <input type="date" name="birth_date" id="birth_date_input" class="input-base" value="{{ old('birth_date') }}" required>
+                            <input type="date" name="birth_date" id="birth_date_input" class="input-base" x-model="patientBirthDate" required>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
                             <div class="grid grid-cols-2 gap-3">
                                 <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95 bg-white dark:bg-[#141b18]"
                                        :class="gender === 'L' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-[#e2efe7] dark:border-[#283731] hover:border-brand/40 dark:hover:border-brand/40'">
-                                    <input type="radio" name="gender" value="L" class="sr-only" x-model="gender" {{ old('gender') === 'L' ? 'checked' : '' }}>
+                                    <input type="radio" name="gender" value="L" class="sr-only" x-model="gender">
                                     <span class="text-xl">👨</span>
                                     <span class="font-medium text-sm text-gray-700 dark:text-gray-300">Laki-laki</span>
                                 </label>
                                 <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95 bg-white dark:bg-[#141b18]"
                                        :class="gender === 'P' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-[#e2efe7] dark:border-[#283731] hover:border-brand/40 dark:hover:border-brand/40'">
-                                    <input type="radio" name="gender" value="P" class="sr-only" x-model="gender" {{ old('gender') === 'P' ? 'checked' : '' }}>
+                                    <input type="radio" name="gender" value="P" class="sr-only" x-model="gender">
                                     <span class="text-xl">👩</span>
                                     <span class="font-medium text-sm text-gray-700 dark:text-gray-300">Perempuan</span>
                                 </label>
@@ -246,7 +310,7 @@
                         </div>
                         <div>
                             <label for="phone" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">No HP/WhatsApp <span class="text-red-500">*</span></label>
-                            <input type="text" name="phone" id="phone" class="input-base" maxlength="15" placeholder="08xxxxxxxxxx" value="{{ old('phone', Auth::user()->phone ?? '') }}" required>
+                            <input type="text" name="phone" id="phone" class="input-base" maxlength="15" placeholder="08xxxxxxxxxx" x-model="patientPhone" required>
                         </div>
                         {{-- Hidden Complaint Field for Form Submit --}}
                         <input type="hidden" name="complaint" :value="complaint">
@@ -372,6 +436,15 @@
 @endif
 
 @push('scripts')
+    @php
+        $selfProfileJson = [
+            'full_name' => $profile?->full_name ?? Auth::user()->name,
+            'nik' => $profile?->nik ?? '',
+            'birth_date' => $profile?->birth_date?->format('Y-m-d') ?? '',
+            'gender' => $profile?->gender ?? '',
+            'phone_number' => $profile?->phone_number ?? '',
+        ];
+    @endphp
     @vite('resources/js/booking.js')
     <script>
     function bookingWizard() {
@@ -379,7 +452,7 @@
             step: 1,
             doctorId: '{{ old('doctor_id', '') }}',
             examDate: '{{ old('exam_date', '') }}',
-            gender: '{{ old('gender', '') }}',
+            gender: '{{ old('gender', $profile?->gender ?? '') }}',
             schedules: [],
             loadingSchedule: false,
             selectedDoctorName: '',
@@ -390,6 +463,18 @@
             suggestion: null,
             doctorCapacities: {},
             submitting: false,
+
+            // Patient selection
+            profileType: '{{ old('profile_type', 'self') }}',
+            selectedFamilyId: '{{ old('family_profile_id', '') }}',
+            selfProfile: @json($selfProfileJson),
+            familyProfilesData: @json($familyProfilesJson),
+
+            // Patient fields (x-model bound)
+            patientName: '{{ old('patient_name', $profile?->full_name ?? Auth::user()->name) }}',
+            patientNik: '{{ old('nik', $profile?->nik ?? '') }}',
+            patientBirthDate: '{{ old('birth_date', $profile?->birth_date?->format('Y-m-d') ?? '') }}',
+            patientPhone: '{{ old('phone', $profile?->phone_number ?? '') }}',
 
             init() {
                 // If old input exists, jump to correct step
@@ -402,6 +487,49 @@
                 }
                 if (this.examDate) {
                     this.fetchDoctorCapacities();
+                }
+
+                // Auto-fill from self profile on init
+                if (this.profileType === 'self') {
+                    this.fillFromSelf();
+                }
+            },
+
+            fillFromSelf() {
+                this.patientName = this.selfProfile.full_name || '';
+                this.patientNik = this.selfProfile.nik || '';
+                this.patientBirthDate = this.selfProfile.birth_date || '';
+                this.gender = this.selfProfile.gender || '';
+                this.patientPhone = this.selfProfile.phone_number || '';
+            },
+
+            fillFromFamily(id) {
+                const fp = this.familyProfilesData[id];
+                if (!fp) return;
+                this.patientName = fp.full_name || '';
+                this.patientNik = fp.nik || '';
+                this.patientBirthDate = fp.birth_date || '';
+                this.gender = fp.gender || '';
+                this.patientPhone = fp.phone_number || '';
+            },
+
+            onProfileTypeChange() {
+                if (this.profileType === 'self') {
+                    this.selectedFamilyId = '';
+                    this.fillFromSelf();
+                } else {
+                    // Clear fields until family member is selected
+                    this.patientName = '';
+                    this.patientNik = '';
+                    this.patientBirthDate = '';
+                    this.gender = '';
+                    this.patientPhone = '';
+                }
+            },
+
+            onFamilySelect() {
+                if (this.selectedFamilyId) {
+                    this.fillFromFamily(this.selectedFamilyId);
                 }
             },
 
@@ -505,15 +633,12 @@
                     if (!jadwal.value) { alert('Silakan pilih jadwal waktu.'); return; }
                 }
                 if (this.step === 2) {
-                    const nik = document.getElementById('nik').value;
-                    const name = document.getElementById('patient_name').value;
-                    const birth = document.getElementById('birth_date_input').value;
-                    const phone = document.getElementById('phone').value;
-                    if (!nik || nik.length < 16) { alert('NIK harus 16 digit.'); return; }
-                    if (!name) { alert('Nama pasien wajib diisi.'); return; }
-                    if (!birth) { alert('Tanggal lahir wajib diisi.'); return; }
+                    if (this.profileType === 'family' && !this.selectedFamilyId) { alert('Silakan pilih anggota keluarga.'); return; }
+                    if (!this.patientNik || this.patientNik.length < 16) { alert('NIK harus 16 digit.'); return; }
+                    if (!this.patientName) { alert('Nama pasien wajib diisi.'); return; }
+                    if (!this.patientBirthDate) { alert('Tanggal lahir wajib diisi.'); return; }
                     if (!this.gender) { alert('Jenis kelamin wajib dipilih.'); return; }
-                    if (!phone) { alert('Nomor HP wajib diisi.'); return; }
+                    if (!this.patientPhone) { alert('Nomor HP wajib diisi.'); return; }
                 }
                 this.step++;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
