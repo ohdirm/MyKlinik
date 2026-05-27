@@ -58,7 +58,7 @@
         @endif
 
         {{-- Card --}}
-        <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800 transition-all duration-300">
+        <div class="bg-white dark:bg-[#1c2622] rounded-3xl shadow-xl overflow-hidden border border-[#e2efe7] dark:border-[#283731] transition-all duration-300">
             <form method="POST" action="{{ route('booking.store') }}" id="booking-form" @submit="handleSubmit">
                 @csrf
 
@@ -76,7 +76,7 @@
                                 Tentukan Tanggal Periksa <span class="text-red-500">*</span>
                             </label>
                             <input type="date" name="exam_date" id="exam-date" x-model="examDate" @change="onDateChange()"
-                                   class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand"
+                                   class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-[#141b18] focus:ring-1 focus:ring-brand focus:border-brand"
                                    min="{{ now()->format('Y-m-d') }}"
                                    max="{{ now()->addDays(14)->format('Y-m-d') }}"
                                    value="{{ old('exam_date') }}" required>
@@ -96,7 +96,7 @@
                                     Punya keluhan spesifik?
                                 </label>
                                 <div class="flex gap-3 items-center">
-                                    <textarea x-model="complaint" rows="2" class="flex-1 input-base text-sm py-3 px-4 resize-none rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand" placeholder="Contoh: sakit perut, demam tinggi, pusing..."></textarea>
+                                    <textarea x-model="complaint" rows="2" class="flex-1 input-base text-sm py-3 px-4 resize-none rounded-2xl bg-white dark:bg-[#141b18] focus:ring-1 focus:ring-brand focus:border-brand" placeholder="Contoh: sakit perut, demam tinggi, pusing..."></textarea>
                                     <button type="button" @click="analyzeComplaint()" class="w-16 h-16 bg-[#A8D5BA] hover:bg-[#96c4a9] text-[#1b2621] rounded-2xl flex flex-col items-center justify-center gap-1 shrink-0 shadow-sm transition active:scale-95 cursor-pointer border-0">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" x-show="!analyzing"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
                                         <svg class="animate-spin w-5 h-5 text-[#1b2621]" fill="none" viewBox="0 0 24 24" x-show="analyzing"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
@@ -105,7 +105,7 @@
                                 </div>
 
                                 {{-- Suggestion result --}}
-                                <div x-show="suggestion" class="mt-4 p-4 rounded-2xl border text-xs space-y-2 bg-white dark:bg-gray-950 shadow-sm border-gray-100 dark:border-gray-800 animate-fade-in" x-transition>
+                                <div x-show="suggestion" class="mt-4 p-4 rounded-2xl border text-xs space-y-2 bg-white dark:bg-[#141b18] shadow-sm border-[#e2efe7] dark:border-[#283731] animate-fade-in" x-transition>
                                     <div class="flex items-start gap-3">
                                         <span class="text-brand text-lg">💡</span>
                                         <div class="flex-1">
@@ -126,9 +126,9 @@
                                 <div class="relative flex-1">
                                     <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
                                     <input type="text" x-model="doctorSearch" placeholder="Atau cari nama dokter di sini..."
-                                           class="input-base pl-11 text-sm py-3 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand">
+                                           class="input-base pl-11 text-sm py-3 rounded-2xl bg-white dark:bg-[#141b18] focus:ring-1 focus:ring-brand focus:border-brand">
                                 </div>
-                                <select x-model="spFilter" class="input-base text-sm w-48 py-3 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand">
+                                <select x-model="spFilter" class="input-base text-sm w-48 py-3 rounded-2xl bg-white dark:bg-[#141b18] focus:ring-1 focus:ring-brand focus:border-brand">
                                     <option value="">Semua Spesialis</option>
                                     @foreach($doctors->pluck('specialization_label')->unique()->sort() as $sp)
                                         <option value="{{ $sp }}">{{ $sp }}</option>
@@ -140,7 +140,7 @@
                             <div class="space-y-3 max-h-80 overflow-y-auto pr-2 rounded-2xl scrollbar-thin scrollbar-thumb-brand/20 scrollbar-track-transparent" id="doctor-cards">
                                 @foreach($doctors as $doc)
                                 <label class="relative flex items-center gap-4 p-4 rounded-3xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-brand/5 dark:hover:bg-brand/10 group"
-                                       :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950'"
+                                       :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-[#e2efe7] dark:border-[#283731] bg-white dark:bg-[#141b18]'"
                                        x-show="(doctorSearch === '' || '{{ strtolower($doc->name) }}'.includes(doctorSearch.toLowerCase())) && (spFilter === '' || spFilter === '{{ $doc->specialization_label }}')"
                                        >
                                     <input type="radio" name="doctor_id" value="{{ $doc->id }}" class="sr-only" x-model="doctorId" @change="onDoctorChange()" {{ old('doctor_id') == $doc->id ? 'checked' : '' }}>
@@ -174,7 +174,7 @@
                                     
                                     {{-- Radio indicator --}}
                                     <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
-                                         :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand' : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950'">
+                                         :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand' : 'border-[#e2efe7] dark:border-[#283731] bg-white dark:bg-[#141b18]'">
                                         <div class="w-2 h-2 rounded-full bg-white" x-show="doctorId == '{{ $doc->id }}'"></div>
                                     </div>
                                 </label>
@@ -195,7 +195,7 @@
                                 <svg class="animate-spin w-4 h-4 text-brand" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
                                 Memuat jadwal...
                             </div>
-                            <select name="schedule_id" id="select-jadwal" class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-gray-950 focus:ring-1 focus:ring-brand focus:border-brand" :disabled="schedules.length === 0" x-show="!loadingSchedule" required>
+                            <select name="schedule_id" id="select-jadwal" class="input-base py-3 px-4 rounded-2xl bg-white dark:bg-[#141b18] focus:ring-1 focus:ring-brand focus:border-brand" :disabled="schedules.length === 0" x-show="!loadingSchedule" required>
                                 <option value="">— Pilih jadwal —</option>
                                 <template x-for="s in schedules" :key="s.id">
                                     <option :value="s.id" :disabled="s.remaining_capacity <= 0"
@@ -230,14 +230,14 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
                             <div class="grid grid-cols-2 gap-3">
-                                <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95"
-                                       :class="gender === 'L' ? 'border-brand bg-brand/5 dark:bg-brand/10' : 'border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700'">
+                                <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95 bg-white dark:bg-[#141b18]"
+                                       :class="gender === 'L' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-[#e2efe7] dark:border-[#283731] hover:border-brand/40 dark:hover:border-brand/40'">
                                     <input type="radio" name="gender" value="L" class="sr-only" x-model="gender" {{ old('gender') === 'L' ? 'checked' : '' }}>
                                     <span class="text-xl">👨</span>
                                     <span class="font-medium text-sm text-gray-700 dark:text-gray-300">Laki-laki</span>
                                 </label>
-                                <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95"
-                                       :class="gender === 'P' ? 'border-brand bg-brand/5 dark:bg-brand/10' : 'border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700'">
+                                <label class="flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all active:scale-95 bg-white dark:bg-[#141b18]"
+                                       :class="gender === 'P' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-[#e2efe7] dark:border-[#283731] hover:border-brand/40 dark:hover:border-brand/40'">
                                     <input type="radio" name="gender" value="P" class="sr-only" x-model="gender" {{ old('gender') === 'P' ? 'checked' : '' }}>
                                     <span class="text-xl">👩</span>
                                     <span class="font-medium text-sm text-gray-700 dark:text-gray-300">Perempuan</span>
@@ -290,7 +290,7 @@
                         </div>
 
                         {{-- Ringkasan --}}
-                        <div class="bg-gray-50 dark:bg-gray-950 rounded-xl p-4 border border-gray-100 dark:border-gray-800 text-sm space-y-2">
+                        <div class="bg-[#F6FBF8] dark:bg-[#141b18] rounded-xl p-4 border border-[#e2efe7] dark:border-[#283731] text-sm space-y-2">
                             <p class="font-semibold text-gray-700 dark:text-gray-300 mb-2">📋 Ringkasan Booking</p>
                             <div class="flex justify-between text-gray-600 dark:text-gray-400"><span>Dokter</span><span class="font-medium text-gray-900 dark:text-white" x-text="selectedDoctorName || '—'"></span></div>
                             <div class="flex justify-between text-gray-600 dark:text-gray-400"><span>Tanggal</span><span class="font-medium text-gray-900 dark:text-white" x-text="examDate ? new Date(examDate).toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}) : '—'"></span></div>
@@ -338,15 +338,15 @@
 @if(session('booking'))
 @php $bk = session('booking'); @endphp
 <div id="success-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center border border-gray-100 dark:border-gray-800 animate-bounce-in">
+    <div class="bg-white dark:bg-[#1c2622] rounded-2xl p-8 max-w-md w-full shadow-2xl text-center border border-[#e2efe7] dark:border-[#283731] animate-bounce-in">
         <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
         </div>
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Pendaftaran Berhasil!</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Kode Booking Anda</p>
         <p class="text-4xl font-bold text-brand dark:text-brand tracking-widest mb-5">{{ $bk->booking_code }}</p>
-        <div class="bg-gray-50 dark:bg-gray-950 rounded-xl p-4 mb-4 text-left text-sm space-y-2 border border-gray-100 dark:border-gray-800">
-            <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2 mb-2">
+        <div class="bg-[#F6FBF8] dark:bg-[#141b18] rounded-xl p-4 mb-4 text-left text-sm space-y-2 border border-[#e2efe7] dark:border-[#283731]">
+            <div class="flex justify-between items-center border-b border-[#e2efe7] dark:border-[#283731] pb-2 mb-2">
                 <span class="text-gray-500 dark:text-gray-400">Nomor Antrean:</span>
                 <span class="font-bold text-3xl text-brand dark:text-brand">{{ $bk->queue_number }}</span>
             </div>

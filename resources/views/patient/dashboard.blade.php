@@ -39,7 +39,7 @@
             <div class="lg:col-span-8 space-y-8">
                 
                 {{-- Booking Aktif Section --}}
-                <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="bg-white dark:bg-[#1c2622] rounded-[2.5rem] shadow-xl shadow-gray-200/50 dark:shadow-none border border-[#e2efe7] dark:border-[#283731] overflow-hidden">
                     <div class="p-8 pb-0">
                         <h2 class="font-bold text-xl text-gray-900 dark:text-white flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-brand/10 text-brand flex items-center justify-center">
@@ -51,7 +51,7 @@
 
                     <div class="p-8">
                         @forelse($activeBookings as $b)
-                            <div class="bg-gray-50 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-700/50 rounded-3xl p-8 transition-all hover:bg-gray-100 dark:hover:bg-gray-800/60 group mb-6 last:mb-0">
+                            <div class="bg-[#F6FBF8] dark:bg-[#141b18]/50 border border-[#e2efe7] dark:border-[#283731]/50 rounded-3xl p-8 transition-all hover:bg-brand/5 dark:hover:bg-brand/5 group mb-6 last:mb-0">
                                 <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
                                     <div>
                                         <p class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] mb-1">Kode Reservasi</p>
@@ -63,7 +63,7 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div class="space-y-4">
                                         <div class="flex items-start gap-4">
-                                            <div class="w-12 h-12 rounded-2xl bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center text-2xl shrink-0">🩺</div>
+                                            <div class="w-12 h-12 rounded-2xl bg-white dark:bg-[#141b18] shadow-sm flex items-center justify-center text-2xl shrink-0 border border-[#e2efe7] dark:border-[#283731]">🩺</div>
                                             <div>
                                                 <p class="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-1">Dokter Pemeriksa</p>
                                                 <p class="font-bold text-gray-900 dark:text-white text-lg leading-tight">{{ $b->doctor->name ?? '-' }}</p>
@@ -71,7 +71,7 @@
                                             </div>
                                         </div>
                                         <div class="flex items-start gap-4">
-                                            <div class="w-12 h-12 rounded-2xl bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center text-2xl shrink-0">📅</div>
+                                            <div class="w-12 h-12 rounded-2xl bg-white dark:bg-[#141b18] shadow-sm flex items-center justify-center text-2xl shrink-0 border border-[#e2efe7] dark:border-[#283731]">📅</div>
                                             <div>
                                                 <p class="text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider mb-1">Jadwal & Waktu</p>
                                                 <p class="font-bold text-gray-900 dark:text-white text-lg leading-tight">{{ $b->exam_date->format('d/m/Y') }}</p>
@@ -80,7 +80,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="bg-white dark:bg-gray-900/50 rounded-2xl p-6 flex items-center justify-around text-center shadow-inner">
+                                    <div class="bg-white dark:bg-[#141b18]/60 rounded-2xl p-6 flex items-center justify-around text-center shadow-inner border border-[#e2efe7] dark:border-[#283731]">
                                         <div>
                                             <p class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-black mb-1">No. Antrean</p>
                                             <p class="text-5xl font-black text-brand-dark dark:text-brand">#{{ $b->queue_number }}</p>
@@ -96,8 +96,8 @@
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center py-20 bg-gray-50 dark:bg-gray-800/20 rounded-[2rem] border-2 border-dashed border-gray-100 dark:border-gray-800">
-                                <div class="w-20 h-20 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-gray-200/50 dark:shadow-none">
+                            <div class="text-center py-20 bg-[#F6FBF8] dark:bg-[#1c2622]/10 rounded-[2rem] border-2 border-dashed border-[#e2efe7] dark:border-[#283731]">
+                                <div class="w-20 h-20 bg-white dark:bg-[#141b18] rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl border border-[#e2efe7] dark:border-[#283731]">
                                     <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
                                 </div>
                                 <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Belum Ada Antrean Aktif</h3>
@@ -112,9 +112,9 @@
                 </div>
 
                 {{-- Riwayat Kunjungan Section --}}
-                <div class="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-800 p-8 text-white">
+                <div class="bg-white dark:bg-[#1c2622] rounded-[2.5rem] shadow-xl shadow-gray-200/50 dark:shadow-none border border-[#e2efe7] dark:border-[#283731] p-8 text-white">
                     <h2 class="font-bold text-xl text-gray-900 dark:text-white mb-8 flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 flex items-center justify-center">
+                        <div class="w-10 h-10 rounded-xl bg-[#F6FBF8] dark:bg-[#141b18] text-[#6B9080] flex items-center justify-center border border-[#e2efe7] dark:border-[#283731]">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                         Riwayat Kunjungan
@@ -123,14 +123,14 @@
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead>
-                                    <tr class="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] border-b border-gray-50 dark:border-gray-800">
+                                    <tr class="text-[10px] font-black text-[#6B9080] dark:text-[#A8D5BA] uppercase tracking-[0.2em] border-b border-[#e2efe7] dark:border-[#283731]">
                                         <th class="px-4 py-4">Kode</th>
                                         <th class="px-4 py-4">Dokter Pemeriksa</th>
                                         <th class="px-4 py-4">Tanggal</th>
                                         <th class="px-4 py-4 text-right">Review</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-50 dark:divide-gray-800">
+                                <tbody class="divide-y divide-[#e2efe7] dark:divide-[#283731]">
                                     @foreach($completedBookings as $cb)
                                     <tr class="group text-gray-900 dark:text-white">
                                         <td class="px-4 py-6 font-mono font-bold text-gray-400 group-hover:text-brand transition-colors">{{ $cb->booking_code }}</td>
@@ -157,7 +157,7 @@
                             </table>
                         </div>
                     @else
-                        <div class="py-12 text-center text-gray-400 bg-gray-50/50 dark:bg-gray-800/10 rounded-2xl border border-dashed border-gray-100 dark:border-gray-800">
+                        <div class="py-12 text-center text-[#6B9080] dark:text-[#A8D5BA] bg-[#F6FBF8] dark:bg-[#1c2622]/20 rounded-2xl border border-dashed border-[#e2efe7] dark:border-[#283731]">
                             Belum ada riwayat kunjungan yang tercatat.
                         </div>
                     @endif

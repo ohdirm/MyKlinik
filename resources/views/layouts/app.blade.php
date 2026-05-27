@@ -27,7 +27,7 @@
             <div class="flex items-center justify-between h-16">
                 {{-- Logo --}}
                 <a href="{{ url('/') }}" class="flex items-center gap-2">
-                    <img src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911" class="w-38 md:w-52 drop-shadow-sm transition-all duration-300">
+                    <img :src="darkMode ? '{{ asset('assets/logodark_app.png') }}' : '{{ asset('assets/logo_app.png') }}'" src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911" class="w-38 md:w-52 drop-shadow-sm transition-all duration-300">
                 </a>
 
                 {{-- Desktop nav --}}

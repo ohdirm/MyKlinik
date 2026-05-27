@@ -6,7 +6,7 @@
         {{-- Back Button --}}
         <div class="mb-6 flex">
             <a href="{{ url('/') }}" class="inline-flex items-center gap-2 group text-sm font-medium transition-all" style="color: var(--ui-text-muted);">
-                <div class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-800 flex items-center justify-center transition-all group-hover:border-brand group-hover:bg-brand group-hover:text-white">
+                <div class="w-8 h-8 rounded-full border border-[#e2efe7] dark:border-[#283731] flex items-center justify-center transition-all group-hover:border-brand group-hover:bg-brand group-hover:text-white">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
                 </div>
                 <span class="group-hover:text-brand">Kembali ke Beranda</span>
@@ -20,7 +20,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="doctor-status-grid">
             @foreach($doctors as $doctor)
             @php $st = $doctor->status; @endphp
-            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 hover:shadow-md transition-all duration-200" id="doctor-card-{{ $doctor->id }}">
+            <div class="bg-white dark:bg-[#1c2622] rounded-2xl shadow-sm border border-[#e2efe7] dark:border-[#283731] p-6 hover:shadow-md transition-all duration-200" id="doctor-card-{{ $doctor->id }}">
                 <div class="flex items-center gap-4 mb-4">
                     @if($doctor->photo)
                         <img src="{{ asset('storage/' . $doctor->photo) }}"
