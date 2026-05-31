@@ -79,7 +79,7 @@
                     <td class="px-4 py-3 font-semibold">{{ $b->queue_number }}</td>
                     <td class="px-4 py-3">
                         @if($b->booking_source === 'WALK_IN')
-                            <span class="text-xs font-semibold px-2 py-1 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">Walk-in</span>
+                            <span class="text-xs font-semibold px-2 py-1 rounded-full bg-brand-light text-brand-dark border border-brand/20 dark:bg-brand-dark/10 dark:text-brand dark:border-brand-dark/20">Walk-in</span>
                         @else
                             <span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">Online</span>
                         @endif
@@ -191,7 +191,7 @@
                     </div>
                     <div>
                         <span class="text-gray-500 dark:text-gray-400 block text-xs mb-1">Sumber</span>
-                        <span x-text="selected.booking_source === 'WALK_IN' ? 'Walk-in' : 'Online'" class="px-2 py-1 text-xs font-semibold rounded-full" :class="selected.booking_source === 'WALK_IN' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'"></span>
+                        <span x-text="selected.booking_source === 'WALK_IN' ? 'Walk-in' : 'Online'" class="px-2 py-1 text-xs font-semibold rounded-full" :class="selected.booking_source === 'WALK_IN' ? 'bg-brand-light text-brand-dark border border-brand/20 dark:bg-brand-dark/10 dark:text-brand dark:border-brand-dark/20' : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'"></span>
                     </div>
                 </div>
             </div>
@@ -223,7 +223,7 @@
 <div id="walkin-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" style="display:none;">
     <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto">
         {{-- Header --}}
-        <div class="bg-gradient-to-r from-purple-600 to-brand px-6 py-4 rounded-t-2xl flex items-center justify-between">
+        <div class="bg-gradient-to-r from-brand-dark to-brand px-6 py-4 rounded-t-2xl flex items-center justify-between">
             <div>
                 <h2 class="text-white font-bold text-lg flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"/></svg>
@@ -238,13 +238,13 @@
 
         <div class="p-6 space-y-6" id="walkin-form-content">
             {{-- ── Keluhan Penyakit & Auto-suggest ── --}}
-            <div class="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl p-4">
-                <label class="block text-sm font-semibold text-purple-800 dark:text-purple-200 mb-2">
+            <div class="bg-brand-light dark:bg-[#141b18] border border-[#e2efe7] dark:border-[#283731] rounded-xl p-4">
+                <label class="block text-sm font-semibold text-brand-dark dark:text-brand mb-2">
                     🩺 Keluhan Penyakit Pasien
                 </label>
                 <textarea id="wk-complaint" class="input-base" rows="2" placeholder="Contoh: sakit perut, mual, demam tinggi sudah 3 hari..."></textarea>
                 <div class="flex items-center gap-2 mt-2">
-                    <button type="button" onclick="analyzeComplaint()" class="text-xs bg-purple-600 hover:bg-purple-700 text-white px-3 py-1.5 rounded-lg transition cursor-pointer inline-flex items-center gap-1.5 font-medium">
+                    <button type="button" onclick="analyzeComplaint()" class="text-xs bg-brand-dark hover:bg-accent-dark text-white px-3 py-1.5 rounded-lg transition cursor-pointer inline-flex items-center gap-1.5 font-medium">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
                         Analisis & Cari Dokter
                     </button>
@@ -371,7 +371,7 @@
 
             {{-- Submit --}}
             <div class="flex gap-3 pt-2">
-                <button type="button" onclick="submitWalkin()" id="wk-submit-btn" class="flex-1 bg-gradient-to-r from-purple-600 to-brand hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 rounded-xl transition text-sm shadow-sm cursor-pointer inline-flex items-center justify-center gap-2">
+                <button type="button" onclick="submitWalkin()" id="wk-submit-btn" class="flex-1 bg-gradient-to-r from-brand-dark to-brand hover:from-accent-dark hover:to-brand-dark text-white font-semibold py-3 rounded-xl transition text-sm shadow-sm cursor-pointer inline-flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>
                     Daftarkan Pasien
                 </button>
@@ -607,7 +607,7 @@ function analyzeComplaint() {
             result.className = 'mt-3 p-3 rounded-lg border text-sm space-y-1 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200';
             html += `<p class="font-medium">⚠️ ${data.fallback_reason}</p>`;
         } else {
-            result.className = 'mt-3 p-3 rounded-lg border text-sm space-y-1 bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-800 dark:text-green-200';
+            result.className = 'mt-3 p-3 rounded-lg border text-sm space-y-1 bg-brand-light dark:bg-brand-dark/10 border-brand/30 dark:border-brand-dark/30 text-brand-dark dark:text-brand';
         }
 
         html += `<p class="font-medium">✅ Rekomendasi: <strong>${data.suggested_doctor.name}</strong> — ${data.suggested_doctor.specialization_label}</p>`;

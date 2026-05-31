@@ -24,6 +24,11 @@ class Schedule extends Model
         ];
     }
 
+    protected $appends = [
+        'day_name',
+        'time_range',
+    ];
+
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(Doctor::class);
