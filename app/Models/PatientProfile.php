@@ -16,6 +16,10 @@ class PatientProfile extends Model
         'gender',
         'phone_number',
         'address',
+        'province',
+        'district',
+        'sub_district',
+        'village',
         'profile_photo',
     ];
 
@@ -40,6 +44,11 @@ class PatientProfile extends Model
             && $this->full_name
             && $this->birth_date
             && $this->gender
-            && $this->phone_number;
+            && $this->phone_number
+            && $this->address
+            && $this->province
+            && $this->district
+            && $this->sub_district
+            && $this->village;
     }
 }

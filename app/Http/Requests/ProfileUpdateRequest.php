@@ -22,7 +22,11 @@ class ProfileUpdateRequest extends FormRequest
             'birth_date' => ['required', 'date', 'before:today'],
             'gender' => ['required', 'in:L,P'],
             'phone_number' => ['required', 'string', 'regex:/^(08|\\+62)[0-9]{8,13}$/', 'max:15'],
-            'address' => ['nullable', 'string', 'max:500'],
+            'address' => ['required', 'string', 'max:500'],
+            'province' => ['required', 'string', 'max:255'],
+            'district' => ['required', 'string', 'max:255'],
+            'sub_district' => ['required', 'string', 'max:255'],
+            'village' => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -41,6 +45,11 @@ class ProfileUpdateRequest extends FormRequest
             'gender.in' => 'Jenis kelamin tidak valid.',
             'phone_number.required' => 'Nomor HP/WhatsApp wajib diisi.',
             'phone_number.regex' => 'Format nomor HP tidak valid. Gunakan format 08xx atau +62xx.',
+            'address.required' => 'Alamat lengkap wajib diisi.',
+            'province.required' => 'Provinsi wajib dipilih.',
+            'district.required' => 'Kabupaten/Kota wajib dipilih.',
+            'sub_district.required' => 'Kecamatan wajib dipilih.',
+            'village.required' => 'Kelurahan/Desa wajib dipilih.',
         ];
     }
 }

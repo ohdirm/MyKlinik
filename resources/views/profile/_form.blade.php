@@ -81,10 +81,42 @@
             <p class="text-xs text-gray-400 mt-1">Email dari akun Anda, tidak dapat diubah di sini.</p>
         </div>
 
-        {{-- Alamat --}}
+        {{-- Alamat Lengkap --}}
         <div>
-            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Alamat <span class="text-gray-400 text-xs font-normal">(opsional)</span></label>
-            <textarea name="address" rows="3" class="input-base" placeholder="Alamat lengkap">{{ old('address', $profile?->address ?? '') }}</textarea>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Alamat Lengkap <span class="text-red-500">*</span></label>
+            <textarea name="address" rows="3" class="input-base" placeholder="Nama jalan, nomor rumah, RT/RW" required>{{ old('address', $profile?->address ?? '') }}</textarea>
+        </div>
+
+        {{-- Provinsi --}}
+        <div>
+            <label for="province" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Provinsi <span class="text-red-500">*</span></label>
+            <select name="province" id="province" class="input-base" required>
+                <option value="">— Pilih Provinsi —</option>
+            </select>
+        </div>
+
+        {{-- Kabupaten/Kota --}}
+        <div>
+            <label for="district" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kabupaten/Kota <span class="text-red-500">*</span></label>
+            <select name="district" id="district" class="input-base" disabled required>
+                <option value="">— Pilih Kabupaten —</option>
+            </select>
+        </div>
+
+        {{-- Kecamatan --}}
+        <div>
+            <label for="sub_district" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kecamatan <span class="text-red-500">*</span></label>
+            <select name="sub_district" id="sub_district" class="input-base" disabled required>
+                <option value="">— Pilih Kecamatan —</option>
+            </select>
+        </div>
+
+        {{-- Kelurahan/Desa --}}
+        <div>
+            <label for="village" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kelurahan/Desa <span class="text-red-500">*</span></label>
+            <select name="village" id="village" class="input-base" disabled required>
+                <option value="">— Pilih Kelurahan —</option>
+            </select>
         </div>
 
         {{-- Submit --}}

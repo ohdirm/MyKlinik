@@ -1,7 +1,3 @@
-/**
- * MyKlinik911 — Booking Page JavaScript
- * Handles: Wilayah cascading (Province → District → Sub-district → Village)
- */
 document.addEventListener('DOMContentLoaded', function () {
     const provinceSelect = document.getElementById('province');
     const districtSelect = document.getElementById('district');
@@ -10,7 +6,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!provinceSelect) return;
 
-    function loadOptions(url, params, targetSelect, placeholder) {
+    // Get saved values from global window object if available
+    const saved = window.savedAddressData || {};
+    const savedProvince = saved.province || '';
+    const savedDistrict = saved.district || '';
+    const savedSubDistrict = saved.subDistrict || '';
+    const savedVillage = saved.village || '';
+
+    function loadOptions(url, params, targetSelect, placeholder, savedValue, callback) {
         const query = new URLSearchParams(params).toString();
         targetSelect.innerHTML = `<option value="">Memuat...</option>`;
         targetSelect.disabled = true;
@@ -19,22 +22,40 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(r => r.json())
             .then(data => {
                 targetSelect.innerHTML = `<option value="">${placeholder}</option>`;
+                let matchedId = null;
                 data.forEach(item => {
                     const opt = document.createElement('option');
                     opt.value = item.name;
                     opt.textContent = item.name;
                     opt.dataset.id = item.id;
+                    if (savedValue && item.name.toLowerCase() === savedValue.toLowerCase()) {
+                        opt.selected = true;
+                        matchedId = item.id;
+                    }
                     targetSelect.appendChild(opt);
                 });
                 targetSelect.disabled = false;
+                if (callback) callback(matchedId);
             })
             .catch(() => {
                 targetSelect.innerHTML = `<option value="">Gagal memuat data</option>`;
             });
     }
 
-    // Load provinces on page load
-    loadOptions('/api/wilayah/provinces', {}, provinceSelect, '— Pilih Provinsi —');
+    // Load initial provinces and trigger cascade if saved values exist
+    loadOptions('/api/wilayah/provinces', {}, provinceSelect, '— Pilih Provinsi —', savedProvince, function (provId) {
+        if (provId) {
+            loadOptions('/api/wilayah/districts', { province_id: provId }, districtSelect, '— Pilih Kabupaten —', savedDistrict, function (distId) {
+                if (distId) {
+                    loadOptions('/api/wilayah/subdistricts', { district_id: distId }, subDistrictSelect, '— Pilih Kecamatan —', savedSubDistrict, function (subId) {
+                        if (subId) {
+                            loadOptions('/api/wilayah/villages', { sub_district_id: subId }, villageSelect, '— Pilih Kelurahan —', savedVillage);
+                        }
+                    });
+                }
+            });
+        }
+    });
 
     provinceSelect.addEventListener('change', function () {
         const id = this.options[this.selectedIndex]?.dataset?.id;

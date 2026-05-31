@@ -22,30 +22,43 @@
                 Pendaftaran Online
             </div>
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Buat Janji Temu</h1>
-            <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">Selesaikan dalam 3 langkah mudah</p>
+            <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">Selesaikan dalam 2 langkah mudah</p>
         </div>
  
         {{-- Step Indicator --}}
-        <div class="flex items-center justify-center mb-8">
-            <template x-for="(label, i) in ['Jadwal', 'Data Pasien', 'Domisili']" :key="i">
-                <div class="flex items-center">
-                    <div class="flex flex-col items-center">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2"
-                             :class="step > i+1 ? 'bg-brand-dark border-brand-dark text-white' : (step === i+1 ? 'bg-brand border-brand text-white shadow-lg scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400')">
-                            <template x-if="step > i+1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                            </template>
-                            <template x-if="step <= i+1">
-                                <span x-text="i+1"></span>
-                            </template>
-                        </div>
-                        <span class="text-xs mt-1 font-medium transition-colors"
-                              :class="step === i+1 ? 'text-brand' : 'text-gray-400'" x-text="label"></span>
-                    </div>
-                    <div x-show="i < 2" class="w-16 h-0.5 mb-4 mx-1 transition-colors duration-300"
-                         :class="step > i+1 ? 'bg-brand-dark' : 'bg-gray-200'"></div>
+        <div class="flex flex-col items-center mb-8">
+            {{-- Circles + Connector Row --}}
+            <div class="flex items-center">
+                {{-- Circle 1 --}}
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2"
+                     :class="step > 1 ? 'bg-brand-dark border-brand-dark text-white' : (step === 1 ? 'bg-brand border-brand text-white shadow-lg scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400')">
+                    <template x-if="step > 1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                    </template>
+                    <template x-if="step <= 1">
+                        <span>1</span>
+                    </template>
                 </div>
-            </template>
+
+                {{-- Connector --}}
+                <div class="w-16 h-0.5 mx-2 shrink-0 transition-colors duration-300"
+                     :class="step > 1 ? 'bg-brand-dark' : 'bg-gray-300 dark:bg-gray-700'"></div>
+
+                {{-- Circle 2 --}}
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2"
+                     :class="step === 2 ? 'bg-brand border-brand text-white shadow-lg scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400'">
+                    <span>2</span>
+                </div>
+            </div>
+
+            {{-- Labels Row --}}
+            <div class="flex items-start mt-2">
+                <span class="w-10 text-center text-xs font-medium transition-colors"
+                      :class="step === 1 ? 'text-brand' : 'text-gray-400'">Jadwal</span>
+                <div class="w-16 mx-2 shrink-0"></div>
+                <span class="w-10 text-center text-xs font-medium transition-colors leading-tight"
+                      :class="step === 2 ? 'text-brand' : 'text-gray-400'">Data Pasien</span>
+            </div>
         </div>
 
         {{-- Error bag --}}
@@ -211,7 +224,7 @@
                 <div x-show="step === 2" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
                     <div class="bg-gradient-to-r from-brand to-teal-600 px-6 py-4">
                         <h2 class="text-white font-semibold text-lg">Langkah 2: Data Pasien</h2>
-                        <p class="text-white/85 text-xs mt-0.5">Pilih pasien yang akan diperiksa</p>
+                        <p class="text-white/85 text-xs mt-0.5">Isi data diri dan domisili pasien</p>
                     </div>
                     <div class="p-6 space-y-5">
 
@@ -314,38 +327,46 @@
                         </div>
                         {{-- Hidden Complaint Field for Form Submit --}}
                         <input type="hidden" name="complaint" :value="complaint">
-                    </div>
-                </div>
 
-                {{-- ══ STEP 3: Domisili & Konfirmasi ══ --}}
-                <div x-show="step === 3" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4" x-transition:enter-end="opacity-100 translate-x-0">
-                    <div class="bg-gradient-to-r from-brand to-teal-600 px-6 py-4">
-                        <h2 class="text-white font-semibold text-lg">Langkah 3: Alamat & Konfirmasi</h2>
-                        <p class="text-white/85 text-xs mt-0.5">Lengkapi alamat domisili dan kirimkan pendaftaran</p>
-                    </div>
-                    <div class="p-6 space-y-5">
+                        {{-- ══ Divider: Domisili ══ --}}
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-[#e2efe7] dark:border-[#283731]"></div></div>
+                            <div class="relative flex justify-start">
+                                <span class="bg-white dark:bg-[#1c2622] pr-3 text-xs font-semibold text-brand-dark dark:text-brand uppercase tracking-wider">📍 Domisili</span>
+                            </div>
+                        </div>
+
+                        {{-- Alamat Lengkap --}}
                         <div>
                             <label for="address" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Alamat Lengkap <span class="text-red-500">*</span></label>
-                            <textarea name="address" id="address" rows="3" class="input-base" placeholder="Nama jalan, nomor rumah, RT/RW" required>{{ old('address') }}</textarea>
+                            <textarea name="address" id="address" rows="3" class="input-base" placeholder="Nama jalan, nomor rumah, RT/RW" required>{{ old('address', $profile?->address ?? '') }}</textarea>
                         </div>
+
+                        {{-- Provinsi --}}
                         <div>
                             <label for="province" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Provinsi <span class="text-red-500">*</span></label>
                             <select name="province" id="province" class="input-base" required>
                                 <option value="">— Pilih Provinsi —</option>
                             </select>
                         </div>
+
+                        {{-- Kabupaten/Kota --}}
                         <div>
                             <label for="district" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kabupaten/Kota <span class="text-red-500">*</span></label>
                             <select name="district" id="district" class="input-base" disabled required>
                                 <option value="">— Pilih Kabupaten —</option>
                             </select>
                         </div>
+
+                        {{-- Kecamatan --}}
                         <div>
                             <label for="sub_district" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kecamatan <span class="text-red-500">*</span></label>
                             <select name="sub_district" id="sub_district" class="input-base" disabled required>
                                 <option value="">— Pilih Kecamatan —</option>
                             </select>
                         </div>
+
+                        {{-- Kelurahan/Desa --}}
                         <div>
                             <label for="village" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kelurahan/Desa <span class="text-red-500">*</span></label>
                             <select name="village" id="village" class="input-base" disabled required>
@@ -353,7 +374,7 @@
                             </select>
                         </div>
 
-                        {{-- Ringkasan --}}
+                        {{-- Ringkasan Booking --}}
                         <div class="bg-[#F6FBF8] dark:bg-[#141b18] rounded-xl p-4 border border-[#e2efe7] dark:border-[#283731] text-sm space-y-2">
                             <p class="font-semibold text-gray-700 dark:text-gray-300 mb-2">📋 Ringkasan Booking</p>
                             <div class="flex justify-between text-gray-600 dark:text-gray-400"><span>Dokter</span><span class="font-medium text-gray-900 dark:text-white" x-text="selectedDoctorName || '—'"></span></div>
@@ -369,11 +390,11 @@
                             style="background-color: var(--ui-surface); border-color: var(--ui-border); color: var(--ui-text);">
                         ← Sebelumnya
                     </button>
-                    <button type="button" x-show="step < 3" @click="nextStep()"
+                    <button type="button" x-show="step < 2" @click="nextStep()"
                             class="flex-1 btn-primary py-3 text-sm font-semibold">
                         Selanjutnya →
                     </button>
-                    <button type="submit" x-show="step === 3"
+                    <button type="submit" x-show="step === 2"
                             :disabled="submitting"
                             class="flex-1 bg-gradient-to-r from-brand to-[#85cca0] hover:from-[#96d7af] hover:to-brand text-white font-bold py-3 rounded-xl transition text-sm shadow-sm active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                         <template x-if="!submitting">
@@ -445,6 +466,14 @@
             'phone_number' => $profile?->phone_number ?? '',
         ];
     @endphp
+    <script>
+        window.savedAddressData = {
+            province: "{{ old('province', $profile?->province ?? '') }}",
+            district: "{{ old('district', $profile?->district ?? '') }}",
+            subDistrict: "{{ old('sub_district', $profile?->sub_district ?? '') }}",
+            village: "{{ old('village', $profile?->village ?? '') }}"
+        };
+    </script>
     @vite('resources/js/booking.js')
     <script>
     function bookingWizard() {
@@ -479,7 +508,7 @@
             init() {
                 // If old input exists, jump to correct step
                 @if($errors->any())
-                    this.step = 1;
+                    this.step = 2;
                 @endif
 
                 if (this.doctorId || this.examDate) {
@@ -631,14 +660,6 @@
                     if (!this.examDate) { alert('Silakan pilih tanggal periksa.'); return; }
                     const jadwal = document.getElementById('select-jadwal');
                     if (!jadwal.value) { alert('Silakan pilih jadwal waktu.'); return; }
-                }
-                if (this.step === 2) {
-                    if (this.profileType === 'family' && !this.selectedFamilyId) { alert('Silakan pilih anggota keluarga.'); return; }
-                    if (!this.patientNik || this.patientNik.length < 16) { alert('NIK harus 16 digit.'); return; }
-                    if (!this.patientName) { alert('Nama pasien wajib diisi.'); return; }
-                    if (!this.patientBirthDate) { alert('Tanggal lahir wajib diisi.'); return; }
-                    if (!this.gender) { alert('Jenis kelamin wajib dipilih.'); return; }
-                    if (!this.patientPhone) { alert('Nomor HP wajib diisi.'); return; }
                 }
                 this.step++;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
