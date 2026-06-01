@@ -26,10 +26,10 @@
 
         {{-- Sidebar --}}
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-brand-dark to-[#4e6d5e] text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col shadow-xl">
-            {{-- Logo --}}
-            <div class="flex items-center px-6 h-20 border-b border-white/10 shrink-0 bg-transparent transition-colors duration-200">
+            {{-- Logo (Always use light logo on dark sidebar) --}}
+            <div class="flex items-center px-6 h-20 border-b border-white/10 shrink-0 bg-transparent">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center hover:opacity-90 transition-opacity">
-                    <img :src="darkMode ? '{{ asset('assets/logodark_app.png') }}' : '{{ asset('assets/logo_app.png') }}'" src="{{ asset('assets/logo_app.png') }}" alt="MyKlinik911 Logo" class="h-28 w-auto drop-shadow-sm transition-all duration-300">
+                    <img src="{{ asset('assets/logodark_app.png') }}" alt="MyKlinik911 Logo" class="h-28 w-auto drop-shadow-sm">
                 </a>
             </div>
 
@@ -78,9 +78,9 @@
         </aside>
 
         {{-- Main area --}}
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col overflow-hidden bg-gray-50 dark:bg-[#141b18]">
             {{-- Topbar --}}
-            <header class="bg-white dark:bg-[#1c2622] border-b border-[#e2efe7] dark:border-[#283731] h-20 flex items-center justify-between px-6 shrink-0 transition-colors duration-200">
+            <header class="bg-white dark:bg-[#1c2622] border-b border-[#e2efe7] dark:border-[#283731] h-20 flex items-center justify-between px-6 shrink-0 transition-all duration-300">
                 <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden p-2 rounded-lg hover:bg-brand-light dark:hover:bg-gray-700 transition">
                     <svg class="w-6 h-6 text-brand dark:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>

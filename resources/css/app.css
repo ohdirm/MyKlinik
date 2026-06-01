@@ -11,13 +11,13 @@
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* Brand Colors (Mint & Sage) */
-    --color-brand: #A8D5BA;
-    --color-brand-dark: #6B9080;
-    --color-brand-light: #F6FBF8;
+    /* Brand Colors (High Contrast) */
+    --color-brand: #4A7C66;
+    --color-brand-dark: #355949;
+    --color-brand-light: #F0F7F4;
 
-    --color-accent: #6B9080;
-    --color-accent-dark: #537264;
+    --color-accent: #355949;
+    --color-accent-dark: #2A4539;
 
     /* Semantic UI Colors */
     --color-ui-bg: #FFFFFF;

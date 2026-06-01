@@ -120,7 +120,7 @@
         </div>
 
         {{-- Submit --}}
-        <button type="submit" :disabled="submitting" class="w-full bg-gradient-to-r from-brand to-[#85cca0] hover:from-[#96d7af] hover:to-brand text-white font-bold py-3.5 rounded-xl transition text-sm shadow-sm active:scale-95 cursor-pointer disabled:opacity-50">
+        <button type="submit" :disabled="submitting" class="btn-primary w-full py-3.5 !bg-brand hover:!bg-brand-dark transition shadow-lg active:scale-95 disabled:opacity-50">
             <span x-show="!submitting">Simpan Profile</span>
             <span x-show="submitting" class="flex items-center justify-center gap-2">
                 <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>

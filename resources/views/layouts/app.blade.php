@@ -216,20 +216,20 @@
                     <ul class="text-sm space-y-2 opacity-80">
                         <li class="flex justify-between"><span>Senin - Jumat</span><span>08:00 - 17:00</span></li>
                         <li class="flex justify-between"><span>Sabtu</span><span>08:00 - 12:00</span></li>
-                        <li class="flex justify-between text-[#A8D5BA] font-medium"><span>Minggu & Hari Libur</span><span>Tutup</span></li>
+                        <li class="flex justify-between text-brand font-medium"><span>Minggu & Hari Libur</span><span>Tutup</span></li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-white font-semibold mb-4">Hubungi Kami</h3>
                     <ul class="text-sm space-y-3">
                         <li class="flex items-center gap-3 group">
-                            <div class="w-8 h-8 rounded-full bg-[#A8D5BA]/20 flex items-center justify-center text-[#A8D5BA] group-hover:bg-[#A8D5BA] group-hover:text-[#1B2621] transition-all">
+                            <div class="w-8 h-8 rounded-full bg-brand/20 flex items-center justify-center text-brand group-hover:bg-brand group-hover:text-white transition-all">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
                             </div>
                             <span class="opacity-80 group-hover:opacity-100 transition-opacity">0812-3456-7890</span>
                         </li>
                         <li class="flex items-center gap-3 group">
-                            <div class="w-8 h-8 rounded-full bg-[#6B9080]/20 flex items-center justify-center text-[#6B9080] group-hover:bg-[#6B9080] group-hover:text-[#1B2621] transition-all">
+                            <div class="w-8 h-8 rounded-full bg-brand-dark/20 flex items-center justify-center text-brand-dark group-hover:bg-brand-dark group-hover:text-white transition-all">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
                             </div>
                             <span class="opacity-80 group-hover:opacity-100 transition-opacity">myklinik911@gmail.com</span>
