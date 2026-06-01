@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\BookingConfirmed;
+use App\Models\ActivityLog;
 use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\DoctorStatus;
@@ -109,6 +110,9 @@ class BookingController extends Controller
 
         $booking->load('doctor', 'schedule');
 
+        // Log Activity
+        ActivityLog::log('Pendaftaran Walk-in', "Mendaftarkan pasien {$booking->patient_name} ({$booking->booking_code}) secara langsung.");
+
         // Send confirmation email automatically
         try {
             Mail::to($booking->phone && str_contains($booking->phone, '@') ? $booking->phone : $booking->email ?? 'no-reply@myklinik.com')
@@ -128,6 +132,9 @@ class BookingController extends Controller
     {
         $booking = Booking::with('doctor', 'schedule')->findOrFail($id);
         $booking->update(['status' => 'CONFIRMED']);
+
+        // Log Activity
+        ActivityLog::log('Konfirmasi Booking', "Mengonfirmasi pesanan pasien {$booking->patient_name} ({$booking->booking_code}).");
 
         // Send confirmation email automatically
         $emailSent = false;
@@ -162,6 +169,9 @@ class BookingController extends Controller
             'rejection_reason' => $request->rejection_reason,
         ]);
 
+        // Log Activity
+        ActivityLog::log('Tolak Booking', "Menolak pesanan pasien {$booking->patient_name} ({$booking->booking_code}) dengan alasan: {$request->rejection_reason}.");
+
         // Send in-app notification to patient
         if ($booking->user) {
             $booking->user->notify(new BookingStatusNotification($booking, 'rejected'));
@@ -189,6 +199,9 @@ class BookingController extends Controller
 
         $booking->update(['status' => 'EXAMINING']);
 
+        // Log Activity
+        ActivityLog::log('Mulai Periksa', "Memulai pemeriksaan untuk pasien {$booking->patient_name} ({$booking->booking_code}) oleh dr. {$booking->doctor->name}.");
+
         // Automatically update doctor status
         DoctorStatus::updateOrCreate(
             ['doctor_id' => $booking->doctor_id],
@@ -212,14 +225,17 @@ class BookingController extends Controller
         $booking = Booking::with('user', 'doctor.status')->findOrFail($id);
         $booking->update(['status' => 'DONE']);
 
-        // Automatically update doctor status back to AVAILABLE 
+        // Log Activity
+        ActivityLog::log('Selesai Periksa', "Menyelesaikan pemeriksaan untuk pasien {$booking->patient_name} ({$booking->booking_code}).");
+
+        // Automatically update doctor status back to AVAILABLE
         // ONLY if no other patients are currently being examined by this doctor
         $otherExamining = Booking::where('doctor_id', $booking->doctor_id)
             ->where('status', 'EXAMINING')
             ->where('id', '!=', $id)
             ->exists();
 
-        if ($booking->doctor->status && !$otherExamining) {
+        if ($booking->doctor->status && ! $otherExamining) {
             $booking->doctor->status->update([
                 'current_status' => 'AVAILABLE',
                 'current_queue_number' => null,

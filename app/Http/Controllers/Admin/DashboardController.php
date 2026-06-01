@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ActivityLog;
 use App\Models\Booking;
 use App\Models\DoctorStatus;
 
@@ -42,6 +43,9 @@ class DashboardController extends Controller
         Booking::whereDate('exam_date', $today)
             ->whereIn('status', ['PENDING', 'CONFIRMED'])
             ->update(['status' => 'CANCELLED']);
+
+        // Log Activity
+        ActivityLog::log('Reset Harian', 'Menutup klinik, mereset status dokter, dan membatalkan booking gantung hari ini.');
 
         return response()->json([
             'success' => true,

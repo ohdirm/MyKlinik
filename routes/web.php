@@ -17,6 +17,8 @@ use App\Http\Controllers\PatientDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WilayahController;
+use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\StaffController;
 use Illuminate\Support\Facades\Route;
 
 // ── GUEST (tanpa login) ──
@@ -110,4 +112,8 @@ Route::prefix('admin')->middleware('auth.admin')->name('admin.')->group(function
     // Archive
     Route::get('/archive', [ArchiveController::class, 'index'])->name('archive.index');
     Route::delete('/archive/{id}', [ArchiveController::class, 'destroy'])->name('archive.destroy');
+    // Staff management
+    Route::resource('/staff', StaffController::class)->names('staff');
+    // Activity Logs
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });
