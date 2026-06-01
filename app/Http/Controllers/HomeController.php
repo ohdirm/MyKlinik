@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Review;
 
@@ -18,7 +19,12 @@ class HomeController extends Controller
             ->take(12)
             ->get();
 
-        return view('home.index', compact('doctors', 'reviews'));
+        $todayBookings = Booking::whereDate('exam_date', now())
+            ->whereIn('status', ['PENDING', 'CONFIRMED', 'EXAMINING'])
+            ->orderBy('queue_number')
+            ->get();
+
+        return view('home.index', compact('doctors', 'reviews', 'todayBookings'));
     }
 
     public function terms()

@@ -20,15 +20,16 @@ class PatientDashboardController extends Controller
             ->orderBy('exam_date')
             ->get();
 
-        // Daftar antrean publik hari ini (tanpa nama pasien — hanya dokter & status)
+        // Daftar antrean publik hari ini (tanpa nama pasien — hanya nomor & kode anonim)
         $todayQueue = Booking::with('doctor')
             ->where('exam_date', $today)
-            ->whereIn('status', ['CONFIRMED', 'DONE'])
+            ->whereIn('status', ['CONFIRMED', 'EXAMINING'])
             ->orderBy('queue_number')
             ->get()
             ->map(function ($b) {
                 return [
                     'queue_number' => $b->queue_number,
+                    'booking_code' => '***'.substr($b->booking_code, -3),
                     'doctor_name' => $b->doctor->name ?? '-',
                     'status' => $b->status,
                 ];
@@ -42,7 +43,7 @@ class PatientDashboardController extends Controller
             ->where('user_id', $user->id)
             ->where('status', 'DONE')
             ->latest()
-            ->get();
+            ->paginate(5);
 
         // Booking IDs yang sudah di-review
         $reviewedBookingIds = $user->reviews()

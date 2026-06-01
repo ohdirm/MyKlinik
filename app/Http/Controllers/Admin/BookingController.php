@@ -217,7 +217,10 @@ class BookingController extends Controller
             $booking->user->notify(new BookingStatusNotification($booking, 'examining'));
         }
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'start_time' => $booking->updated_at->toIso8601String(),
+        ]);
     }
 
     public function done(int $id)

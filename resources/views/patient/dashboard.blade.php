@@ -89,7 +89,9 @@
                                         <div class="w-px h-12 bg-gray-100 dark:bg-gray-800"></div>
                                         <div>
                                             <p class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-black mb-1">Estimasi Jam</p>
-                                            <p class="text-4xl font-black text-brand-dark dark:text-brand">{{ $b->estimated_time }}</p>
+                                            <p class="font-black text-brand-dark dark:text-brand {{ strlen($b->estimated_time) > 5 ? 'text-2xl' : 'text-4xl' }} transition-all">
+                                                {{ $b->estimated_time }}
+                                            </p>
                                         </div>
                                         @endif
                                     </div>
@@ -156,6 +158,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <!-- Pagination Nav -->
+                        <div class="px-4 py-4 mt-2 border-t border-[#e2efe7]/50 dark:border-[#283731]/50">
+                            {{ $completedBookings->links() }}
+                        </div>
                     @else
                         <div class="py-12 text-center text-[#6B9080] dark:text-[#A8D5BA] bg-[#F6FBF8] dark:bg-[#1c2622]/20 rounded-2xl border border-dashed border-[#e2efe7] dark:border-[#283731]">
                             Belum ada riwayat kunjungan yang tercatat.
@@ -176,14 +183,17 @@
                     </h2>
                     
                     <div class="space-y-3 mb-8">
-                        @forelse($todayQueue->take(6) as $q)
-                        <div class="flex items-center justify-between p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10 transition-transform hover:scale-[1.02]">
+                        @forelse($todayQueue->take(8) as $q)
+                        <div class="flex items-center justify-between p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10 transition-transform hover:scale-[1.02] {{ $q['status'] === 'EXAMINING' ? 'ring-2 ring-yellow-400 bg-white/20' : '' }}">
                             <div class="flex items-center gap-3">
-                                <span class="w-10 h-10 rounded-full bg-white text-brand-dark flex items-center justify-center font-black">#{{ $q['queue_number'] }}</span>
-                                <div class="text-sm font-bold truncate max-w-[120px]">{{ $q['doctor_name'] }}</div>
+                                <span class="w-10 h-10 rounded-full bg-white text-brand-dark flex items-center justify-center font-black shadow-sm">#{{ $q['queue_number'] }}</span>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black opacity-60 tracking-wider">{{ $q['booking_code'] }}</span>
+                                    <div class="text-[11px] font-bold truncate max-w-[100px]">{{ $q['doctor_name'] }}</div>
+                                </div>
                             </div>
-                            <span class="text-[10px] font-black px-2 py-1 rounded-full {{ $q['status'] === 'CONFIRMED' ? 'bg-white/20 text-white' : 'bg-green-400 text-green-900' }}">
-                                {{ $q['status'] === 'CONFIRMED' ? 'ANTRE' : 'OK' }}
+                            <span class="text-[9px] font-black px-2 py-1 rounded-full {{ $q['status'] === 'EXAMINING' ? 'bg-yellow-400 text-yellow-900 animate-pulse' : 'bg-white/20 text-white' }}">
+                                {{ $q['status'] === 'EXAMINING' ? 'DIPERIKSA' : 'ANTRE' }}
                             </span>
                         </div>
                         @empty
@@ -209,6 +219,8 @@
                         </div>
                         <p class="text-[10px] text-white/40 mt-4 text-center">Status diperbarui otomatis setiap 30 detik.</p>
                     </div>
+
+
                 </div>
             </div>
 

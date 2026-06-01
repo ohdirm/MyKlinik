@@ -90,4 +90,16 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->patientProfile?->isComplete() ?? false;
     }
+
+    /**
+     * Get the user's avatar URL.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->isPatient() && $this->patientProfile?->profile_photo) {
+            return asset('storage/'.$this->patientProfile->profile_photo);
+        }
+
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&color=10b981&background=ecfdf5';
+    }
 }

@@ -115,9 +115,9 @@
                         @endif
 
                         <div class="relative ml-2" x-data="{ dropdown: false }">
-                            <button @click="dropdown = !dropdown" class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1c2622] transition-all cursor-pointer">
-                                <div class="w-8 h-8 bg-brand/10 dark:bg-brand/20 text-brand rounded-full flex items-center justify-center text-xs font-bold">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ Auth::user()->name }}</span>
+                            <button @click="dropdown = !dropdown" class="flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-100 dark:hover:bg-[#1c2622] transition-all cursor-pointer">
+                                <img src="{{ Auth::user()->avatar_url }}" class="w-8 h-8 rounded-full border-2 border-brand/20 object-cover shadow-sm" alt="{{ Auth::user()->name }}">
+                                <span class="hidden sm:inline text-sm font-semibold text-gray-700 dark:text-gray-200">{{ Auth::user()->name }}</span>
                                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
                             </button>
                             <div x-show="dropdown" @click.away="dropdown = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" class="absolute right-0 mt-2 w-52 bg-white dark:bg-[#141b18] rounded-2xl shadow-xl py-2 z-50 border border-gray-100 dark:border-[#1c2622]">

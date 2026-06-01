@@ -84,7 +84,19 @@
                             <span class="text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">Online</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3"><span class="text-xs font-semibold px-2 py-1 rounded-full {{ $b->status_badge_class }}" id="status-{{ $b->id }}">{{ $b->status }}</span></td>
+                    <td class="px-4 py-3">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-xs font-semibold px-2 py-1 rounded-full {{ $b->status_badge_class }}" id="status-{{ $b->id }}">{{ $b->status }}</span>
+                            @if($b->status === 'EXAMINING')
+                                <div class="flex items-center gap-1 text-[10px] font-bold examine-timer text-blue-600 dark:text-blue-400" 
+                                     data-start="{{ $b->updated_at->toIso8601String() }}" 
+                                     id="timer-{{ $b->id }}">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span class="timer-text">00:00</span>
+                                </div>
+                            @endif
+                        </div>
+                    </td>
                     <td class="px-4 py-3">
                         <div class="flex items-center gap-2" id="actions-{{ $b->id }}">
                             {{-- Primary Action Button --}}
@@ -479,7 +491,7 @@ function examineBooking(id) {
         })
         .then(data => {
             if(data.success) {
-                updateRow(id,'EXAMINING','bg-blue-100 text-blue-800');
+                updateRow(id,'EXAMINING','bg-blue-100 text-blue-800', null, data.start_time);
                 alert('Pasien sedang diperiksa. Status dokter diperbarui.');
             }
         })
@@ -502,9 +514,26 @@ function doneBooking(id) {
         .catch(e => { alert('Gagal: ' + e.message); console.error(e); });
 }
 
-function updateRow(id, status, badgeClass, waLink = null) {
+function updateRow(id, status, badgeClass, waLink = null, startTime = null) {
     const badge = document.getElementById('status-'+id);
-    if(badge){badge.textContent=status;badge.className='text-xs font-semibold px-2 py-1 rounded-full '+badgeClass;}
+    if(badge){
+        badge.textContent=status;
+        badge.className='text-xs font-semibold px-2 py-1 rounded-full '+badgeClass;
+        
+        // Timer Handling
+        const parentDiv = badge.parentNode;
+        let existingTimer = document.getElementById('timer-'+id);
+        if(status === 'EXAMINING' && !existingTimer) {
+            const tDiv = document.createElement('div');
+            tDiv.id = 'timer-'+id;
+            tDiv.className = 'flex items-center gap-1 text-[10px] font-bold examine-timer text-blue-600 dark:text-blue-400';
+            tDiv.dataset.start = startTime || new Date().toISOString();
+            tDiv.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="timer-text">00:00</span>';
+            parentDiv.appendChild(tDiv);
+        } else if (status !== 'EXAMINING' && existingTimer) {
+            existingTimer.remove();
+        }
+    }
     const actions = document.getElementById('actions-'+id);
     if(!actions) return;
 
@@ -866,6 +895,21 @@ function submitWalkin() {
         btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg> Daftarkan Pasien';
     });
 }
+
+// ── Timer Global Engine ──
+function initExamineTimers() {
+    setInterval(() => {
+        document.querySelectorAll('.examine-timer').forEach(timer => {
+            const diff = Math.floor((new Date() - new Date(timer.dataset.start)) / 1000);
+            const m = Math.floor(diff / 60), s = diff % 60;
+            timer.querySelector('.timer-text').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            if (m >= 15) timer.className = 'flex items-center gap-1 text-[10px] font-bold examine-timer text-red-600 dark:text-red-400 animate-bounce';
+            else if (m >= 10) timer.className = 'flex items-center gap-1 text-[10px] font-bold examine-timer text-amber-500 dark:text-amber-400';
+            else timer.className = 'flex items-center gap-1 text-[10px] font-bold examine-timer text-blue-600 dark:text-blue-400';
+        });
+    }, 1000);
+}
+document.addEventListener('DOMContentLoaded', initExamineTimers);
 </script>
 @endpush
 @endsection
