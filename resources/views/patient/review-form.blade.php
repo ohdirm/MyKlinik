@@ -6,18 +6,18 @@
         {{-- Back Button --}}
         <div class="mb-6 flex">
             <a href="{{ route('patient.dashboard') }}" class="inline-flex items-center gap-2 group text-sm font-medium transition-all" style="color: var(--ui-text-muted);">
-                <div class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-800 flex items-center justify-center transition-all group-hover:border-brand group-hover:bg-brand group-hover:text-white">
+                <div class="w-8 h-8 rounded-full border border-[#e2efe7] dark:border-[#283731] flex items-center justify-center transition-all group-hover:border-brand group-hover:bg-brand group-hover:text-white">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
                 </div>
                 <span class="group-hover:text-brand">Kembali ke Dashboard</span>
             </a>
         </div>
 
-        <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-800">
+        <div class="bg-white dark:bg-[#1c2622] rounded-3xl shadow-xl p-8 border border-[#e2efe7] dark:border-[#283731]">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Beri Review</h1>
 
             {{-- Booking info --}}
-            <div class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 mb-6 text-sm space-y-1">
+            <div class="bg-[#F6FBF8] dark:bg-[#141b18]/50 border border-[#e2efe7] dark:border-[#283731]/50 rounded-xl p-4 mb-6 text-sm space-y-1">
                 <p><span class="text-gray-500 dark:text-gray-400">Kode Booking:</span> <strong class="text-brand">{{ $booking->booking_code }}</strong></p>
                 <p><span class="text-gray-500 dark:text-gray-400">Dokter:</span> <strong class="dark:text-white">{{ $booking->doctor->name }}</strong> — <span class="dark:text-gray-300">{{ $booking->doctor->specialization_label }}</span></p>
                 <p><span class="text-gray-500 dark:text-gray-400">Tanggal:</span> <span class="dark:text-gray-300">{{ $booking->exam_date->format('d/m/Y') }}</span></p>
@@ -36,11 +36,11 @@
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipe Review</label>
                     <div class="flex gap-3">
-                        <label class="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition has-[:checked]:bg-brand-light dark:has-[:checked]:bg-brand/20 has-[:checked]:border-brand">
+                        <label class="flex items-center gap-2 bg-[#F6FBF8] dark:bg-[#141b18] border border-[#e2efe7] dark:border-[#283731] rounded-xl px-4 py-3 cursor-pointer hover:bg-brand/5 dark:hover:bg-brand/10 transition has-[:checked]:bg-brand-light dark:has-[:checked]:bg-brand/20 has-[:checked]:border-brand">
                             <input type="radio" name="type" value="clinic" class="text-brand focus:ring-brand" {{ old('type', 'clinic') === 'clinic' ? 'checked' : '' }}>
                             <span class="text-sm font-medium dark:text-gray-200">🏥 Klinik</span>
                         </label>
-                        <label class="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition has-[:checked]:bg-brand-light dark:has-[:checked]:bg-brand/20 has-[:checked]:border-brand">
+                        <label class="flex items-center gap-2 bg-[#F6FBF8] dark:bg-[#141b18] border border-[#e2efe7] dark:border-[#283731] rounded-xl px-4 py-3 cursor-pointer hover:bg-brand/5 dark:hover:bg-brand/10 transition has-[:checked]:bg-brand-light dark:has-[:checked]:bg-brand/20 has-[:checked]:border-brand">
                             <input type="radio" name="type" value="doctor" class="text-brand focus:ring-brand" {{ old('type') === 'doctor' ? 'checked' : '' }}>
                             <span class="text-sm font-medium dark:text-gray-200">🩺 Dokter ({{ $booking->doctor->name }})</span>
                         </label>

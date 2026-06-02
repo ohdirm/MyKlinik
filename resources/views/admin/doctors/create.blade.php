@@ -2,7 +2,7 @@
 @section('title', 'Tambah Dokter — MyKlinik911')
 @section('content')
 <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Tambah Dokter</h1>
-<div class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-sm p-6 max-w-2xl transition-colors duration-200">
+<div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm p-6 max-w-2xl transition-colors duration-200">
     @if($errors->any())
         <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"><ul class="list-disc list-inside">@foreach($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
     @endif
@@ -39,7 +39,7 @@
 
                 {{-- Modal Tambah Spesialisasi --}}
                 <div x-show="showModal" x-transition.opacity class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" style="display:none">
-                    <div @click.outside="closeModal()" class="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 transition-colors duration-200" x-transition.scale>
+                    <div @click.outside="closeModal()" class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6 transition-colors duration-200" x-transition.scale>
                         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Tambah Spesialisasi Baru</h2>
 
                         <div x-show="errorMsg" class="mb-3 bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm" x-text="errorMsg"></div>

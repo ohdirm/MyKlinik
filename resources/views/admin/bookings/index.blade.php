@@ -158,8 +158,8 @@
 </div>
 
 {{-- Detail Modal (Alpine) --}}
-<div x-show="showDetail" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" x-transition style="display: none;">
-    <div @click.away="showDetail = false" class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+<div x-show="showDetail" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-24 pb-8" x-transition style="display: none;">
+    <div @click.away="showDetail = false" class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[calc(100vh-8rem)] overflow-y-auto">
         <div class="flex justify-between items-center mb-5 border-b border-[#e2efe7] dark:border-[#283731] pb-3">
             <h3 class="text-xl font-bold text-gray-900 dark:text-white">Detail Pasien & Booking</h3>
             <button @click="showDetail = false" class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
@@ -232,8 +232,8 @@
 {{-- ══════════════════════════════════════════════════════════════ --}}
 {{-- WALK-IN REGISTRATION MODAL                                    --}}
 {{-- ══════════════════════════════════════════════════════════════ --}}
-<div id="walkin-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" style="display:none;">
-    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto">
+<div id="walkin-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-24 pb-8" style="display:none;">
+    <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-2xl shadow-2xl max-w-3xl w-full max-h-[calc(100vh-8rem)] overflow-y-auto">
         {{-- Header --}}
         <div class="bg-gradient-to-r from-brand-dark to-brand px-6 py-4 rounded-t-2xl flex items-center justify-between">
             <div>
@@ -555,18 +555,18 @@ function updateRow(id, status, badgeClass, waLink = null, startTime = null) {
     }
 
     // Build dropdown (always has Detail; WhatsApp only for CONFIRMED/EXAMINING)
-    const waItem = showWa && waLink ? `<a href="${waLink}" target="_blank" class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-2.5 cursor-pointer transition">
+    const waItem = showWa && waLink ? `<a href="${waLink}" target="_blank" class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1c2622]/50 text-gray-700 dark:text-gray-300 flex items-center gap-2.5 cursor-pointer transition">
         <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         WhatsApp</a>` : '';
 
     const dropdown = `<div class="relative" x-data="{ menuOpen: false }">
-        <button @click="menuOpen = !menuOpen" class="w-8 h-8 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer">
+        <button @click="menuOpen = !menuOpen" class="w-8 h-8 rounded-lg border border-[#e2efe7] dark:border-[#283731] flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-[#1c2622]/50 transition cursor-pointer">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="4" r="1.5"/><circle cx="10" cy="10" r="1.5"/><circle cx="10" cy="16" r="1.5"/></svg>
         </button>
         <div x-show="menuOpen" @click.away="menuOpen = false" x-transition
-             class="absolute right-0 top-full mt-1 w-40 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl z-50 py-1 text-sm" style="display:none;">
+             class="absolute right-0 top-full mt-1 w-40 bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-xl z-50 py-1 text-sm" style="display:none;">
             <button onclick="openDetailById(${id})" @click="menuOpen = false"
-                    class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 flex items-center gap-2.5 cursor-pointer transition">
+                    class="w-full text-left px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-[#1c2622]/50 text-gray-700 dark:text-gray-300 flex items-center gap-2.5 cursor-pointer transition">
                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
                 Detail Pasien</button>
             ${waItem}

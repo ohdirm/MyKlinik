@@ -103,7 +103,7 @@
             {{-- Topbar (Glassmorphism) --}}
             <header class="bg-white/80 dark:bg-[#1c2622]/80 backdrop-blur-md border-b border-[#e2efe7] dark:border-[#283731] h-20 flex items-center justify-between px-6 shrink-0 transition-all duration-300 z-20">
                 <div class="flex items-center gap-4">
-                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-xl hover:bg-brand-light dark:hover:bg-brand/10 text-brand dark:text-blue-300 transition-all focus:outline-none ring-1 ring-brand/10" aria-label="Toggle Navigation">
+                    <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-xl hover:bg-brand-light dark:hover:bg-brand/10 text-brand dark:text-white transition-all focus:outline-none ring-1 ring-brand/10" aria-label="Toggle Navigation">
                         <svg class="w-6 h-6 transition-transform duration-300" :class="sidebarOpen ? '' : 'rotate-180'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>

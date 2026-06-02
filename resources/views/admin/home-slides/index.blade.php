@@ -55,7 +55,7 @@
     @endif
 
     {{-- Slides Grid/Table --}}
-    <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden transition-colors duration-200">
+    <div class="bg-white dark:bg-[#1c2622] rounded-2xl shadow-sm border border-[#e2efe7] dark:border-[#283731] overflow-hidden transition-colors duration-200">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -70,7 +70,7 @@
                     @foreach($slides as $slide)
                     <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-850/35 transition-colors">
                         <td class="px-6 py-4 text-center">
-                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-light dark:bg-brand/20 text-brand dark:text-blue-300 font-bold">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-brand-light dark:bg-brand/20 text-brand dark:text-[#A8D5BA] font-bold">
                                 {{ $slide->order }}
                             </span>
                         </td>
@@ -89,7 +89,7 @@
                         <td class="px-6 py-4 text-center">
                             <div class="inline-flex items-center gap-2">
                                 <button @click='openEditModal({!! json_encode($slide) !!})'
-                                    class="inline-flex items-center gap-1 text-xs font-semibold px-3.5 py-2 rounded-full border border-brand/20 bg-brand/10 dark:bg-brand/20 text-brand dark:text-blue-300 hover:bg-brand/20 dark:hover:bg-brand/35 transition cursor-pointer">
+                                    class="inline-flex items-center gap-1 text-xs font-semibold px-3.5 py-2 rounded-full border border-brand/20 bg-brand/10 dark:bg-brand/20 text-brand dark:text-[#A8D5BA] hover:bg-brand/20 dark:hover:bg-brand/35 transition cursor-pointer">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
                                     Edit
                                 </button>
@@ -118,7 +118,7 @@
 
         {{-- Container --}}
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="relative w-full max-w-xl bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 p-6 md:p-8 overflow-hidden transition-all duration-300" x-transition>
+            <div class="relative w-full max-w-xl bg-white dark:bg-[#1c2622] rounded-3xl shadow-xl border border-[#e2efe7] dark:border-[#283731] p-6 md:p-8 overflow-hidden transition-all duration-300" x-transition>
                 <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4 mb-6">
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white" x-text="editMode ? 'Perbarui Slide Homepage' : 'Tambah Slide Baru'"></h2>
                     <button @click="modalOpen = false" class="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
@@ -175,7 +175,7 @@
                                         slideImagePreview = URL.createObjectURL(file);
                                     }
                                 "
-                                class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-light dark:file:bg-brand/20 file:text-brand dark:file:text-blue-300 hover:file:bg-brand-light/80 dark:hover:file:bg-brand/30 file:cursor-pointer transition">
+                                class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-brand-light dark:file:bg-brand/20 file:text-brand dark:file:text-[#A8D5BA] hover:file:bg-brand-light/80 dark:hover:file:bg-brand/30 file:cursor-pointer transition">
                         </div>
                     </div>
 

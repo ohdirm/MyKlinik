@@ -46,7 +46,7 @@
                     <td class="px-4 py-3"><span class="text-xs font-semibold px-2 py-1 rounded-full {{ $d->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">{{ $d->is_active ? 'Aktif' : 'Nonaktif' }}</span></td>
                     <td class="px-4 py-3 text-center">
                         <div class="inline-flex items-center gap-2">
-                            <a href="{{ route('admin.doctors.edit', $d) }}" class="inline-flex items-center justify-center rounded-full border border-brand/20 bg-brand/10 dark:bg-brand/20 px-3 py-1 text-[11px] font-semibold text-brand dark:text-blue-300 transition hover:bg-brand/20 dark:hover:bg-brand/35">Edit</a>
+                            <a href="{{ route('admin.doctors.edit', $d) }}" class="inline-flex items-center justify-center rounded-full border border-brand/20 bg-brand/10 dark:bg-brand/20 px-3 py-1 text-[11px] font-semibold text-brand dark:text-[#A8D5BA] transition hover:bg-brand/20 dark:hover:bg-brand/35">Edit</a>
                             <form method="POST" action="{{ route('admin.doctors.destroy', $d) }}" onsubmit="return confirm('Hapus dokter ini?')" class="inline-flex items-center">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="inline-flex items-center justify-center rounded-full border border-red-200 dark:border-red-900/35 bg-red-50 dark:bg-red-950/30 px-3 py-1 text-[11px] font-semibold text-red-600 dark:text-red-300 transition hover:bg-red-100 dark:hover:bg-red-950/50">Hapus</button>
