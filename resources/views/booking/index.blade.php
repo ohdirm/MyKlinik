@@ -26,38 +26,36 @@
         </div>
  
         {{-- Step Indicator --}}
-        <div class="flex flex-col items-center mb-8">
-            {{-- Circles + Connector Row --}}
-            <div class="flex items-center">
+        <div class="mb-10">
+            {{-- Unified Step Line and Circles --}}
+            <div class="relative flex items-center justify-between max-w-xs mx-auto">
+                {{-- Background Line --}}
+                <div class="absolute top-1/2 left-0 w-full h-1 bg-gray-200 dark:bg-gray-800 -translate-y-1/2 rounded-full overflow-hidden">
+                    <div class="h-full bg-brand transition-all duration-500 ease-out" :style="`width: ${step === 1 ? '0%' : '100%'}`"></div>
+                </div>
+
                 {{-- Circle 1 --}}
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2"
-                     :class="step > 1 ? 'bg-brand-dark border-brand-dark text-white' : (step === 1 ? 'bg-brand border-brand text-white shadow-lg scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400')">
+                <div class="relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 border-2"
+                     :class="step > 1 ? 'bg-brand border-brand text-white' : (step === 1 ? 'bg-brand border-brand text-white shadow-xl scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400')">
                     <template x-if="step > 1">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                     </template>
                     <template x-if="step <= 1">
                         <span>1</span>
                     </template>
                 </div>
 
-                {{-- Connector --}}
-                <div class="w-16 h-0.5 mx-2 shrink-0 transition-colors duration-300"
-                     :class="step > 1 ? 'bg-brand-dark' : 'bg-gray-300 dark:bg-gray-700'"></div>
-
                 {{-- Circle 2 --}}
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2"
-                     :class="step === 2 ? 'bg-brand border-brand text-white shadow-lg scale-110 shadow-brand/20' : 'bg-transparent border-gray-300 dark:border-gray-700 text-gray-400'">
+                <div class="relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 border-2"
+                     :class="step === 2 ? 'bg-brand border-brand text-white shadow-xl scale-110 shadow-brand/20' : (step > 2 ? 'bg-brand border-brand text-white' : 'bg-white dark:bg-[#141b18] border-gray-300 dark:border-gray-700 text-gray-400')">
                     <span>2</span>
                 </div>
             </div>
 
-            {{-- Labels Row --}}
-            <div class="flex items-start mt-2">
-                <span class="w-10 text-center text-xs font-medium transition-colors"
-                      :class="step === 1 ? 'text-brand' : 'text-gray-400'">Jadwal</span>
-                <div class="w-16 mx-2 shrink-0"></div>
-                <span class="w-10 text-center text-xs font-medium transition-colors leading-tight"
-                      :class="step === 2 ? 'text-brand' : 'text-gray-400'">Data Pasien</span>
+            {{-- Labels --}}
+            <div class="flex justify-between max-w-xs mx-auto mt-3 px-1">
+                <span class="text-[10px] font-bold uppercase tracking-widest transition-colors duration-300" :class="step >= 1 ? 'text-brand' : 'text-gray-400'">Jadwal</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest transition-colors duration-300" :class="step === 2 ? 'text-brand' : 'text-gray-400'">Data Pasien</span>
             </div>
         </div>
 
@@ -104,15 +102,29 @@
 
                             {{-- ── Complaint Analysis / Doctor Suggestion ── --}}
                             <div class="bg-[#F6FBF8] dark:bg-[#1c2622]/30 border border-[#e2efe7] dark:border-[#283731] rounded-3xl p-5 mb-5 shadow-sm">
-                                <label class="block text-xs font-black text-brand-dark dark:text-brand uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                                    <svg class="w-4 h-4 text-brand-dark dark:text-brand" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
-                                    Punya keluhan spesifik?
-                                </label>
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="block text-xs font-black text-brand-dark dark:text-brand uppercase tracking-wider flex items-center gap-1.5">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg>
+                                        Punya keluhan spesifik?
+                                    </label>
+                                    <span class="text-[10px] text-gray-400 font-medium italic">Tulis keluhan untuk rekomendasi dokter AI</span>
+                                </div>
+
+                                {{-- Quick Tags --}}
+                                <div class="flex flex-wrap gap-1.5 mb-3">
+                                    <template x-for="tag in ['Demam', 'Batuk Pilek', 'Sakit Gigi', 'Pusing', 'Sakit Perut', 'Gatal-gatal']">
+                                        <button type="button" @click="complaint = (complaint ? complaint + ', ' : '') + tag" 
+                                                class="px-2.5 py-1 rounded-full border border-brand/20 bg-white dark:bg-[#141b18] text-[10px] font-bold text-brand hover:bg-brand hover:text-white transition-all cursor-pointer active:scale-95 shadow-sm">
+                                            + <span x-text="tag"></span>
+                                        </button>
+                                    </template>
+                                </div>
+
                                 <div class="flex gap-3 items-center">
                                     <textarea x-model="complaint" rows="2" class="flex-1 input-base text-sm py-3 px-4 resize-none rounded-2xl bg-white dark:bg-[#141b18] focus:ring-1 focus:ring-brand focus:border-brand" placeholder="Contoh: sakit perut, demam tinggi, pusing..."></textarea>
-                                    <button type="button" @click="analyzeComplaint()" class="w-16 h-16 bg-[#A8D5BA] hover:bg-[#96c4a9] text-[#1b2621] rounded-2xl flex flex-col items-center justify-center gap-1 shrink-0 shadow-sm transition active:scale-95 cursor-pointer border-0">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" x-show="!analyzing"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
-                                        <svg class="animate-spin w-5 h-5 text-[#1b2621]" fill="none" viewBox="0 0 24 24" x-show="analyzing"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+                                    <button type="button" @click="analyzeComplaint()" class="w-16 h-16 bg-[#A8D5BA] hover:bg-[#96c4a9] text-[#1b2621] rounded-2xl flex flex-col items-center justify-center gap-1 shrink-0 shadow-sm transition active:scale-95 cursor-pointer border-0 disabled:opacity-50" :disabled="analyzing">
+                                        <svg class="w-5 h-5 transition-all" :class="analyzing ? 'scale-0 opacity-0' : 'scale-100 opacity-100'" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" x-show="!analyzing"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+                                        <svg class="animate-spin w-5 h-5 text-[#1b2621] absolute" fill="none" viewBox="0 0 24 24" x-show="analyzing"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
                                         <span class="text-[9px] font-black uppercase tracking-wider" x-text="analyzing ? '...' : 'Cari'"></span>
                                     </button>
                                 </div>
@@ -150,7 +162,23 @@
                             </div>
 
                             {{-- Doctor Cards (scrollable list) --}}
-                            <div class="space-y-3 max-h-80 overflow-y-auto pr-2 rounded-2xl scrollbar-thin scrollbar-thumb-brand/20 scrollbar-track-transparent" id="doctor-cards">
+                            <div class="space-y-3 max-h-80 overflow-y-auto pr-2 rounded-2xl scrollbar-custom" id="doctor-cards">
+                                {{-- Skeleton Loader --}}
+                                <template x-if="fetchingCapacities">
+                                    <div class="space-y-3">
+                                        <template x-for="i in 3">
+                                            <div class="h-20 bg-gray-100 dark:bg-[#1c2622] rounded-3xl animate-pulse flex items-center px-4 gap-4">
+                                                <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800"></div>
+                                                <div class="flex-1 space-y-2">
+                                                    <div class="h-3 w-1/3 bg-gray-200 dark:bg-gray-800 rounded"></div>
+                                                    <div class="h-2 w-1/4 bg-gray-200 dark:bg-gray-800 rounded"></div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <div x-show="!fetchingCapacities">
                                 @foreach($doctors as $doc)
                                 <label class="relative flex items-center gap-4 p-4 rounded-3xl border-2 cursor-pointer transition-all duration-200 hover:border-brand hover:bg-brand/5 dark:hover:bg-brand/10 group"
                                        :class="doctorId == '{{ $doc->id }}' ? 'border-brand bg-brand/5 dark:bg-brand/10 shadow-sm' : 'border-[#e2efe7] dark:border-[#283731] bg-white dark:bg-[#141b18]'"
@@ -192,7 +220,9 @@
                                     </div>
                                 </label>
                                 @endforeach
-                                <p x-show="$el.previousElementSibling && [...$el.parentElement.querySelectorAll('label')].every(l => l.style.display === 'none')"
+                                </div>
+                                
+                                <p x-show="!fetchingCapacities && [...$el.parentElement.querySelectorAll('label')].every(l => l.style.display === 'none')"
                                    class="text-center text-sm text-gray-400 py-6">Dokter tidak ditemukan</p>
                             </div>
                         </div>
@@ -345,32 +375,44 @@
                         {{-- Provinsi --}}
                         <div>
                             <label for="province" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Provinsi <span class="text-red-500">*</span></label>
-                            <select name="province" id="province" class="input-base" required>
+                            <select name="province" id="province" class="input-base" x-model="address.province" @change="onProvinceChange()" required>
                                 <option value="">— Pilih Provinsi —</option>
+                                <template x-for="p in provinces" :key="p.id">
+                                    <option :value="p.name" :data-id="p.id" x-text="p.name" :selected="p.name === address.province"></option>
+                                </template>
                             </select>
                         </div>
 
                         {{-- Kabupaten/Kota --}}
                         <div>
                             <label for="district" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kabupaten/Kota <span class="text-red-500">*</span></label>
-                            <select name="district" id="district" class="input-base" disabled required>
-                                <option value="">— Pilih Kabupaten —</option>
+                            <select name="district" id="district" class="input-base" x-model="address.district" @change="onDistrictChange()" :disabled="!address.province || loadingWilayah.districts" required>
+                                <option value="" x-text="loadingWilayah.districts ? 'Memuat...' : '— Pilih Kabupaten —'"></option>
+                                <template x-for="d in districts" :key="d.id">
+                                    <option :value="d.name" :data-id="d.id" x-text="d.name" :selected="d.name === address.district"></option>
+                                </template>
                             </select>
                         </div>
 
                         {{-- Kecamatan --}}
                         <div>
                             <label for="sub_district" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kecamatan <span class="text-red-500">*</span></label>
-                            <select name="sub_district" id="sub_district" class="input-base" disabled required>
-                                <option value="">— Pilih Kecamatan —</option>
+                            <select name="sub_district" id="sub_district" class="input-base" x-model="address.sub_district" @change="onSubDistrictChange()" :disabled="!address.district || loadingWilayah.subdistricts" required>
+                                <option value="" x-text="loadingWilayah.subdistricts ? 'Memuat...' : '— Pilih Kecamatan —'"></option>
+                                <template x-for="s in subdistricts" :key="s.id">
+                                    <option :value="s.name" :data-id="s.id" x-text="s.name" :selected="s.name === address.sub_district"></option>
+                                </template>
                             </select>
                         </div>
 
                         {{-- Kelurahan/Desa --}}
                         <div>
                             <label for="village" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Kelurahan/Desa <span class="text-red-500">*</span></label>
-                            <select name="village" id="village" class="input-base" disabled required>
-                                <option value="">— Pilih Kelurahan —</option>
+                            <select name="village" id="village" class="input-base" x-model="address.village" :disabled="!address.sub_district || loadingWilayah.villages" required>
+                                <option value="" x-text="loadingWilayah.villages ? 'Memuat...' : '— Pilih Kelurahan —'"></option>
+                                <template x-for="v in villages" :key="v.id">
+                                    <option :value="v.name" :data-id="v.id" x-text="v.name" :selected="v.name === address.village"></option>
+                                </template>
                             </select>
                         </div>
 
@@ -422,39 +464,81 @@
 {{-- Success Modal --}}
 @if(session('booking'))
 @php $bk = session('booking'); @endphp
-<div id="success-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div class="bg-white dark:bg-[#1c2622] rounded-2xl p-8 max-w-md w-full shadow-2xl text-center border border-[#e2efe7] dark:border-[#283731] animate-bounce-in">
-        <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+<div id="success-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4" x-data="{ printing: false }">
+    <div class="bg-white dark:bg-[#1c2622] rounded-3xl p-8 max-w-md w-full shadow-2xl text-center border border-[#e2efe7] dark:border-[#283731] animate-bounce-in overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-brand"></div>
+        
+        <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+            <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
         </div>
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">Pendaftaran Berhasil!</h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Kode Booking Anda</p>
-        <p class="text-4xl font-bold text-brand dark:text-brand tracking-widest mb-5">{{ $bk->booking_code }}</p>
-        <div class="bg-[#F6FBF8] dark:bg-[#141b18] rounded-xl p-4 mb-4 text-left text-sm space-y-2 border border-[#e2efe7] dark:border-[#283731]">
-            <div class="flex justify-between items-center border-b border-[#e2efe7] dark:border-[#283731] pb-2 mb-2">
-                <span class="text-gray-500 dark:text-gray-400">Nomor Antrean:</span>
-                <span class="font-bold text-3xl text-brand dark:text-brand">{{ $bk->queue_number }}</span>
+        
+        <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-1">Pendaftaran Berhasil!</h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-6 uppercase tracking-widest font-bold">Kode Booking: <span class="text-brand">{{ $bk->booking_code }}</span></p>
+        
+        {{-- Printable Ticket Card --}}
+        <div id="printable-ticket" class="bg-brand/5 dark:bg-[#141b18] rounded-2xl p-6 mb-6 text-left border-2 border-dashed border-brand/20 relative">
+            <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-[#1c2622] rounded-full border-r-2 border-brand/10"></div>
+            <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-white dark:bg-[#1c2622] rounded-full border-l-2 border-brand/10"></div>
+            
+            <div class="text-center mb-4 border-b border-brand/10 pb-4">
+                <span class="text-[10px] text-gray-400 uppercase font-bold">Nomor Antrean</span>
+                <div class="text-6xl font-black text-brand leading-none my-1">{{ $bk->queue_number }}</div>
+                <div class="text-[10px] font-bold text-brand-dark dark:text-brand bg-brand/10 px-3 py-1 rounded-full inline-block mt-2">
+                    ESTIMASI: {{ $bk->estimated_time ?? '--:--' }} WIB
+                </div>
             </div>
-            @if($bk->estimated_time)
-            <div class="flex justify-between items-center bg-brand/10 dark:bg-brand/20 p-2 rounded-lg">
-                <span class="text-brand-dark dark:text-brand font-medium">🕒 Estimasi Dilayani:</span>
-                <span class="font-bold text-brand-dark dark:text-brand">Jam {{ $bk->estimated_time }}</span>
+
+            <div class="space-y-3 text-xs">
+                <div class="flex justify-between"><span class="text-gray-500">Pasien</span><span class="font-bold text-gray-900 dark:text-white">{{ $bk->patient_name }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Dokter</span><span class="font-bold text-gray-900 dark:text-white">{{ $bk->doctor->name }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Jadwal</span><span class="font-bold text-gray-900 dark:text-white">{{ $bk->exam_date->translatedFormat('l, d M Y') }}</span></div>
             </div>
-            @endif
-            <p><span class="text-gray-500 dark:text-gray-400">Dokter:</span> <span class="font-medium text-gray-950 dark:text-gray-200">{{ $bk->doctor->name }}</span></p>
-            <p><span class="text-gray-500 dark:text-gray-400">Tanggal:</span> <span class="font-medium text-gray-950 dark:text-gray-200">{{ $bk->exam_date->format('d/m/Y') }}</span></p>
-            <p><span class="text-gray-500 dark:text-gray-400">Jadwal:</span> <span class="font-medium text-gray-950 dark:text-gray-200">{{ $bk->schedule->day_name }}, {{ $bk->schedule->time_range }}</span></p>
         </div>
-        <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-3 mb-5 text-xs text-amber-800 dark:text-amber-300 text-left">
-            <strong>💡 Tips:</strong> Datanglah mendekati jam estimasi. Pantau antrean melalui menu <strong>Antrean Saya</strong>.
+
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="window.print()" class="btn-outline flex-1 py-3 text-xs font-bold border-brand/30 text-brand flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.844l9.635-9.635m-9.635 9.635a2.592 2.592 0 003.665 3.665l9.635-9.635m-13.3 0L3 16.5m13.3-8.88l4.419 4.419"/></svg>
+                Cetak Tiket
+            </button>
+            <a href="{{ route('patient.dashboard') }}" class="btn-primary flex-1 py-3 text-xs font-bold">Dashboard</a>
         </div>
-        <div class="flex gap-3">
-            <a href="{{ route('patient.dashboard') }}" class="btn-primary flex-1 py-3 text-center text-sm">Lihat Antrean</a>
-            <button onclick="document.getElementById('success-modal').remove()" class="btn-outline flex-1 py-3 text-sm">Tutup</button>
-        </div>
+        <button onclick="document.getElementById('success-modal').remove()" class="mt-4 text-[10px] font-bold text-gray-400 hover:text-gray-600 transition-colors uppercase tracking-widest">Tutup Jendela Ini</button>
     </div>
 </div>
+
+<style>
+@media print {
+    body * { visibility: hidden; }
+    #success-modal, #success-modal * { visibility: visible; }
+    #success-modal { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: white; }
+    #printable-ticket { border: 2px solid #4A7C66; background: transparent !important; }
+    .btn-outline, .btn-primary, button { display: none !important; }
+}
+</style>
 @endif
+
+{{-- Toast Container --}}
+<div x-data="toastManager()" 
+     @toast.window="add($event.detail)"
+     class="fixed bottom-6 right-6 z-[60] flex flex-col gap-3 max-w-sm w-full pointer-events-none">
+    <template x-for="t in toasts" :key="t.id">
+        <div x-show="t.show" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="pointer-events-auto bg-white dark:bg-[#1c2622] shadow-2xl rounded-2xl p-4 flex items-center gap-3 border-l-4"
+             :class="t.type === 'error' ? 'border-red-500' : 'border-brand'">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" :class="t.type === 'error' ? 'bg-red-100 text-red-600' : 'bg-brand/10 text-brand'">
+                <template x-if="t.type === 'error'"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></template>
+                <template x-if="t.type !== 'error'"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg></template>
+            </div>
+            <p class="text-xs font-bold text-gray-700 dark:text-gray-200" x-text="t.message"></p>
+        </div>
+    </template>
+</div>
 
 @push('scripts')
     @php
@@ -466,16 +550,25 @@
             'phone_number' => $profile?->phone_number ?? '',
         ];
     @endphp
+    @vite('resources/js/app.js') {{-- booking.js functionality is integrated here --}}
     <script>
-        window.savedAddressData = {
-            province: "{{ old('province', $profile?->province ?? '') }}",
-            district: "{{ old('district', $profile?->district ?? '') }}",
-            subDistrict: "{{ old('sub_district', $profile?->sub_district ?? '') }}",
-            village: "{{ old('village', $profile?->village ?? '') }}"
+    function toastManager() {
+        return {
+            toasts: [],
+            add(detail) {
+                const id = Date.now();
+                this.toasts.push({ id, message: detail.message, type: detail.type || 'success', show: true });
+                setTimeout(() => {
+                    const idx = this.toasts.findIndex(t => t.id === id);
+                    if (idx !== -1) this.toasts[idx].show = false;
+                    setTimeout(() => {
+                        this.toasts = this.toasts.filter(t => t.id !== id);
+                    }, 500);
+                }, 4000);
+            }
         };
-    </script>
-    @vite('resources/js/booking.js')
-    <script>
+    }
+
     function bookingWizard() {
         return {
             step: 1,
@@ -491,7 +584,21 @@
             analyzing: false,
             suggestion: null,
             doctorCapacities: {},
+            fetchingCapacities: false,
             submitting: false,
+
+            // Wilayah logic
+            provinces: [],
+            districts: [],
+            subdistricts: [],
+            villages: [],
+            loadingWilayah: { provinces: false, districts: false, subdistricts: false, villages: false },
+            address: {
+                province: "{{ old('province', $profile?->province ?? '') }}",
+                district: "{{ old('district', $profile?->district ?? '') }}",
+                sub_district: "{{ old('sub_district', $profile?->sub_district ?? '') }}",
+                village: "{{ old('village', $profile?->village ?? '') }}"
+            },
 
             // Patient selection
             profileType: '{{ old('profile_type', 'self') }}',
@@ -499,14 +606,13 @@
             selfProfile: @json($selfProfileJson),
             familyProfilesData: @json($familyProfilesJson),
 
-            // Patient fields (x-model bound)
+            // Patient fields
             patientName: '{{ old('patient_name', $profile?->full_name ?? Auth::user()->name) }}',
             patientNik: '{{ old('nik', $profile?->nik ?? '') }}',
             patientBirthDate: '{{ old('birth_date', $profile?->birth_date?->format('Y-m-d') ?? '') }}',
             patientPhone: '{{ old('phone', $profile?->phone_number ?? '') }}',
 
             init() {
-                // If old input exists, jump to correct step
                 @if($errors->any())
                     this.step = 2;
                 @endif
@@ -518,10 +624,92 @@
                     this.fetchDoctorCapacities();
                 }
 
-                // Auto-fill from self profile on init
                 if (this.profileType === 'self') {
                     this.fillFromSelf();
                 }
+
+                // Initial Wilayah Load
+                this.loadProvinces();
+            },
+
+            // Wilayah Methods
+            loadProvinces() {
+                this.loadingWilayah.provinces = true;
+                fetch('/api/wilayah/provinces')
+                    .then(r => r.json())
+                    .then(data => {
+                        this.provinces = data;
+                        this.loadingWilayah.provinces = false;
+                        if (this.address.province) {
+                            const p = this.provinces.find(x => x.name.toLowerCase() === this.address.province.toLowerCase());
+                            if (p) this.loadDistricts(p.id);
+                        }
+                    });
+            },
+
+            loadDistricts(provinceId) {
+                this.loadingWilayah.districts = true;
+                this.districts = [];
+                fetch(`/api/wilayah/districts?province_id=${provinceId}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        this.districts = data;
+                        this.loadingWilayah.districts = false;
+                        if (this.address.district) {
+                            const d = this.districts.find(x => x.name.toLowerCase() === this.address.district.toLowerCase());
+                            if (d) this.loadSubDistricts(d.id);
+                        }
+                    });
+            },
+
+            loadSubDistricts(districtId) {
+                this.loadingWilayah.subdistricts = true;
+                this.subdistricts = [];
+                fetch(`/api/wilayah/subdistricts?district_id=${districtId}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        this.subdistricts = data;
+                        this.loadingWilayah.subdistricts = false;
+                        if (this.address.sub_district) {
+                            const s = this.subdistricts.find(x => x.name.toLowerCase() === this.address.sub_district.toLowerCase());
+                            if (s) this.loadVillages(s.id);
+                        }
+                    });
+            },
+
+            loadVillages(subDistrictId) {
+                this.loadingWilayah.villages = true;
+                this.villages = [];
+                fetch(`/api/wilayah/villages?sub_district_id=${subDistrictId}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        this.villages = data;
+                        this.loadingWilayah.villages = false;
+                    });
+            },
+
+            onProvinceChange() {
+                const el = document.getElementById('province');
+                const id = el.options[el.selectedIndex]?.dataset?.id;
+                this.address.district = '';
+                this.address.sub_district = '';
+                this.address.village = '';
+                if (id) this.loadDistricts(id);
+            },
+
+            onDistrictChange() {
+                const el = document.getElementById('district');
+                const id = el.options[el.selectedIndex]?.dataset?.id;
+                this.address.sub_district = '';
+                this.address.village = '';
+                if (id) this.loadSubDistricts(id);
+            },
+
+            onSubDistrictChange() {
+                const el = document.getElementById('sub_district');
+                const id = el.options[el.selectedIndex]?.dataset?.id;
+                this.address.village = '';
+                if (id) this.loadVillages(id);
             },
 
             fillFromSelf() {
@@ -547,7 +735,6 @@
                     this.selectedFamilyId = '';
                     this.fillFromSelf();
                 } else {
-                    // Clear fields until family member is selected
                     this.patientName = '';
                     this.patientNik = '';
                     this.patientBirthDate = '';
@@ -563,8 +750,7 @@
             },
 
             onDoctorChange() {
-                const label = document.querySelector(`input[name=doctor_id][value="${this.doctorId}"]`)?.closest('label')?.querySelector('p')?.textContent;
-                this.selectedDoctorName = document.querySelector(`input[name=doctor_id][value="${this.doctorId}"]`)?.closest('label')?.querySelector('.font-semibold')?.textContent ?? '';
+                this.selectedDoctorName = document.querySelector(`input[name=doctor_id][value="${this.doctorId}"]`)?.closest('label')?.querySelector('.font-bold')?.textContent ?? '';
                 this.loadSchedules();
             },
 
@@ -590,29 +776,29 @@
 
             fetchDoctorCapacities() {
                 if (!this.examDate) return;
+                this.fetchingCapacities = true;
                 fetch(`/api/doctor-capacities?date=${this.examDate}`)
                     .then(r => r.json())
                     .then(data => {
                         const capacities = {};
-                        data.forEach(item => {
-                            capacities[item.doctor_id] = item;
-                        });
+                        data.forEach(item => { capacities[item.doctor_id] = item; });
                         this.doctorCapacities = capacities;
-                    });
+                        this.fetchingCapacities = false;
+                    })
+                    .catch(() => { this.fetchingCapacities = false; });
             },
 
             analyzeComplaint() {
-                if (this.complaint.trim().length < 3) { alert('Silakan tuliskan keluhan Anda terlebih dahulu.'); return; }
+                if (this.complaint.trim().length < 3) { 
+                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Silakan tuliskan keluhan Anda terlebih dahulu.', type: 'error' } }));
+                    return; 
+                }
                 this.analyzing = true;
                 this.suggestion = null;
 
                 fetch('/api/suggest-doctor', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
                     body: JSON.stringify({ complaint: this.complaint, date: this.examDate || new Date().toISOString().slice(0,10) })
                 })
                 .then(r => r.json())
@@ -621,45 +807,37 @@
                     if (data.suggested_doctor) {
                         this.suggestion = data;
                     } else {
-                        alert('Maaf, kami tidak menemukan dokter yang spesifik untuk keluhan tersebut.');
+                        window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Maaf, dokter spesifik tidak ditemukan.', type: 'error' } }));
                     }
                 })
-                .catch(() => { this.analyzing = false; alert('Gagal menganalisis keluhan.'); });
+                .catch(() => { this.analyzing = false; });
             },
 
             applySuggestion() {
                 if (!this.suggestion) return;
                 this.doctorId = this.suggestion.suggested_doctor.id;
-                this.spFilter = ''; // Reset filter so selected doctor shows
+                this.spFilter = '';
                 this.doctorSearch = '';
-                
-                // If the user hasn't picked a date, set to today
-                if (!this.examDate) {
-                    this.examDate = new Date().toISOString().slice(0,10);
-                }
-
+                if (!this.examDate) this.examDate = new Date().toISOString().slice(0,10);
                 this.schedules = this.suggestion.schedules;
                 this.selectedDoctorName = this.suggestion.suggested_doctor.name;
                 
-                // Set schedule if only one
                 if (this.schedules.length === 1) {
                     setTimeout(() => {
                         const sel = document.getElementById('select-jadwal');
                         if (sel) sel.value = this.schedules[0].id;
                     }, 50);
                 }
-
                 this.suggestion = null;
-                // Scroll to schedules
                 document.getElementById('select-jadwal').scrollIntoView({ behavior: 'smooth', block: 'center' });
             },
 
             nextStep() {
                 if (this.step === 1) {
-                    if (!this.doctorId) { alert('Silakan pilih dokter terlebih dahulu.'); return; }
-                    if (!this.examDate) { alert('Silakan pilih tanggal periksa.'); return; }
+                    if (!this.doctorId) { window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Silakan pilih dokter.', type: 'error' } })); return; }
+                    if (!this.examDate) { window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Silakan pilih tanggal.', type: 'error' } })); return; }
                     const jadwal = document.getElementById('select-jadwal');
-                    if (!jadwal.value) { alert('Silakan pilih jadwal waktu.'); return; }
+                    if (!jadwal.value) { window.dispatchEvent(new CustomEvent('toast', { detail: { message: 'Silakan pilih jadwal waktu.', type: 'error' } })); return; }
                 }
                 this.step++;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
