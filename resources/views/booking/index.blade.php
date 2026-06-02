@@ -1,5 +1,12 @@
 @extends('layouts.app')
 @section('title', 'Pendaftaran Online — MyKlinik911')
+@push('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+    <style>
+        .iti { width: 100%; display: block; }
+        .iti__flag-container { border-radius: 12px 0 0 12px; }
+    </style>
+@endpush
 @section('content')
 
 <div class="min-h-screen bg-gradient-to-br from-[#f2faf5] via-white to-[#e8f5ed] dark:from-[#141b18] dark:via-[#0a0f0d] dark:to-[#141b18] py-10 transition-colors duration-200"
@@ -353,7 +360,7 @@
                         </div>
                         <div>
                             <label for="phone" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">No HP/WhatsApp <span class="text-red-500">*</span></label>
-                            <input type="text" name="phone" id="phone" class="input-base" maxlength="15" placeholder="08xxxxxxxxxx" x-model="patientPhone" required>
+                            <input type="tel" name="phone" id="phone" class="input-base w-full" placeholder="81234567890" x-model="patientPhone" required>
                         </div>
                         {{-- Hidden Complaint Field for Form Submit --}}
                         <input type="hidden" name="complaint" :value="complaint">
@@ -551,7 +558,36 @@
         ];
     @endphp
     @vite('resources/js/app.js') {{-- booking.js functionality is integrated here --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <script>
+    let iti; // Global reference for Alpine availability
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInput = document.querySelector("#phone");
+        if (phoneInput) {
+            iti = window.intlTelInput(phoneInput, {
+                initialCountry: "id",
+                separateDialCode: true,
+                preferredCountries: ["id", "sg", "my"],
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+            });
+
+            // Auto-strip leading zero and format numbers
+            phoneInput.addEventListener('input', function(e) {
+                let val = this.value.replace(/[^0-9]/g, '');
+                if (val.startsWith('0')) {
+                    val = val.substring(1);
+                }
+                if (val.length > 13) val = val.substring(0, 13);
+                this.value = val;
+            });
+
+            // On submit, update the value with full international format
+            document.getElementById('booking-form').addEventListener('submit', function() {
+                phoneInput.value = iti.getNumber();
+            });
+        }
+    });
+
     function toastManager() {
         return {
             toasts: [],
@@ -717,7 +753,13 @@
                 this.patientNik = this.selfProfile.nik || '';
                 this.patientBirthDate = this.selfProfile.birth_date || '';
                 this.gender = this.selfProfile.gender || '';
-                this.patientPhone = this.selfProfile.phone_number || '';
+                
+                let phone = this.selfProfile.phone_number || '';
+                if (phone.startsWith('0')) phone = phone.substring(1);
+                if (phone.startsWith('+62')) phone = phone.substring(3);
+                if (phone.startsWith('62')) phone = phone.substring(2);
+                this.patientPhone = phone;
+                if (iti) iti.setNumber('+' + (phone.startsWith('62') ? phone : '62' + phone));
             },
 
             fillFromFamily(id) {
@@ -727,7 +769,13 @@
                 this.patientNik = fp.nik || '';
                 this.patientBirthDate = fp.birth_date || '';
                 this.gender = fp.gender || '';
-                this.patientPhone = fp.phone_number || '';
+
+                let phone = fp.phone_number || '';
+                if (phone.startsWith('0')) phone = phone.substring(1);
+                if (phone.startsWith('+62')) phone = phone.substring(3);
+                if (phone.startsWith('62')) phone = phone.substring(2);
+                this.patientPhone = phone;
+                if (iti) iti.setNumber('+' + (phone.startsWith('62') ? phone : '62' + phone));
             },
 
             onProfileTypeChange() {

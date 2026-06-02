@@ -183,12 +183,14 @@ class Booking extends Model
             .'Terima kasih.'
         );
 
-        $phone = ltrim($this->phone, '0');
-        // Ensure starting with 62
+        $phone = preg_replace('/[^0-9]/', '', $this->phone);
+        if (str_starts_with($phone, '0')) {
+            $phone = '62'.substr($phone, 1);
+        }
         if (! str_starts_with($phone, '62')) {
             $phone = '62'.$phone;
         }
 
-        return "https://wa.me/{$phone}?text={$msg}";
+        return "https://api.whatsapp.com/send?phone={$phone}&text={$msg}";
     }
 }

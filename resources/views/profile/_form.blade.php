@@ -23,7 +23,7 @@
     </div>
 
     {{-- Form --}}
-    <form method="POST" action="{{ route('profile.update') }}" class="p-6 space-y-5" @submit="submitting = true">
+    <form method="POST" action="{{ route('profile.update') }}" class="p-6 space-y-5" @submit="submitting = true" onsubmit="return submitProfile(this)">
         @csrf
         @method('PUT')
 
@@ -71,7 +71,14 @@
         {{-- No HP --}}
         <div>
             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">No HP/WhatsApp <span class="text-red-500">*</span></label>
-            <input type="text" name="phone_number" class="input-base" maxlength="15" placeholder="08xxxxxxxxxx" value="{{ old('phone_number', $profile?->phone_number ?? '') }}" required>
+            @php
+                $phone = old('phone_number', $profile?->phone_number ?? '');
+                // If it starts with +62, keep it. If it starts with 62, prepend +. If it starts with 08, strip 0.
+                if (str_starts_with($phone, '62')) $phone = '+' . $phone;
+                if (str_starts_with($phone, '0')) $phone = substr($phone, 1);
+                // intlTelInput will handle the rest
+            @endphp
+            <input type="tel" name="phone_number" id="profile-phone" class="input-base w-full" placeholder="81234567890" value="{{ $phone }}" required>
         </div>
 
         {{-- Email (readonly) --}}

@@ -43,10 +43,21 @@ class Specialization extends Model
         foreach ($specializations as $spec) {
             $score = 0;
             $keywords = $spec->keywords ?? [];
+            $complaintWords = array_filter(explode(' ', preg_replace('/[^\w\s]/', '', $complaint)));
 
             foreach ($keywords as $keyword) {
-                if (str_contains($complaint, mb_strtolower($keyword))) {
-                    $score++;
+                $keywordLower = mb_strtolower($keyword);
+
+                // 1. Exact phrase match (High score)
+                if (str_contains($complaint, $keywordLower)) {
+                    $score += 10;
+                }
+
+                // 2. Word overlap match (Medium score)
+                $keywordWords = array_filter(explode(' ', preg_replace('/[^\w\s]/', '', $keywordLower)));
+                $overlaps = array_intersect($complaintWords, $keywordWords);
+                if (count($overlaps) > 0) {
+                    $score += count($overlaps) * 2;
                 }
             }
 

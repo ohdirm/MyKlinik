@@ -27,6 +27,7 @@
                 <tr>
                     <th class="px-5 py-3 text-left w-12">#</th>
                     <th class="px-5 py-3 text-left">Label (Nama Tampilan)</th>
+                    <th class="px-5 py-3 text-left">Keywords Keluhan (AI)</th>
                     <th class="px-5 py-3 text-left">Kode</th>
                     <th class="px-5 py-3 text-center">Tipe</th>
                     <th class="px-5 py-3 text-center">Aksi</th>
@@ -39,6 +40,12 @@
                     <td class="px-5 py-3 font-medium text-gray-900 dark:text-white" id="label-{{ $spec->id }}">
                         {{ $spec->label }}
                     </td>
+                    <td class="px-5 py-3 text-xs text-gray-500 overflow-hidden max-w-xs">
+                        <div class="truncate" title="{{ is_array($spec->keywords) ? implode(', ', $spec->keywords) : '' }}">
+                            {{ is_array($spec->keywords) ? implode(', ', $spec->keywords) : '-' }}
+                        </div>
+                    </td>
+                    <td class="px-5 py-3 text-gray-500" id="keywords-{{ $spec->id }}" style="display:none;">{{ is_array($spec->keywords) ? implode(', ', $spec->keywords) : '' }}</td>
                     <td class="px-5 py-3">
                         <code class="text-xs bg-[#F6FBF8] dark:bg-[#141b18] text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded font-mono border border-[#e2efe7] dark:border-[#283731]">{{ $spec->value }}</code>
                     </td>
@@ -57,7 +64,7 @@
                     </td>
                     <td class="px-5 py-3 text-center">
                         <div class="inline-flex items-center gap-2">
-                            <button onclick="openEditModal({{ $spec->id }}, '{{ addslashes($spec->label) }}')"
+                            <button onclick="openEditModal({{ $spec->id }}, '{{ addslashes($spec->label) }}', '{{ addslashes(is_array($spec->keywords) ? implode(', ', $spec->keywords) : '') }}')"
                                 class="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full border border-brand/20 bg-brand/10 dark:bg-brand/20 text-brand dark:text-blue-300 hover:bg-brand/20 dark:hover:bg-brand/35 transition">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                 Edit
@@ -94,6 +101,12 @@
                 class="input-base w-full" onkeydown="if(event.key==='Enter')submitAdd()">
             <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Kode akan dibuat otomatis dari nama.</p>
         </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Keywords Keluhan (Opsional)</label>
+            <textarea id="add-keywords" placeholder="contoh: saraf, pusing, mati rasa, kejang"
+                class="input-base w-full h-20 resize-none"></textarea>
+            <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1 italic">Kosongkan jika ingin generate otomatis dari nama. Pisahkan dengan koma.</p>
+        </div>
         <div class="flex gap-3 justify-end">
             <button onclick="closeAddModal()" class="btn-outline">Batal</button>
             <button onclick="submitAdd()" id="add-btn" class="btn-primary">Simpan</button>
@@ -111,6 +124,11 @@
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Spesialisasi</label>
             <input type="text" id="edit-label" class="input-base w-full" onkeydown="if(event.key==='Enter')submitEdit()">
             <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Kode (value) tidak berubah, hanya nama tampilan yang diperbarui.</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Keywords Keluhan</label>
+            <textarea id="edit-keywords" class="input-base w-full h-20 resize-none"></textarea>
+            <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1 italic">Pisahkan dengan koma.</p>
         </div>
         <div class="flex gap-3 justify-end">
             <button onclick="closeEditModal()" class="btn-outline">Batal</button>
@@ -137,6 +155,7 @@ function showToast(msg, type = 'success') {
 // ── TAMBAH ──
 function openAddModal() {
     document.getElementById('add-label').value = '';
+    document.getElementById('add-keywords').value = '';
     document.getElementById('add-error').classList.add('hidden');
     document.getElementById('modal-add').classList.remove('hidden');
     setTimeout(() => document.getElementById('add-label').focus(), 100);
@@ -146,6 +165,7 @@ function closeAddModal() {
 }
 async function submitAdd() {
     const label = document.getElementById('add-label').value.trim();
+    const keywords = document.getElementById('add-keywords').value.trim();
     const errEl = document.getElementById('add-error');
     if (!label) { errEl.textContent = 'Nama tidak boleh kosong.'; errEl.classList.remove('hidden'); return; }
 
@@ -156,7 +176,7 @@ async function submitAdd() {
         const res = await fetch('{{ route('admin.specializations.store') }}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
-            body: JSON.stringify({ label }),
+            body: JSON.stringify({ label, keywords }),
         });
         const data = await res.json();
         if (!res.ok || !data.success) {
@@ -177,9 +197,10 @@ async function submitAdd() {
 }
 
 // ── EDIT ──
-function openEditModal(id, label) {
+function openEditModal(id, label, keywords) {
     document.getElementById('edit-id').value = id;
     document.getElementById('edit-label').value = label;
+    document.getElementById('edit-keywords').value = keywords;
     document.getElementById('edit-error').classList.add('hidden');
     document.getElementById('modal-edit').classList.remove('hidden');
     setTimeout(() => document.getElementById('edit-label').focus(), 100);
@@ -190,6 +211,7 @@ function closeEditModal() {
 async function submitEdit() {
     const id    = document.getElementById('edit-id').value;
     const label = document.getElementById('edit-label').value.trim();
+    const keywords = document.getElementById('edit-keywords').value.trim();
     const errEl = document.getElementById('edit-error');
     if (!label) { errEl.textContent = 'Nama tidak boleh kosong.'; errEl.classList.remove('hidden'); return; }
 
@@ -200,7 +222,7 @@ async function submitEdit() {
         const res = await fetch(`/admin/specializations/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
-            body: JSON.stringify({ label }),
+            body: JSON.stringify({ label, keywords }),
         });
         const data = await res.json();
         if (!res.ok || !data.success) {

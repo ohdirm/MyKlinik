@@ -1,5 +1,12 @@
 @extends('layouts.admin')
 @section('title', 'Kelola Booking — MyKlinik911')
+@push('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+    <style>
+        .iti { width: 100%; display: block; }
+        .iti__flag-container { border-radius: 8px 0 0 8px; }
+    </style>
+@endpush
 @section('content')
 <div class="flex items-center justify-between mb-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Kelola Booking</h1>
@@ -9,7 +16,44 @@
     </button>
 </div>
 
-<div x-data="{ showDetail: false, selected: null, bookings: {{ Js::from($bookings->items()) }} }">
+<div x-data="{ 
+    showDetail: false, 
+    selected: null, 
+    bookings: {{ Js::from($bookings->items()) }},
+    newBookingsCount: 0,
+    initialPendingCount: {{ \App\Models\Booking::whereDate('exam_date', now()->toDateString())->where('status', 'PENDING')->count() }}
+}" x-init="
+    setInterval(async () => {
+        try {
+            const res = await fetch('/api/pending-count');
+            const data = await res.json();
+            if (data.count > initialPendingCount) {
+                newBookingsCount = data.count - initialPendingCount;
+            } else {
+                newBookingsCount = 0;
+            }
+        } catch(e) {}
+    }, 30000)
+">
+    {{-- Notification Bar for New Bookings --}}
+    <div x-show="newBookingsCount > 0" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 -translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         class="mb-4 bg-brand/10 border border-brand/20 rounded-xl p-3 flex items-center justify-between text-brand-dark dark:text-brand"
+         style="display: none;">
+        <div class="flex items-center gap-2 text-sm font-medium">
+            <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-brand"></span>
+            </span>
+            <span x-text="`Ada ${newBookingsCount} pendaftaran baru hari ini!`"></span>
+        </div>
+        <button onclick="location.reload()" class="text-xs font-bold bg-brand text-white px-4 py-1.5 rounded-lg hover:bg-brand-dark transition shadow-sm">
+            Refresh Halaman
+        </button>
+    </div>
+
 {{-- Filter bar --}}
 <div class="bg-white dark:bg-[#1c2622] border border-[#e2efe7] dark:border-[#283731] rounded-xl shadow-sm p-4 mb-6 transition-colors duration-200">
     <form method="GET" class="flex gap-4 flex-wrap items-end">
@@ -321,7 +365,7 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">No HP/WA <span class="text-red-500">*</span></label>
-                            <input type="text" id="wk-phone" class="input-base" maxlength="15" placeholder="08xxx">
+                            <input type="tel" id="wk-phone" class="input-base w-full" placeholder="81234567890">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Jenis Kelamin <span class="text-red-500">*</span></label>
@@ -419,8 +463,32 @@
 </div>
 
 @push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 <script>
 const csrf = document.querySelector('meta[name="csrf-token"]').content;
+
+// Initialize intl-tel-input for Walk-in
+let itiWk;
+document.addEventListener('DOMContentLoaded', function() {
+    const wkPhone = document.querySelector("#wk-phone");
+    if (wkPhone) {
+        itiWk = window.intlTelInput(wkPhone, {
+            initialCountry: "id",
+            separateDialCode: true,
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+        });
+
+        // Auto-strip leading zero and format numbers
+        wkPhone.addEventListener('input', function(e) {
+            let val = this.value.replace(/[^0-9]/g, '');
+            if (val.startsWith('0')) {
+                val = val.substring(1);
+            }
+            if (val.length > 13) val = val.substring(0, 13);
+            this.value = val;
+        });
+    }
+});
 
 // ═══════════════════════════════════════════════════
 // EXISTING BOOKING MANAGEMENT
@@ -831,7 +899,7 @@ function submitWalkin() {
     const data = {
         patient_name: document.getElementById('wk-name').value.trim(),
         nik: document.getElementById('wk-nik').value.trim(),
-        phone: document.getElementById('wk-phone').value.trim(),
+        phone: itiWk.getNumber(),
         birth_date: document.getElementById('wk-birth-date').value,
         gender: document.getElementById('wk-gender').value,
         doctor_id: document.getElementById('wk-doctor').value,

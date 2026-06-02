@@ -48,7 +48,7 @@ class BookingController extends Controller
         $validated = $request->validate([
             'patient_name' => ['required', 'string', 'max:255'],
             'nik' => ['required', 'digits:16'],
-            'phone' => ['required', 'string', 'regex:/^08[0-9]{8,11}$/'],
+            'phone' => ['required', 'string', 'regex:/^\+?[0-9]{5,16}$/'],
             'birth_date' => ['required', 'date'],
             'gender' => ['required', 'in:L,P'],
             'doctor_id' => ['required', 'exists:doctors,id'],

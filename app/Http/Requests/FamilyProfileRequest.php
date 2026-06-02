@@ -22,7 +22,7 @@ class FamilyProfileRequest extends FormRequest
             'nik' => ['required', 'digits:16'],
             'birth_date' => ['required', 'date'],
             'gender' => ['required', 'in:L,P'],
-            'phone_number' => ['required', 'string', 'regex:/^(08|\\+62)[0-9]{8,13}$/', 'max:15'],
+            'phone_number' => ['required', 'string', 'regex:/^\+?[0-9]{5,16}$/'],
         ];
     }
 
@@ -40,7 +40,7 @@ class FamilyProfileRequest extends FormRequest
             'birth_date.required' => 'Tanggal lahir wajib diisi.',
             'gender.required' => 'Jenis kelamin wajib dipilih.',
             'phone_number.required' => 'Nomor HP/WhatsApp wajib diisi.',
-            'phone_number.regex' => 'Format nomor HP tidak valid. Gunakan format 08xx atau +62xx.',
+            'phone_number.regex' => 'Format nomor HP tidak valid. Gunakan format internasional (contoh: +628123456789).',
         ];
     }
 }

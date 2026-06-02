@@ -22,7 +22,7 @@ class BookingRequest extends FormRequest
             'family_profile_id' => ['required_if:profile_type,family', 'nullable', 'exists:family_profiles,id'],
             'patient_name' => ['required', 'string', 'max:255'],
             'nik' => ['required', 'digits:16'],
-            'phone' => ['required', 'string', 'regex:/^08[0-9]{8,11}$/'],
+            'phone' => ['required', 'string', 'regex:/^\+?[0-9]{5,16}$/'],
             'birth_date' => ['required', 'date'],
             'gender' => ['required', 'in:L,P'],
             'doctor_id' => ['required', 'exists:doctors,id'],
@@ -44,7 +44,7 @@ class BookingRequest extends FormRequest
     {
         return [
             'nik.digits' => 'NIK harus 16 digit.',
-            'phone.regex' => 'Format nomor HP tidak valid (contoh: 081234567890).',
+            'phone.regex' => 'Format nomor HP tidak valid (gunakan format internasional, contoh: +628123456789).',
             'exam_date.after' => 'Tanggal periksa harus setelah hari ini.',
             'exam_date.before_or_equal' => 'Tanggal periksa maksimal 14 hari ke depan.',
             'doctor_id.exists' => 'Dokter tidak ditemukan.',

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Schedule;
 use App\Models\Specialization;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
@@ -196,11 +198,28 @@ class ApiController extends Controller
                     : null,
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error in suggestDoctor: ' . $e->getMessage(), [
+            Log::error('Error in suggestDoctor: '.$e->getMessage(), [
                 'complaint' => $request->complaint,
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return response()->json(['error' => 'Internal Server Error', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Get count of pending bookings for today to trigger notifications.
+     */
+    public function pendingCount()
+    {
+        try {
+            $count = Booking::whereDate('exam_date', now()->toDateString())
+                ->where('status', 'PENDING')
+                ->count();
+
+            return response()->json(['count' => $count]);
+        } catch (\Exception $e) {
+            return response()->json(['count' => 0]);
         }
     }
 }

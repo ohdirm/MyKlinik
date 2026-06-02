@@ -85,6 +85,7 @@ Route::prefix('api')->group(function () {
     Route::get('/wilayah/districts', [WilayahController::class, 'districts']);
     Route::get('/wilayah/subdistricts', [WilayahController::class, 'subDistricts']);
     Route::get('/wilayah/villages', [WilayahController::class, 'villages']);
+    Route::get('/pending-count', [ApiController::class, 'pendingCount']);
 });
 
 // ── AUTH ADMIN ──

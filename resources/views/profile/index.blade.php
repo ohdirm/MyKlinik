@@ -1,5 +1,12 @@
 @extends('layouts.app')
 @section('title', 'Profile Saya — MyKlinik911')
+@push('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+    <style>
+        .iti { width: 100%; display: block; }
+        .iti__flag-container { border-radius: 12px 0 0 12px; }
+    </style>
+@endpush
 @section('content')
     <div class="min-h-screen bg-gradient-to-br from-[#f2faf5] via-white to-[#e8f5ed] dark:from-[#141b18] dark:via-[#0a0f0d] dark:to-[#141b18] py-10 transition-colors"
         x-data="profilePage()">
@@ -88,8 +95,64 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     @push('scripts')
         <script>
+            let itiProfile, itiFamily;
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize primary profile phone
+                const profilePhone = document.querySelector("#profile-phone");
+                if (profilePhone) {
+                    itiProfile = window.intlTelInput(profilePhone, {
+                        initialCountry: "id",
+                        separateDialCode: true,
+                        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+                    });
+
+                    profilePhone.addEventListener('input', function() {
+                        let val = this.value.replace(/[^0-9]/g, '');
+                        if (val.startsWith('0')) val = val.substring(1);
+                        if (val.length > 13) val = val.substring(0, 13);
+                        this.value = val;
+                    });
+                }
+
+                // Initialize family phone
+                const familyPhone = document.querySelector("#family-phone");
+                if (familyPhone) {
+                    itiFamily = window.intlTelInput(familyPhone, {
+                        initialCountry: "id",
+                        separateDialCode: true,
+                        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+                    });
+
+                    familyPhone.addEventListener('input', function() {
+                        let val = this.value.replace(/[^0-9]/g, '');
+                        if (val.startsWith('0')) val = val.substring(1);
+                        if (val.length > 13) val = val.substring(0, 13);
+                        this.value = val;
+                    });
+                }
+            });
+
+            // Handle submission for profile
+            function submitProfile(form) {
+                const phoneInput = document.querySelector("#profile-phone");
+                if (phoneInput && itiProfile) {
+                    phoneInput.value = itiProfile.getNumber();
+                }
+                return true;
+            }
+
+            // Handle submission for family
+            function submitFamilyForm(form) {
+                const phoneInput = document.querySelector("#family-phone");
+                if (phoneInput && itiFamily) {
+                    phoneInput.value = itiFamily.getNumber();
+                }
+                return true;
+            }
+
             function profilePage() {
                 return {
                     tab: '{{ request('tab', 'profile') }}',

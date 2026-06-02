@@ -87,7 +87,7 @@
         </div>
 
         {{-- Modal Form --}}
-        <form :action="editingFamily ? '{{ url('profile/family') }}/' + editingFamily.id : '{{ route('profile.family.store') }}'" method="POST" class="p-6 space-y-5">
+        <form :action="editingFamily ? '{{ url('profile/family') }}/' + editingFamily.id : '{{ route('profile.family.store') }}'" method="POST" class="p-6 space-y-5" onsubmit="return submitFamilyForm(this)">
             @csrf
             <template x-if="editingFamily"><input type="hidden" name="_method" value="PUT"></template>
 
@@ -143,7 +143,7 @@
             {{-- No HP --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">No HP/WhatsApp <span class="text-red-500">*</span></label>
-                <input type="text" name="phone_number" x-model="familyForm.phone_number" class="input-base" maxlength="15" placeholder="08xxxxxxxxxx" required>
+                <input type="tel" name="phone_number" id="family-phone" x-model="familyForm.phone_number" class="input-base w-full" placeholder="81234567890" required>
             </div>
 
             {{-- Actions --}}
