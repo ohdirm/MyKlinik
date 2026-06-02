@@ -14,17 +14,20 @@ class HomeController extends Controller
             ->with('status')
             ->get();
 
-        $reviews = Review::with('user', 'doctor')
+        $reviews = Review::where('status', 'published')
+            ->with(['user', 'doctor'])
             ->latest()
             ->take(12)
             ->get();
+
+        $ratingSummary = Review::getSummary();
 
         $todayBookings = Booking::whereDate('exam_date', now())
             ->whereIn('status', ['PENDING', 'CONFIRMED', 'EXAMINING'])
             ->orderBy('queue_number')
             ->get();
 
-        return view('home.index', compact('doctors', 'reviews', 'todayBookings'));
+        return view('home.index', compact('doctors', 'reviews', 'todayBookings', 'ratingSummary'));
     }
 
     public function terms()

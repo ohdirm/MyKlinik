@@ -114,6 +114,11 @@ Route::prefix('admin')->middleware('auth.admin')->name('admin.')->group(function
     Route::delete('/archive/{id}', [ArchiveController::class, 'destroy'])->name('archive.destroy');
     // Staff management
     Route::resource('/staff', StaffController::class)->names('staff');
+    // Review Moderation
+    Route::get('/reviews', [App\Http\Controllers\Admin\ReviewModerationController::class, 'index'])->name('reviews.index');
+    Route::put('/reviews/{review}', [App\Http\Controllers\Admin\ReviewModerationController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [App\Http\Controllers\Admin\ReviewModerationController::class, 'destroy'])->name('reviews.destroy');
+
     // Activity Logs
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 });

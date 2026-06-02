@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Review;
+use App\Services\ProfanityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    public function __construct(protected ProfanityService $profanityService) {}
     public function create(Booking $booking)
     {
         // Ensure the booking belongs to the logged-in user and is DONE
@@ -48,6 +50,8 @@ class ReviewController extends Controller
             'comment' => 'required|string|min:10|max:1000',
         ]);
 
+        $isFlagged = $this->profanityService->hasProfanity($validated['comment']);
+
         Review::create([
             'user_id' => Auth::id(),
             'doctor_id' => $validated['type'] === 'doctor' ? $booking->doctor_id : null,
@@ -55,9 +59,11 @@ class ReviewController extends Controller
             'type' => $validated['type'],
             'rating' => $validated['rating'],
             'comment' => $validated['comment'],
+            'status' => 'pending',
+            'is_flagged' => $isFlagged,
         ]);
 
         return redirect()->route('patient.dashboard')
-            ->with('success', 'Terima kasih atas review Anda!');
+            ->with('success', 'Terima kasih atas review Anda! Review Anda sedang dalam proses moderasi.');
     }
 }

@@ -189,10 +189,45 @@
 {{-- Reviews Section --}}
 <section class="py-16 bg-[var(--ui-surface)] transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-10">
             <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Apa Kata Pasien Kami</h2>
             <p class="text-gray-500 dark:text-gray-400">Ulasan dari pasien yang telah menggunakan layanan MyKlinik911</p>
         </div>
+
+        @if($ratingSummary['total'] > 0)
+            {{-- Rating Summary Dashboard --}}
+            <div class="bg-[var(--ui-surface)] rounded-3xl p-8 border border-[var(--ui-border)] mb-12 shadow-sm transition-all duration-300">
+                <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-20">
+                    {{-- Big Rating --}}
+                    <div class="text-center lg:border-r border-[var(--ui-border)] lg:pr-20 shrink-0">
+                        <div class="text-7xl font-black text-gray-900 dark:text-white mb-2 tracking-tighter">{{ $ratingSummary['average'] }}</div>
+                        <div class="text-amber-400 text-2xl mb-2">
+                             @for($i = 1; $i <= 5; $i++)
+                                @if($i <= floor($ratingSummary['average']))
+                                    ★
+                                @else
+                                    ☆
+                                @endif
+                             @endfor
+                        </div>
+                        <div class="text-sm font-bold text-gray-400 uppercase tracking-widest">{{ $ratingSummary['total'] }} ULASAN TERVERIFIKASI</div>
+                    </div>
+
+                    {{-- Distribution Bars --}}
+                    <div class="flex-1 w-full max-w-lg space-y-3">
+                        @foreach($ratingSummary['distribution'] as $stars => $data)
+                            <div class="flex items-center gap-4 text-xs font-bold text-gray-500 dark:text-gray-400">
+                                <div class="w-12 whitespace-nowrap">{{ $stars }} Bintang</div>
+                                <div class="flex-1 h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-amber-300 to-amber-500 transition-all duration-1000" style="width: {{ $data['percentage'] }}%"></div>
+                                </div>
+                                <div class="w-10 text-right">{{ $data['percentage'] }}%</div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
         @if($reviews->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($reviews as $review)
@@ -202,7 +237,10 @@
                             {{ strtoupper(substr($review->user->name ?? 'A', 0, 1)) }}
                         </div>
                         <div>
-                            <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ $review->user->name ?? 'Anonim' }}</p>
+                            <div class="flex items-center gap-1.5">
+                                <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ $review->user->name ?? 'Anonim' }}</p>
+                                <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[8px] font-black uppercase px-1.5 py-0.5 rounded-md border border-green-200 dark:border-green-800 tracking-tighter">Verified</span>
+                            </div>
                             <p class="text-xs text-gray-400 dark:text-gray-500">{{ $review->created_at->diffForHumans() }}</p>
                         </div>
                     </div>

@@ -59,9 +59,15 @@
                 </div>
 
                 {{-- Komentar --}}
-                <div class="mb-6">
-                    <label for="comment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Komentar</label>
-                    <textarea name="comment" id="comment" rows="4" class="input-base" placeholder="Ceritakan pengalaman Anda (minimal 10 karakter)..." required minlength="10">{{ old('comment') }}</textarea>
+                <div class="mb-6" x-data="{ comment: '{{ old('comment', '') }}' }">
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="comment" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Komentar</label>
+                        <span class="text-[10px] uppercase font-bold text-gray-400" x-text="`${comment.length}/1000`"></span>
+                    </div>
+                    <textarea name="comment" id="comment" x-model="comment" rows="4" class="input-base" placeholder="Ceritakan pengalaman Anda (minimal 10 karakter)..." required minlength="10" maxlength="1000"></textarea>
+                    <p class="mt-2 text-[10px] text-gray-500 dark:text-gray-400 italic">
+                        💡 <strong>Tips:</strong> Berikan masukan yang sopan dan membangun. Review Anda akan dimoderasi oleh Admin sebelum ditampilkan.
+                    </p>
                 </div>
 
                 <div class="flex gap-3">
