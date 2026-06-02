@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ActivityLog;
 use App\Models\Booking;
-use App\Models\DoctorStatus;
+use Illuminate\Support\Facades\Artisan;
 
 class DashboardController extends Controller
 {
@@ -31,21 +30,7 @@ class DashboardController extends Controller
      */
     public function resetDaily()
     {
-        $today = now()->toDateString();
-
-        // Set all doctor statuses to UNAVAILABLE and queue to 0
-        DoctorStatus::query()->update([
-            'current_status' => 'UNAVAILABLE',
-            'current_queue_number' => 0,
-        ]);
-
-        // Cancel all PENDING/CONFIRMED bookings for today
-        Booking::whereDate('exam_date', $today)
-            ->whereIn('status', ['PENDING', 'CONFIRMED'])
-            ->update(['status' => 'CANCELLED']);
-
-        // Log Activity
-        ActivityLog::log('Reset Harian', 'Menutup klinik, mereset status dokter, dan membatalkan booking gantung hari ini.');
+        Artisan::call('clinic:reset');
 
         return response()->json([
             'success' => true,

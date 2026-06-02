@@ -32,12 +32,12 @@ class ProfileController extends Controller
     public function updatePhoto(Request $request)
     {
         $request->validate([
-            'profile_photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'profile_photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
         ], [
             'profile_photo.required' => 'Pilih foto terlebih dahulu.',
             'profile_photo.image' => 'File harus berupa gambar.',
             'profile_photo.mimes' => 'Format gambar harus JPG, PNG, atau WebP.',
-            'profile_photo.max' => 'Ukuran foto maksimal 2MB.',
+            'profile_photo.max' => 'Ukuran foto maksimal 10MB.',
         ]);
 
         $profile = auth()->user()->patientProfile;

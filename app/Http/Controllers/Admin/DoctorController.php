@@ -41,7 +41,7 @@ class DoctorController extends Controller
             'name' => 'required|string|max:255',
             'specialization' => ['required', 'string', 'in:'.implode(',', $validValues)],
             'bio' => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|max:10240',
             'is_active' => 'boolean',
         ]);
 
@@ -84,7 +84,7 @@ class DoctorController extends Controller
             'name' => 'required|string|max:255',
             'specialization' => ['required', 'string', 'in:'.implode(',', $validValues)],
             'bio' => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|max:10240',
             'is_active' => 'boolean',
         ]);
 

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BookingRequest;
 use App\Mail\BookingSubmitted;
+use App\Models\ActivityLog;
 use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Schedule;
 use App\Notifications\BookingStatusNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -43,58 +45,82 @@ class BookingController extends Controller
     {
         $validated = $request->validated();
 
-        // Check duplicate: same NIK + doctor + exam_date with active status
-        $duplicate = Booking::where('nik', $validated['nik'])
-            ->where('doctor_id', $validated['doctor_id'])
-            ->where('exam_date', $validated['exam_date'])
-            ->whereIn('status', ['PENDING', 'CONFIRMED'])
-            ->exists();
+        return DB::transaction(function () use ($validated) {
+            // Check duplicate: same NIK + doctor + exam_date with active status
+            $duplicate = Booking::where('nik', $validated['nik'])
+                ->where('doctor_id', $validated['doctor_id'])
+                ->where('exam_date', $validated['exam_date'])
+                ->whereIn('status', ['PENDING', 'CONFIRMED'])
+                ->lockForUpdate()
+                ->exists();
 
-        if ($duplicate) {
-            return back()->withErrors(['nik' => 'Anda sudah memiliki booking aktif dengan dokter ini pada tanggal tersebut.'])->withInput();
+            if ($duplicate) {
+                return back()->withErrors(['nik' => 'Anda sudah memiliki booking aktif dengan dokter ini pada tanggal tersebut.'])->withInput();
+            }
+
+            // Check capacity
+            $schedule = Schedule::findOrFail($validated['schedule_id']);
+            $currentCount = Booking::where('schedule_id', $validated['schedule_id'])
+                ->where('exam_date', $validated['exam_date'])
+                ->whereIn('status', ['PENDING', 'CONFIRMED'])
+                ->lockForUpdate()
+                ->count();
+
+            if ($currentCount >= $schedule->max_patients) {
+                return back()->withErrors(['schedule_id' => 'Kuota jadwal ini sudah penuh untuk tanggal tersebut.'])->withInput();
+            }
+
+            // Generate unique booking code
+            do {
+                $code = 'MK-'.strtoupper(Str::random(6));
+            } while (Booking::where('booking_code', $code)->exists());
+
+            // Calculate queue number
+            $queueNumber = Booking::where('doctor_id', $validated['doctor_id'])
+                ->where('exam_date', $validated['exam_date'])
+                ->max('queue_number');
+            $queueNumber = ($queueNumber ?? 0) + 1;
+
+            $booking = Booking::create(array_merge($validated, [
+                'booking_code' => $code,
+                'queue_number' => $queueNumber,
+                'status' => 'PENDING',
+                'user_id' => auth()->id(),
+            ]));
+
+            $booking->load('doctor', 'schedule');
+
+            // Send submission email automatically
+            try {
+                Mail::to(auth()->user()->email)->send(new BookingSubmitted($booking));
+            } catch (\Exception $e) {
+                // Log error but continue
+            }
+
+            // Send in-app notification
+            auth()->user()->notify(new BookingStatusNotification($booking, 'submitted'));
+
+            return redirect()->back()->with('booking', $booking);
+        });
+    }
+
+    public function cancel(Booking $booking)
+    {
+        // Ensure user owns the booking
+        if ($booking->user_id !== auth()->id()) {
+            abort(403);
         }
 
-        // Check capacity
-        $schedule = Schedule::findOrFail($validated['schedule_id']);
-        $currentCount = Booking::where('schedule_id', $validated['schedule_id'])
-            ->where('exam_date', $validated['exam_date'])
-            ->whereIn('status', ['PENDING', 'CONFIRMED'])
-            ->count();
-
-        if ($currentCount >= $schedule->max_patients) {
-            return back()->withErrors(['schedule_id' => 'Kuota jadwal ini sudah penuh untuk tanggal tersebut.'])->withInput();
+        // Only allow cancellation for PENDING or CONFIRMED
+        if (! in_array($booking->status, ['PENDING', 'CONFIRMED'])) {
+            return back()->with('error', 'Booking ini sudah diproses dan tidak dapat dibatalkan.');
         }
 
-        // Generate unique booking code
-        do {
-            $code = 'MK-'.strtoupper(Str::random(6));
-        } while (Booking::where('booking_code', $code)->exists());
+        $booking->update(['status' => 'CANCELLED']);
 
-        // Calculate queue number
-        $queueNumber = Booking::where('doctor_id', $validated['doctor_id'])
-            ->where('exam_date', $validated['exam_date'])
-            ->max('queue_number');
-        $queueNumber = ($queueNumber ?? 0) + 1;
+        // Log Activity
+        ActivityLog::log('Pembatalan Booking', "Pasien membatalkan pesanan ({$booking->booking_code}).");
 
-        $booking = Booking::create(array_merge($validated, [
-            'booking_code' => $code,
-            'queue_number' => $queueNumber,
-            'status' => 'PENDING',
-            'user_id' => auth()->id(),
-        ]));
-
-        $booking->load('doctor', 'schedule');
-
-        // Send submission email automatically
-        try {
-            Mail::to(auth()->user()->email)->send(new BookingSubmitted($booking));
-        } catch (\Exception $e) {
-            // Log error but continue
-        }
-
-        // Send in-app notification
-        auth()->user()->notify(new BookingStatusNotification($booking, 'submitted'));
-
-        return redirect()->back()->with('booking', $booking);
+        return back()->with('success', 'Booking Anda telah berhasil dibatalkan.');
     }
 }

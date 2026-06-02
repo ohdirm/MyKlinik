@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\ArchiveController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\ReviewModerationController;
 use App\Http\Controllers\Admin\ScheduleController;
 use App\Http\Controllers\Admin\SpecializationController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
@@ -17,8 +20,6 @@ use App\Http\Controllers\PatientDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WilayahController;
-use App\Http\Controllers\Admin\ActivityLogController;
-use App\Http\Controllers\Admin\StaffController;
 use Illuminate\Support\Facades\Route;
 
 // ── GUEST (tanpa login) ──
@@ -50,6 +51,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth.patient')->group(function () {
     Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+    Route::delete('/booking/{booking}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
     Route::get('/status-dokter', [DoctorStatusController::class, 'index'])->name('status-dokter');
     Route::get('/antrean-saya', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
     Route::get('/review/{booking}', [ReviewController::class, 'create'])->name('review.create');
@@ -115,9 +117,9 @@ Route::prefix('admin')->middleware('auth.admin')->name('admin.')->group(function
     // Staff management
     Route::resource('/staff', StaffController::class)->names('staff');
     // Review Moderation
-    Route::get('/reviews', [App\Http\Controllers\Admin\ReviewModerationController::class, 'index'])->name('reviews.index');
-    Route::put('/reviews/{review}', [App\Http\Controllers\Admin\ReviewModerationController::class, 'update'])->name('reviews.update');
-    Route::delete('/reviews/{review}', [App\Http\Controllers\Admin\ReviewModerationController::class, 'destroy'])->name('reviews.destroy');
+    Route::get('/reviews', [ReviewModerationController::class, 'index'])->name('reviews.index');
+    Route::put('/reviews/{review}', [ReviewModerationController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [ReviewModerationController::class, 'destroy'])->name('reviews.destroy');
 
     // Activity Logs
     Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');

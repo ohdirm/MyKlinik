@@ -96,6 +96,18 @@
                                         @endif
                                     </div>
                                 </div>
+                                
+                                {{-- Action Buttons --}}
+                                <div class="mt-8 pt-6 border-t border-[#e2efe7]/50 dark:border-[#283731]/50 flex justify-end">
+                                    <form action="{{ route('booking.cancel', $b) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pendaftaran ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="flex items-center gap-2 text-xs font-bold text-red-500 hover:text-red-600 transition-colors opacity-60 hover:opacity-100">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                            Batalkan Pendaftaran
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         @empty
                             <div class="text-center py-20 bg-[#F6FBF8] dark:bg-[#1c2622]/10 rounded-[2rem] border-2 border-dashed border-[#e2efe7] dark:border-[#283731]">

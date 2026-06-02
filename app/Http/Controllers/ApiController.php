@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
 use App\Models\Doctor;
 use App\Models\Schedule;
 use App\Models\Specialization;
@@ -24,19 +23,23 @@ class ApiController extends Controller
     {
         $date = $request->query('date');
 
-        $schedules = Schedule::where('doctor_id', $id)
+        $query = Schedule::where('doctor_id', $id)
             ->select('id', 'day_of_week', 'start_time', 'end_time', 'max_patients')
-            ->orderBy('day_of_week')
-            ->get()
+            ->orderBy('day_of_week');
+
+        if ($date) {
+            $query->withCount(['bookings as used_count' => function ($q) use ($date) {
+                $q->where('exam_date', $date)
+                    ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED']);
+            }]);
+        }
+
+        $schedules = $query->get()
             ->map(function (Schedule $schedule) use ($date) {
                 $remaining = $schedule->max_patients;
 
                 if ($date) {
-                    $used = Booking::where('schedule_id', $schedule->id)
-                        ->where('exam_date', $date)
-                        ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED'])
-                        ->count();
-                    $remaining = max(0, $schedule->max_patients - $used);
+                    $remaining = max(0, $schedule->max_patients - $schedule->used_count);
                 }
 
                 return [
@@ -67,17 +70,17 @@ class ApiController extends Controller
             ->with(['schedules' => function ($q) use ($dayOfWeek) {
                 $q->where('day_of_week', $dayOfWeek);
             }])
+            ->withCount(['bookings as total_used' => function ($q) use ($dateStr) {
+                $q->where('exam_date', $dateStr)
+                    ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED']);
+            }])
             ->get()
-            ->map(function ($doctor) use ($dateStr) {
+            ->map(function ($doctor) {
                 $totalMax = $doctor->schedules->sum('max_patients');
-                $totalUsed = Booking::where('doctor_id', $doctor->id)
-                    ->where('exam_date', $dateStr)
-                    ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED'])
-                    ->count();
 
                 return [
                     'doctor_id' => $doctor->id,
-                    'total_remaining' => max(0, $totalMax - $totalUsed),
+                    'total_remaining' => max(0, $totalMax - $doctor->total_used),
                     'has_schedule' => $doctor->schedules->count() > 0,
                 ];
             });
@@ -94,6 +97,7 @@ class ApiController extends Controller
                 return [
                     'id' => $doctor->id,
                     'name' => $doctor->name,
+                    'photo' => $doctor->photo,
                     'specialization' => $doctor->specialization,
                     'specialization_label' => $doctor->specialization_label,
                     'initials' => $doctor->initials,
@@ -112,84 +116,91 @@ class ApiController extends Controller
      */
     public function suggestDoctor(Request $request)
     {
-        $request->validate([
-            'complaint' => ['required', 'string', 'min:3'],
-            'date' => ['nullable', 'date'],
-        ]);
+        try {
+            $request->validate([
+                'complaint' => ['required', 'string', 'min:3'],
+                'date' => ['nullable', 'date'],
+            ]);
 
-        $complaint = $request->complaint;
-        $dateStr = $request->date ?? now()->toDateString();
-        $date = Carbon::parse($dateStr);
-        $dayOfWeek = $date->dayOfWeek;
+            $complaint = $request->complaint;
+            $dateStr = $request->date ?? now()->toDateString();
+            $date = Carbon::parse($dateStr);
+            $dayOfWeek = $date->dayOfWeek;
 
-        // Match complaint to specialization
-        $match = Specialization::matchComplaint($complaint);
+            // Match complaint to specialization
+            $match = Specialization::matchComplaint($complaint);
 
-        $suggestedDoctor = null;
-        $matchedSpec = $match['specialization'];
-        $fallback = false;
+            $suggestedDoctor = null;
+            $matchedSpec = $match['specialization'];
+            $fallback = false;
 
-        if ($matchedSpec && $matchedSpec->value !== 'UMUM') {
-            // Find an available specialist doctor with a schedule on that day
-            $suggestedDoctor = Doctor::where('is_active', true)
-                ->where('specialization', $matchedSpec->value)
-                ->whereHas('schedules', fn ($q) => $q->where('day_of_week', $dayOfWeek))
-                ->first();
+            if ($matchedSpec && $matchedSpec->value !== 'UMUM') {
+                // Find an available specialist doctor with a schedule on that day
+                $suggestedDoctor = Doctor::where('is_active', true)
+                    ->where('specialization', $matchedSpec->value)
+                    ->whereHas('schedules', fn ($q) => $q->where('day_of_week', $dayOfWeek))
+                    ->first();
 
-            // If specialist not available, fallback to general practitioner
-            if (! $suggestedDoctor) {
-                $fallback = true;
+                // If specialist not available, fallback to general practitioner
+                if (! $suggestedDoctor) {
+                    $fallback = true;
+                }
             }
+
+            // Fallback: find available general practitioner
+            if (! $suggestedDoctor) {
+                $suggestedDoctor = Doctor::where('is_active', true)
+                    ->where('specialization', 'UMUM')
+                    ->whereHas('schedules', fn ($q) => $q->where('day_of_week', $dayOfWeek))
+                    ->first();
+            }
+
+            // Build schedules for the suggested doctor (for that day)
+            $schedules = [];
+            if ($suggestedDoctor) {
+                $schedules = Schedule::where('doctor_id', $suggestedDoctor->id)
+                    ->where('day_of_week', $dayOfWeek)
+                    ->withCount(['bookings as used_count' => function ($q) use ($dateStr) {
+                        $q->where('exam_date', $dateStr)
+                            ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED']);
+                    }])
+                    ->get()
+                    ->map(function (Schedule $s) {
+                        return [
+                            'id' => $s->id,
+                            'day_name' => $s->day_name,
+                            'start_time' => substr($s->start_time, 0, 5),
+                            'end_time' => substr($s->end_time, 0, 5),
+                            'max_patients' => $s->max_patients,
+                            'remaining_capacity' => max(0, $s->max_patients - $s->used_count),
+                        ];
+                    });
+            }
+
+            return response()->json([
+                'matched_specialization' => $matchedSpec ? [
+                    'value' => $matchedSpec->value,
+                    'label' => $matchedSpec->label,
+                ] : null,
+                'score' => $match['score'],
+                'suggested_doctor' => $suggestedDoctor ? [
+                    'id' => $suggestedDoctor->id,
+                    'name' => $suggestedDoctor->name,
+                    'specialization' => $suggestedDoctor->specialization,
+                    'specialization_label' => $suggestedDoctor->specialization_label,
+                ] : null,
+                'schedules' => $schedules,
+                'fallback' => $fallback,
+                'fallback_reason' => $fallback
+                    ? ($matchedSpec ? "Dokter {$matchedSpec->label} tidak tersedia pada tanggal tersebut, dialihkan ke Dokter Umum." : 'Dialihkan ke Dokter Umum.')
+                    : null,
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error in suggestDoctor: ' . $e->getMessage(), [
+                'complaint' => $request->complaint,
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['error' => 'Internal Server Error', 'message' => $e->getMessage()], 500);
         }
-
-        // Fallback: find available general practitioner
-        if (! $suggestedDoctor) {
-            $suggestedDoctor = Doctor::where('is_active', true)
-                ->where('specialization', 'UMUM')
-                ->whereHas('schedules', fn ($q) => $q->where('day_of_week', $dayOfWeek))
-                ->first();
-        }
-
-        // Build schedules for the suggested doctor (for that day)
-        $schedules = [];
-        if ($suggestedDoctor) {
-            $schedules = Schedule::where('doctor_id', $suggestedDoctor->id)
-                ->where('day_of_week', $dayOfWeek)
-                ->get()
-                ->map(function (Schedule $s) use ($dateStr) {
-                    $used = Booking::where('schedule_id', $s->id)
-                        ->where('exam_date', $dateStr)
-                        ->whereNotIn('status', ['REJECTED', 'CANCELLED', 'EXPIRED'])
-                        ->count();
-
-                    return [
-                        'id' => $s->id,
-                        'day_name' => $s->day_name,
-                        'start_time' => substr($s->start_time, 0, 5),
-                        'end_time' => substr($s->end_time, 0, 5),
-                        'max_patients' => $s->max_patients,
-                        'remaining_capacity' => max(0, $s->max_patients - $used),
-                    ];
-                });
-        }
-
-        return response()->json([
-            'matched_specialization' => $matchedSpec ? [
-                'value' => $matchedSpec->value,
-                'label' => $matchedSpec->label,
-            ] : null,
-            'score' => $match['score'],
-            'suggested_doctor' => $suggestedDoctor ? [
-                'id' => $suggestedDoctor->id,
-                'name' => $suggestedDoctor->name,
-                'specialization' => $suggestedDoctor->specialization,
-                'specialization_label' => $suggestedDoctor->specialization_label,
-            ] : null,
-            'schedules' => $schedules,
-            'fallback' => $fallback,
-            'fallback_reason' => $fallback
-                ? ($matchedSpec ? "Dokter {$matchedSpec->label} tidak tersedia pada tanggal tersebut, dialihkan ke Dokter Umum." : 'Dialihkan ke Dokter Umum.')
-                : null,
-        ]);
     }
 }

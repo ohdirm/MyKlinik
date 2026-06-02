@@ -27,7 +27,7 @@ class DoctorController extends Controller
             'name' => 'required|string|max:255',
             'specialization' => 'required|in:UMUM,SPESIALIS_ANAK,SPESIALIS_KANDUNGAN,SPESIALIS_PENYAKIT_DALAM,SPESIALIS_BEDAH,SPESIALIS_MATA,SPESIALIS_THT,SPESIALIS_KULIT,SPESIALIS_JANTUNG',
             'bio' => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|max:10240',
             'is_active' => 'boolean',
         ]);
 
@@ -64,7 +64,7 @@ class DoctorController extends Controller
             'name' => 'required|string|max:255',
             'specialization' => 'required|in:UMUM,SPESIALIS_ANAK,SPESIALIS_KANDUNGAN,SPESIALIS_PENYAKIT_DALAM,SPESIALIS_BEDAH,SPESIALIS_MATA,SPESIALIS_THT,SPESIALIS_KULIT,SPESIALIS_JANTUNG',
             'bio' => 'nullable|string',
-            'photo' => 'nullable|image|max:2048',
+            'photo' => 'nullable|image|max:10240',
             'is_active' => 'boolean',
         ]);
 

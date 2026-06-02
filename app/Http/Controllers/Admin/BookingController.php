@@ -11,6 +11,7 @@ use App\Models\DoctorStatus;
 use App\Models\Schedule;
 use App\Notifications\BookingStatusNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -47,7 +48,7 @@ class BookingController extends Controller
         $validated = $request->validate([
             'patient_name' => ['required', 'string', 'max:255'],
             'nik' => ['required', 'digits:16'],
-            'phone' => ['required', 'string', 'max:15'],
+            'phone' => ['required', 'string', 'regex:/^08[0-9]{8,11}$/'],
             'birth_date' => ['required', 'date'],
             'gender' => ['required', 'in:L,P'],
             'doctor_id' => ['required', 'exists:doctors,id'],
@@ -61,71 +62,75 @@ class BookingController extends Controller
             'complaint' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        // Check duplicate: same NIK + doctor + exam_date with active status
-        $duplicate = Booking::where('nik', $validated['nik'])
-            ->where('doctor_id', $validated['doctor_id'])
-            ->where('exam_date', $validated['exam_date'])
-            ->whereIn('status', ['PENDING', 'CONFIRMED'])
-            ->exists();
+        return DB::transaction(function () use ($validated) {
+            // Check duplicate: same NIK + doctor + exam_date with active status
+            $duplicate = Booking::where('nik', $validated['nik'])
+                ->where('doctor_id', $validated['doctor_id'])
+                ->where('exam_date', $validated['exam_date'])
+                ->whereIn('status', ['PENDING', 'CONFIRMED'])
+                ->lockForUpdate()
+                ->exists();
 
-        if ($duplicate) {
+            if ($duplicate) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pasien sudah memiliki booking aktif dengan dokter ini pada tanggal tersebut.',
+                ], 422);
+            }
+
+            // Check capacity
+            $schedule = Schedule::findOrFail($validated['schedule_id']);
+            $currentCount = Booking::where('schedule_id', $validated['schedule_id'])
+                ->where('exam_date', $validated['exam_date'])
+                ->whereIn('status', ['PENDING', 'CONFIRMED'])
+                ->lockForUpdate()
+                ->count();
+
+            if ($currentCount >= $schedule->max_patients) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kuota jadwal ini sudah penuh untuk tanggal tersebut.',
+                ], 422);
+            }
+
+            // Generate unique booking code
+            do {
+                $code = 'MK-'.strtoupper(Str::random(6));
+            } while (Booking::where('booking_code', $code)->exists());
+
+            // Calculate queue number
+            $queueNumber = Booking::where('doctor_id', $validated['doctor_id'])
+                ->where('exam_date', $validated['exam_date'])
+                ->max('queue_number');
+            $queueNumber = ($queueNumber ?? 0) + 1;
+
+            $booking = Booking::create(array_merge($validated, [
+                'booking_code' => $code,
+                'queue_number' => $queueNumber,
+                'status' => 'CONFIRMED',
+                'booking_source' => 'WALK_IN',
+                'user_id' => null,
+            ]));
+
+            $booking->load('doctor', 'schedule');
+
+            // Log Activity
+            ActivityLog::log('Pendaftaran Walk-in', "Mendaftarkan pasien {$booking->patient_name} ({$booking->booking_code}) secara langsung.");
+
+            // Send confirmation email automatically
+            try {
+                Mail::to($booking->email ?? 'no-reply@myklinik.com')
+                    ->send(new BookingConfirmed($booking));
+            } catch (\Exception $e) {
+                // Log error but continue
+            }
+
             return response()->json([
-                'success' => false,
-                'message' => 'Pasien sudah memiliki booking aktif dengan dokter ini pada tanggal tersebut.',
-            ], 422);
-        }
-
-        // Check capacity
-        $schedule = Schedule::findOrFail($validated['schedule_id']);
-        $currentCount = Booking::where('schedule_id', $validated['schedule_id'])
-            ->where('exam_date', $validated['exam_date'])
-            ->whereIn('status', ['PENDING', 'CONFIRMED'])
-            ->count();
-
-        if ($currentCount >= $schedule->max_patients) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Kuota jadwal ini sudah penuh untuk tanggal tersebut.',
-            ], 422);
-        }
-
-        // Generate unique booking code
-        do {
-            $code = 'MK-'.strtoupper(Str::random(6));
-        } while (Booking::where('booking_code', $code)->exists());
-
-        // Calculate queue number
-        $queueNumber = Booking::where('doctor_id', $validated['doctor_id'])
-            ->where('exam_date', $validated['exam_date'])
-            ->max('queue_number');
-        $queueNumber = ($queueNumber ?? 0) + 1;
-
-        $booking = Booking::create(array_merge($validated, [
-            'booking_code' => $code,
-            'queue_number' => $queueNumber,
-            'status' => 'CONFIRMED',
-            'booking_source' => 'WALK_IN',
-            'user_id' => null,
-        ]));
-
-        $booking->load('doctor', 'schedule');
-
-        // Log Activity
-        ActivityLog::log('Pendaftaran Walk-in', "Mendaftarkan pasien {$booking->patient_name} ({$booking->booking_code}) secara langsung.");
-
-        // Send confirmation email automatically
-        try {
-            Mail::to($booking->phone && str_contains($booking->phone, '@') ? $booking->phone : $booking->email ?? 'no-reply@myklinik.com')
-                ->send(new BookingConfirmed($booking));
-        } catch (\Exception $e) {
-            // Log error but continue
-        }
-
-        return response()->json([
-            'success' => true,
-            'booking' => $booking,
-            'wa_link' => $booking->whatsapp_link,
-        ]);
+                'success' => true,
+                'booking' => $booking,
+                'wa_link' => $booking->whatsapp_link,
+            ]);
+        });
     }
 
     public function confirm(int $id)
